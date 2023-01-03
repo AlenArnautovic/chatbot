@@ -1,6 +1,16 @@
 <div>
-    <p-panel [header]="panelHeader" >
-        'content'
+    <p-panel [header]="panelHeader">
+        <div class="content-container">
+            <ng-template [ngForOf]="messageObjects" let-messageObject ngFor>
+                <div class="message-container" [class]="messageObject.messageLayout.position">
+                    <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem', 'background-Color':'lightgrey','border-bottom-right-radius': messageObject.messageLayout.edgedCornerR,'border-bottom-left-radius':messageObject.messageLayout.edgedCornerL}"   >
+                        <div>{{messageObject.content}}</div>
+                    </p-card> 
+                </div>
+            </ng-template>
+        </div>
+
+
         <ng-template pTemplate="footer">
             <div class="flex justify-content-center">
             <input class="flex mr-2" style="width:100%" type="text" pInputText />
