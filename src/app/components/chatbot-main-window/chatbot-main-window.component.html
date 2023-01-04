@@ -1,10 +1,16 @@
 <div>
     <p-panel [header]="panelHeader">
+        <ng-template pTemplate="icons">
+            <button pButton class="p-panel-header-icon p-link">
+                <span class="pi pi-cog"></span>
+            </button>
+            <p-menu #menu id="config_menu" [model]="items" [popup]="true"></p-menu>
+    </ng-template>
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor>
                 <div class="message-container" [class]="messageObject.messageLayout.position">
-                    <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem', 'background-Color':'lightgrey','border-bottom-right-radius': messageObject.messageLayout.edgedCornerR,'border-bottom-left-radius':messageObject.messageLayout.edgedCornerL}"   >
-                        <div>{{messageObject.content}}</div>
+                    <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem', 'background-Color':'#8B5CF6','border-bottom-right-radius': messageObject.messageLayout.edgedCornerR,'border-bottom-left-radius':messageObject.messageLayout.edgedCornerL}"   >
+                        <div style="word-wrap: break-word; color: white;">{{messageObject.content}}</div>
                     </p-card> 
                 </div>
             </ng-template>
@@ -13,8 +19,8 @@
 
         <ng-template pTemplate="footer">
             <div class="flex justify-content-center">
-            <input class="flex mr-2" style="width:100%" type="text" pInputText />
-            <button pButton type="button" icon="fa fa-light fa-paper-plane"></button>
+            <input [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" pInputText/>
+            <button pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane"></button>
             <div></div>
         </div>
         </ng-template>

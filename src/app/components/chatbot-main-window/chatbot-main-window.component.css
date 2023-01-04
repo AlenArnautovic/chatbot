@@ -11,10 +11,12 @@
 :host>>> .p-card .p-card-content{
     padding: 0rem;
     margin: auto;
+   
 }
 
 :host>>> .p-card .p-card-body{
     padding: 0.2rem;
+   
 }
 
 
