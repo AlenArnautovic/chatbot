@@ -7,7 +7,7 @@
             <p-slideMenu #menu id="config_menu" [model]="items" [popup]="true"></p-slideMenu>
     </ng-template>
         <div class="content-container">
-            <ng-template [ngForOf]="messageObjects" let-messageObject ngFor>
+            <ng-template [ngForOf]="messageObjects" let-messageObject ngFor> 
                 <div class="message-container" [class]="messageObject.messageLayout.position">
                     <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem'}" 
                     [ngClass]="messageObject.messageLayout.backgroundColor">
@@ -16,8 +16,6 @@
                 </div>
             </ng-template>
         </div>
-
-
         <ng-template pTemplate="footer">
             <div class="flex justify-content-center">
             <input [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" pInputText/>
@@ -26,5 +24,4 @@
         </div>
         </ng-template>
     </p-panel>
-
 </div>

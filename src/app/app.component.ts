@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -9,15 +8,8 @@ import {HttpClient} from '@angular/common/http';
 export class AppComponent {
   title = 'chatbot';
 
-  baseServerUrl = 'http://localhost:4245/'
+  constructor(){
 
-  constructor(private http: HttpClient){
-
-  }
-
-  /**Test method */
-  sendRequest(){
-    this.http.post<any[]>(`${this.baseServerUrl}sendMessage`,{message: 'Hello my name is'}).subscribe(next => console.log(next));
   }
 
 
