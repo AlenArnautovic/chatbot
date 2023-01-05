@@ -1,3 +1,5 @@
+import { messageTypes } from "./messageTypes";
+
 export interface MessageObject{
     content:string;
     messageLayout:MessageLayout;
@@ -6,18 +8,22 @@ export interface MessageObject{
 
 export interface MessageLayout{
     position: string;
-    edgedCornerL: string;
-    edgedCornerR: string;
+    backgroundColor: string;
+    textColor: string;
+    messageType:messageTypes;
 }
 
 export const rightMessageLayout:MessageLayout = {
     position: 'flex justify-content-end',
-    edgedCornerL: '',
-    edgedCornerR: '1px'
+    backgroundColor: '',
+    textColor:'',
+    messageType: messageTypes.question
 }
 
 export const leftMessageLayout: MessageLayout = {
     position: 'flex',
-    edgedCornerL: '1px',
-    edgedCornerR: ''
+    backgroundColor: '',
+    textColor:'',
+    messageType: messageTypes.answer
 }
+

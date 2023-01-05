@@ -1,16 +1,17 @@
 <div>
-    <p-panel [header]="panelHeader">
+    <p-panel [header]="panelHeader" [toggleable]="true">
         <ng-template pTemplate="icons">
-            <button pButton class="p-panel-header-icon p-link">
-                <span class="pi pi-cog"></span>
+            <button pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
+                <span class="pi pi-ellipsis-h"></span>
             </button>
-            <p-menu #menu id="config_menu" [model]="items" [popup]="true"></p-menu>
+            <p-slideMenu #menu id="config_menu" [model]="items" [popup]="true"></p-slideMenu>
     </ng-template>
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor>
                 <div class="message-container" [class]="messageObject.messageLayout.position">
-                    <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem', 'background-Color':'#8B5CF6','border-bottom-right-radius': messageObject.messageLayout.edgedCornerR,'border-bottom-left-radius':messageObject.messageLayout.edgedCornerL}"   >
-                        <div style="word-wrap: break-word; color: white;">{{messageObject.content}}</div>
+                    <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem'}" 
+                    [ngClass]="messageObject.messageLayout.backgroundColor">
+                        <div style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
                     </p-card> 
                 </div>
             </ng-template>

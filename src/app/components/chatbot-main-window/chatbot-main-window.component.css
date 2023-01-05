@@ -19,4 +19,67 @@
    
 }
 
+:host ::ng-deep .custom-card-body-db .p-card-body{
+    background-color: #93C5FD;
+}
+
+:host ::ng-deep .custom-card-body-di .p-card-body{
+    background-color: #A5B4FC;
+}
+
+:host ::ng-deep .custom-card-body-dp .p-card-body{
+    background-color: #C4B5FD;
+}
+
+:host ::ng-deep .custom-card-body-dt .p-card-body{
+    background-color: #5EEAD4;
+}
+
+:host ::ng-deep .custom-card-body-lb .p-card-body{
+    background-color: #3B82F6;
+}
+
+:host ::ng-deep .custom-card-body-li .p-card-body{
+    background-color: #6366F1;
+}
+
+:host ::ng-deep .custom-card-body-lp .p-card-body{
+    background-color: #8B5CF6;
+}
+
+:host ::ng-deep .custom-card-body-lt .p-card-body{
+    background-color: #14B8A6;
+}
+
+:host ::ng-deep .custom-card-body-dark .p-card-body{
+    background-color: #040D19;
+}
+
+:host ::ng-deep .custom-card-body-light .p-card-body {
+    background-color: #F8F9FA;
+}
+
+:host ::ng-deep .border-class-right .p-card-body {
+    border: solid;
+    border-width: 0px;
+    border-radius: 5px;
+    border-bottom-right-radius: 1px;
+}
+
+:host ::ng-deep .border-class-left-dark .p-card-body {
+    border: solid;
+    border-width: 1px;
+    border-color: #0B213F;
+    border-radius: 5px;
+    border-bottom-left-radius: 1px;
+}
+
+:host ::ng-deep .border-class-left-light .p-card-body {
+    border: solid;
+    border-width: 1px;
+    border-color: #DEE2E6;
+    border-radius: 5px;
+    border-bottom-left-radius: 1px;
+}
+
 

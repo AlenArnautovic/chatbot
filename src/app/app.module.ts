@@ -12,6 +12,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {CardModule} from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import {MenuModule} from 'primeng/menu';
+import {SlideMenuModule} from 'primeng/slidemenu';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MenuModule} from 'primeng/menu';
     InputTextModule,
     CardModule,
     FormsModule,
-    MenuModule
+    MenuModule,
+    SlideMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
