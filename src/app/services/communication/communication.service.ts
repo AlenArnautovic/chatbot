@@ -14,6 +14,7 @@ export class CommunicationService {
     this.http.post<any[]>(`${this.baseServerUrl}sendMessage`,{message: messageContent}).subscribe(next => console.log(next));
   }
 
+  //TODO add new userId method to server that gives every client a unique user id;
   sendMessageToDialogFlow(messageContent:string){
     this.http.post<any[]>(`${this.baseServerUrl}dialogflow/sendMessage`,{message: messageContent, userId:'user-1'}).subscribe(next => console.log(next));
   }

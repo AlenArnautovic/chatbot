@@ -15,5 +15,6 @@ app.post('/dialogflow/sendMessage', async(req, res)=>{
     const text = req.body.message;
     const userId = req.body.userId;
     const resultQurey = await Chatbot.textQuery(text,userId);
-    res.send("dialogFlow Accepted");
+    //TODO return message from dialogflow client
+    res.send({body: "request accepted"});
 })
