@@ -26,18 +26,50 @@
             ],
             "styles": [
               "src/styles.css",
-              {"input": "src/themes/theme-lara-dark-blue.css","bundleName": "lara-dark-blue","inject":false},
-              {"input": "src/themes/theme-lara-dark-indigo.css","bundleName": "lara-dark-indigo","inject":false},
-              {"input": "src/themes/theme-lara-dark-purple.css","bundleName": "lara-dark-purple","inject":false},
-              {"input": "src/themes/theme-lara-dark-teal.css","bundleName": "lara-dark-teal","inject":false},
-              {"input": "src/themes/theme-lara-light-blue.css","bundleName": "lara-light-blue","inject":false},
-              {"input": "src/themes/theme-lara-light-indigo.css","bundleName": "lara-light-indigo","inject":false},
-              {"input": "src/themes/theme-lara-light-purple.css","bundleName": "lara-light-purple","inject":false},
-              {"input": "src/themes/theme-lara-light-teal.css","bundleName": "lara-light-teal","inject":false},
+              {
+                "input": "src/themes/theme-lara-dark-blue.css",
+                "bundleName": "lara-dark-blue",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-dark-indigo.css",
+                "bundleName": "lara-dark-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-dark-purple.css",
+                "bundleName": "lara-dark-purple",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-dark-teal.css",
+                "bundleName": "lara-dark-teal",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-light-blue.css",
+                "bundleName": "lara-light-blue",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-light-indigo.css",
+                "bundleName": "lara-light-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-light-purple.css",
+                "bundleName": "lara-light-purple",
+                "inject": false
+              },
+              {
+                "input": "src/themes/theme-lara-light-teal.css",
+                "bundleName": "lara-light-teal",
+                "inject": false
+              },
               "node_modules/primeicons/primeicons.css",
-    "node_modules/primeng/resources/primeng.min.css",
-    "node_modules/font-awesome/css/font-awesome.css",
-    "node_modules/primeflex/primeflex.css"
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/primeflex/primeflex.css"
             ],
             "scripts": []
           },
@@ -103,11 +135,23 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": "85be054c-4646-46ee-afce-bf56dc24c307"
+    "analytics": "85be054c-4646-46ee-afce-bf56dc24c307",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

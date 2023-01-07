@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';import { CommunicationService } from 'src/app/services/communication/communication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
-;
-import { leftMessageLayout, MessageLayout, MessageObject, rightMessageLayout } from './chatbotMainSupport';
+import { leftMessageLayout, MessageObject, rightMessageLayout } from './chatbotMainSupport';
 import { invertColor, returnColorForAnswers, returnColorForQuestions } from './colorHelper';
 import { messageTypes } from './messageTypes';
 
@@ -16,7 +15,7 @@ export class ChatbotMainWindowComponent implements OnInit {
   inputFieldValue!: string; 
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
-  backgroundColor:string = "custom-card-body";
+  backgroundColor = "custom-card-body";
   constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService ){
     this.createMessage('Test Message',true);
   }
