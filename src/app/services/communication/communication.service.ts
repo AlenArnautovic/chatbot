@@ -13,4 +13,8 @@ export class CommunicationService {
   sendMessageToServer(messageContent:string){
     this.http.post<any[]>(`${this.baseServerUrl}sendMessage`,{message: messageContent}).subscribe(next => console.log(next));
   }
+
+  sendMessageToDialogFlow(messageContent:string){
+    this.http.post<any[]>(`${this.baseServerUrl}dialogflow/sendMessage`,{message: messageContent, userId:'user-1'}).subscribe(next => console.log(next));
+  }
 }

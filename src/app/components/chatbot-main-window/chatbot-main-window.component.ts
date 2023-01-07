@@ -49,7 +49,7 @@ export class ChatbotMainWindowComponent implements OnInit {
   onSendMessage(){
     if(this.inputFieldValue.trim().length >0){
       this.createMessage(this.inputFieldValue, false);
-      this.communicationService.sendMessageToServer(this.inputFieldValue);
+      this.communicationService.sendMessageToDialogFlow(this.inputFieldValue);
     }
     this.inputFieldValue = "";
   }
