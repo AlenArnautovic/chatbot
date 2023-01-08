@@ -14,12 +14,12 @@ import {SlideMenuModule} from 'primeng/slidemenu';
 import { LoginComponent } from './login/login.component';
 import { RouterModule } from '@angular/router';
 
-
 @NgModule({
   declarations: [
     AppComponent,
     ChatbotMainWindowComponent,
     LoginComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -36,7 +36,6 @@ import { RouterModule } from '@angular/router';
       {path:'', component:ChatbotMainWindowComponent},
       {path:'login', component:LoginComponent},
     ])
-    
   ],
   providers: [],
   bootstrap: [AppComponent]
