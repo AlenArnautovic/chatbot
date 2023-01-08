@@ -16,6 +16,7 @@ app.use((request, res, next)=>{
 });
 
 app.use(express.json());
+app.set('trust proxy', true);
 
 app.use('/',routes);
 

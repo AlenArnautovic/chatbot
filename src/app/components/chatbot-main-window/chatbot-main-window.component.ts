@@ -17,19 +17,19 @@ export class ChatbotMainWindowComponent implements OnInit {
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
   backgroundColor = "custom-card-body";
-  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService,private router : Router ){
+  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService, private router : Router ){
     this.createMessage('Test Message',true);
   }
 
   ngOnInit() {
     this.createMenu();
   }
+
   logIn(){
     console.log("Test");
-    this.router.navigate(['/login']);
-
-    
+    this.router.navigate(['/login']); 
   }
+
   /**
    * Creates an new Message as a chatbubble
    * @param conent message content
@@ -52,10 +52,11 @@ export class ChatbotMainWindowComponent implements OnInit {
     this.messageObjects.push(newMessage);
   }
 
-  onSendMessage(){
+  async onSendMessage(){
     if(this.inputFieldValue.trim().length >0){
       this.createMessage(this.inputFieldValue, false);
-      this.communicationService.sendMessageToDialogFlow(this.inputFieldValue);
+      const response = await this.communicationService.sendMessageToDialogFlow(this.inputFieldValue);
+      this.createMessage(response.fulfillmentText,true);
     }
     this.inputFieldValue = "";
   }

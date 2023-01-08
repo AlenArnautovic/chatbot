@@ -1,21 +1,23 @@
-import * as df from 'dialogflow';
+import dialogflow from '@google-cloud/dialogflow';
+import {v4 as uuid} from 'uuid';
 import { devKeys } from './devKeyConfig';
 
 export class Chatbot{
-    static projectId = devKeys.googleProjectId;
-    static sessionId = devKeys.dialogFlowSessionID;
-    static languageCode = devKeys.dialogFlowSessionLanguageCode;
     
-    static credts:df.Credentials = {
+    static projectId = devKeys.googleProjectId;
+    static languageCode = devKeys.dialogFlowSessionLanguageCode;
+
+    static sessionId = uuid();
+    
+    static credts = {
         client_email: devKeys.googleClientEmail,
         private_key: devKeys.googlePrivateKey
     }
     
-    static sessionClient = new df.SessionsClient({projectId:Chatbot.projectId,credentials:Chatbot.credts});
+    static sessionClient = new dialogflow.SessionsClient({projectId:Chatbot.projectId,credentials:Chatbot.credts});
     
     public static textQuery = async(userMessage:string, userId:string)=>{
-        console.log(userMessage);
-        const sessionPath = Chatbot.sessionClient.sessionPath(Chatbot.projectId,Chatbot.sessionId+userId);
+        const sessionPath = Chatbot.sessionClient.projectAgentSessionPath(Chatbot.projectId,Chatbot.sessionId+userId);
         const request = {
             session: sessionPath,
             queryInput: {
@@ -28,7 +30,7 @@ export class Chatbot{
     
         try{
             const response = await Chatbot.sessionClient.detectIntent(request);
-            console.log(response);
+            console.log(response[0].queryResult.fulfillmentText);
             return response;
         }catch(error){
             console.log(error);
