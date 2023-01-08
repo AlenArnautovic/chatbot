@@ -33,7 +33,7 @@ import { RouterModule } from '@angular/router';
     MenuModule,
     SlideMenuModule,
     RouterModule.forRoot([
-      {path:'home', component:ChatbotMainWindowComponent},
+      {path:'', component:ChatbotMainWindowComponent},
       {path:'login', component:LoginComponent},
     ])
     

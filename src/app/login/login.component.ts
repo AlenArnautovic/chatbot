@@ -16,7 +16,7 @@ export class LoginComponent {
   }
   patient = 'TestPatient';
   logIn(){
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
     //var url = "localhost";
     
   }
