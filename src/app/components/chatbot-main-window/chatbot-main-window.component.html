@@ -16,6 +16,9 @@
                 </div>
             </ng-template>
         </div>
+        <div>
+            <label *ngIf="showIsTyping" class="flex text-sm">{{isTypingContent}}</label>
+        </div>
         <ng-template pTemplate="footer">
             <div class="flex justify-content-center">
             <input [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" pInputText/>
