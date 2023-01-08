@@ -12,6 +12,10 @@
     - Prettier ESLint (optional)
 - Git installieren
 - SourceTree installieren (optional)
+### Requirements Datenbank
+-In Server/database
+  npm i snowflake-sdk
+  
 
 ### Projekt Initialisieren:
 

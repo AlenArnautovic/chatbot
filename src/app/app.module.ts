@@ -14,6 +14,7 @@ import {SlideMenuModule} from 'primeng/slidemenu';
 import { LoginComponent } from './login/login.component';
 import { RouterModule } from '@angular/router';
 
+
 @NgModule({
   declarations: [
     AppComponent,
