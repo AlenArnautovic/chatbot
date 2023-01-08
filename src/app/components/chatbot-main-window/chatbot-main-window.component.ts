@@ -13,7 +13,8 @@ import { Router } from '@angular/router';
 })
 export class ChatbotMainWindowComponent implements OnInit {
   panelHeader = "Chatbot";
-  isTypingContent = 'Chatbot is typing...'
+  isTypingContent = 'Chatbot is typing...';
+  panelSubHeader = 'online'
   
   showIsTyping = false;
 
@@ -77,7 +78,7 @@ export class ChatbotMainWindowComponent implements OnInit {
       end = new Date().getTime();
    }
  }
- 
+
 changeThemeForExistingMessages(){
   const currentTheme = this.themeSerivce.getCurrentTheme();
   this.messageObjects.forEach(element => {

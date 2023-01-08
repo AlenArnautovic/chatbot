@@ -1,5 +1,14 @@
 <div>
-    <p-panel [header]="panelHeader" [toggleable]="true">
+    <p-panel [toggleable]="true">
+        <ng-template pTemplate="header">
+            <div class="flex flex-column">
+            <label class="flex text-lg font-medium"> {{panelHeader}}</label>
+            <div class="flex flex-row align-content-center">
+                <i class="pi pi-circle-fill flex align-self-center mt-1 mr-1" style="font-size: 0.5rem; color: #04d190"></i>
+                <label class="flex text-sm flex align-self-center"> {{panelSubHeader}}</label> 
+            </div>
+        </div>
+        </ng-template>
         <ng-template pTemplate="icons">
             <button pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
                 <span class="pi pi-ellipsis-h"></span>
