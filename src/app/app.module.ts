@@ -13,11 +13,14 @@ import {CardModule} from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import {MenuModule} from 'primeng/menu';
 import {SlideMenuModule} from 'primeng/slidemenu';
+import { LoginComponent } from './login/login.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatbotMainWindowComponent
+    ChatbotMainWindowComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,11 @@ import {SlideMenuModule} from 'primeng/slidemenu';
     CardModule,
     FormsModule,
     MenuModule,
-    SlideMenuModule
+    SlideMenuModule,
+    RouterModule.forRoot([
+      {path:'', component:ChatbotMainWindowComponent},
+      {path:'login', component:LoginComponent},
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]
