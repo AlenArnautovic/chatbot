@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatbotMainWindowComponent } from './components/chatbot-main-window/chatbot-main-window.component';
 import {HttpClientModule} from '@angular/common/http';
@@ -13,15 +11,18 @@ import {CardModule} from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import {MenuModule} from 'primeng/menu';
 import {SlideMenuModule} from 'primeng/slidemenu';
+import { LoginComponent } from './login/login.component';
+import { RouterModule } from '@angular/router';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatbotMainWindowComponent
+    ChatbotMainWindowComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     PanelModule,
     BrowserAnimationsModule,
@@ -30,7 +31,12 @@ import {SlideMenuModule} from 'primeng/slidemenu';
     CardModule,
     FormsModule,
     MenuModule,
-    SlideMenuModule
+    SlideMenuModule,
+    RouterModule.forRoot([
+      {path:'home', component:ChatbotMainWindowComponent},
+      {path:'login', component:LoginComponent},
+    ])
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

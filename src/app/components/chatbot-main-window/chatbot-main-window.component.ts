@@ -4,6 +4,7 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 import { leftMessageLayout, MessageObject, rightMessageLayout } from './chatbotMainSupport';
 import { invertColor, returnColorForAnswers, returnColorForQuestions } from './colorHelper';
 import { messageTypes } from './messageTypes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chatbot-main-window',
@@ -16,14 +17,19 @@ export class ChatbotMainWindowComponent implements OnInit {
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
   backgroundColor = "custom-card-body";
-  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService ){
+  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService,private router : Router ){
     this.createMessage('Test Message',true);
   }
 
   ngOnInit() {
     this.createMenu();
   }
+  logIn(){
+    console.log("Test");
+    this.router.navigate(['/login']);
 
+    
+  }
   /**
    * Creates an new Message as a chatbubble
    * @param conent message content
