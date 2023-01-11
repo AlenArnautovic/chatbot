@@ -21,4 +21,10 @@ export class CommunicationService {
     const response: AiResponse  = await firstValueFrom(this.http.post(`${this.baseServerUrl}dialogflow/sendMessage`,{message: messageContent, userId:'user-1'})) as AiResponse;
     return response;
   }
+
+  //TODO change method to own requirement
+  async sendMessageToDatabase(messageContent:string):Promise<AiResponse>{
+    const response: AiResponse  = await firstValueFrom(this.http.post(`${this.baseServerUrl}database/insert`,{message: messageContent, userId:'user-1'})) as AiResponse;
+    return response;
+  }
 }

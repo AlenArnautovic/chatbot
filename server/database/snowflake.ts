@@ -19,7 +19,7 @@ snowConnect.connect(function (err, conn) {
         } 
     });
 
-
+export function executeInsert (){
     snowConnect.execute({
         sqlText: `INSERT INTO CHATBOT.PATIENT.PATIENT VALUES (4,'test','test')`,// ${'<your-variable-name>'} for variable values
         complete: function (err, stmt) {
@@ -29,3 +29,4 @@ snowConnect.connect(function (err, conn) {
         console.log("Successfully executed statement: " + stmt.getSqlText())
         }
         }});
+    }

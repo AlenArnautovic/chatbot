@@ -1,5 +1,6 @@
 import express from 'express';
 import { Chatbot } from './chatbot/chatbotServer';
+import { executeInsert } from './database/snowflake';
 
 const app = express.Router();
 
@@ -21,4 +22,9 @@ app.post('/dialogflow/sendMessage', async(req, res)=>{
     }
 
     res.send(response);
+});
+
+app.post('/database/insert', async(req, res)=>{
+    const text = req.body.message;
+    executeInsert(); 
 });
