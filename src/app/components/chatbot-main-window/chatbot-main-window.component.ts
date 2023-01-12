@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';import { CommunicationService } from 'src/app/services/communication/communication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { leftMessageLayout, MessageObject, rightMessageLayout } from './chatbotMainSupport';
 import { invertColor, returnColorForAnswers, returnColorForQuestions } from './colorHelper';
 import { messageTypes } from './messageTypes';
 import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-chatbot-main-window',
@@ -13,16 +14,17 @@ import { Router } from '@angular/router';
 })
 export class ChatbotMainWindowComponent implements OnInit {
   panelHeader = "Chatbot";
-  isTypingContent = 'Chatbot is typing...';
+  isTypingContent = 'is typing...';
   panelSubHeader = 'online'
-  
+  mainWindowContainer = '';
   showIsTyping = false;
+  slideMenuheigth = 230;
 
   inputFieldValue!: string; 
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
   backgroundColor = "custom-card-body";
-  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService, private router : Router ){
+  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService, private router : Router, @Inject(DOCUMENT) private document: Document){
     this.createMessage('Test Message',true);
   }
 
@@ -98,9 +100,11 @@ changeTheme(theme:string){
   this.changeThemeForExistingMessages();
 }
 
-openSizeEditor(){
-  //TODO
+changeSizeOfComponent(size:number){
+  const zoomlevel = `zoom: ${size}`;
+  this.mainWindowContainer = zoomlevel;
 }
+
   createMenu(){
     this.items = [
       {
@@ -167,11 +171,31 @@ openSizeEditor(){
         }
         ]
         },{
-          label: 'Text Size',
-          icon: 'pi pi-comment',
-          command: ()=>{
-            this.openSizeEditor();
-          }
+          label: 'Chatbot Size',
+          icon: 'pi pi-search',
+          items: [
+            {
+              label: 'Large',
+              icon: 'pi pi-window-maximize',
+              command: () => {
+                this.changeSizeOfComponent(1.3);
+              }
+          },
+          {
+            label: 'Standard',
+            icon: 'pi pi-stop',
+            command: () => {
+              this.changeSizeOfComponent(1);
+            }
+        },
+      {
+        label: 'Small',
+        icon: 'pi pi-window-minimize',
+        command: () => {
+          this.changeSizeOfComponent(0.8);
+        }
+    },
+        ]
         }
 
       ]

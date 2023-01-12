@@ -6,6 +6,10 @@
 
 :host>>> .p-panel .p-panel-content {
     padding: 0.5rem;
+    height: 25vw;
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 :host>>> .p-card .p-card-content{
@@ -81,5 +85,3 @@
     border-radius: 5px;
     border-bottom-left-radius: 1px;
 }
-
-
