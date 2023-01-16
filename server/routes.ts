@@ -28,3 +28,7 @@ app.post('/database/insert', async(req, res)=>{
     const text = req.body.message;
     executeInsert(); 
 });
+
+app.post('/webhook', async(req, res)=>{
+    console.log(req.body);
+});
