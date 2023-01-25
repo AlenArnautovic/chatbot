@@ -13,6 +13,10 @@ import {MenuModule} from 'primeng/menu';
 import {SlideMenuModule} from 'primeng/slidemenu';
 import { LoginComponent } from './login/login.component';
 import { RouterModule } from '@angular/router';
+import {SplitButtonModule} from 'primeng/splitbutton';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
+import {ConfirmationService} from 'primeng/api';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 
 @NgModule({
@@ -25,8 +29,11 @@ import { RouterModule } from '@angular/router';
   imports: [
     BrowserModule,
     HttpClientModule,
+    ConfirmDialogModule,
     PanelModule,
+    ConfirmPopupModule,
     BrowserAnimationsModule,
+    SplitButtonModule,
     ButtonModule,
     InputTextModule,
     CardModule,
@@ -38,7 +45,7 @@ import { RouterModule } from '@angular/router';
       {path:'login', component:LoginComponent},
     ])
   ],
-  providers: [],
+  providers: [ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

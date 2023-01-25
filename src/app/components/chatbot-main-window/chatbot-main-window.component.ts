@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';import { CommunicationService } from 'src/app/services/communication/communication.service';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { Confirmation, ConfirmationService, MenuItem } from 'primeng/api';import { CommunicationService } from 'src/app/services/communication/communication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { ChoiceObject, leftMessageLayout, MessageObject, multipleChoiceLayout, rightMessageLayout } from './chatbotMainSupport';
 import { invertColor, returnColorForAnswers, returnColorForQuestions } from './colorHelper';
@@ -19,40 +19,63 @@ export class ChatbotMainWindowComponent implements OnInit {
   mainWindowContainer = '';
   showIsTyping = false;
   slideMenuheigth = 230;
+  inputDisabled= false;
 
   inputFieldValue!: string; 
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
   backgroundColor = "custom-card-body";
-  constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService, private router : Router, @Inject(DOCUMENT) private document: Document){
-    this.createMessage('Test Message',true);
+  constructor(private themeSerivce: ThemeService, 
+    private communicationService: CommunicationService, 
+    private router : Router, 
+    @Inject(DOCUMENT) private document: Document, 
+    private confirmationService: ConfirmationService,
+    private ref: ChangeDetectorRef){
+    this.createMessage('Please pick one of the following symptoms to continue:',true);
 
     const choice1: ChoiceObject = {
       label: 'fever',
       event: '',
-      description: ''
+      description: 'This is fever',
+      isFallback: false,
+      symbolClass: 'pi pi-info-circle'
     }
     const choice2: ChoiceObject = {
       label: 'headache',
       event: '',
-      description: ''
+      description: 'This is headache',
+      isFallback: false,
+      symbolClass: 'pi pi-info-circle'
     }
     const choice3: ChoiceObject = {
       label: 'something something something',
       event: '',
-      description: ''
+      description: 'This is something',
+      isFallback: false,
+      symbolClass: 'pi pi-info-circle'
     }
     const choice4: ChoiceObject = {
       label: 'yes yes yes yes',
       event: '',
-      description: ''
+      description: 'This is yes',
+      isFallback: false,
+      symbolClass: 'pi pi-info-circle'
     }
     const choice5: ChoiceObject = {
       label: 'blablablabla',
       event: '',
-      description: ''
+      description: 'This is bla',
+      isFallback: false,
+      symbolClass: 'pi pi-info-circle'
     }
-    const choices:ChoiceObject [] = [choice1,choice2,choice3,choice4,choice5];
+    const choice6: ChoiceObject = {
+      label: 'None of the mentioned',
+      event: '',
+      description: 'Are you sure you have none of the mentioned? Please consider reading the descriptions of every symptom by clicking on it before continuing.',
+      isFallback: true,
+      symbolClass: 'pi pi-times-circle'
+    }
+    const choices:ChoiceObject [] = [choice1,choice2,choice3,choice4,choice5,choice6];
     this.createMultipleChoice(choices);
   }
 
@@ -97,10 +120,20 @@ export class ChatbotMainWindowComponent implements OnInit {
       choiceObjects : choiceObjects
     }
     this.messageObjects.push(newMessage);
+    this.toggleInputFooter(true);
+  }
+
+  disableAllChoiceButtons(){
+    this.messageObjects.forEach(messageObject => {
+      if(messageObject.isMultipleChoice){
+        messageObject.messageLayout.disabled = true;
+      }
+    });
   }
 
   async onSendMessage(){
     if(this.inputFieldValue.trim().length >0){
+      this.toggleInputFooter(true);
       this.createMessage(this.inputFieldValue, false);
       this.showIsTyping = true;
       const response = await this.communicationService.sendMessageToDialogFlow(this.inputFieldValue);
@@ -109,17 +142,23 @@ export class ChatbotMainWindowComponent implements OnInit {
       this.createMessage(response.fulfillmentText,true);
     }
     this.inputFieldValue = "";
+    this.toggleInputFooter(false);
   }
 
   //TODO maybe rework this fuction because it pauses the whole code
   //https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line
-  wait(ms:number){
+wait(ms:number){
     const start = new Date().getTime();
     let end = start;
     while(end < start + ms) {
       end = new Date().getTime();
    }
  }
+
+toggleInputFooter(disable:boolean){
+  this.inputDisabled = disable;
+}
+
 
 changeThemeForExistingMessages(){
   const currentTheme = this.themeSerivce.getCurrentTheme();
@@ -134,6 +173,32 @@ changeThemeForExistingMessages(){
   });
   console.log(this.themeSerivce.getCurrentTheme());
 }
+
+confirmChoice(event:any, choiceObj: ChoiceObject) {
+  
+    const confirmation:Confirmation ={
+      rejectIcon: 'pi pi-times',
+      acceptIcon: 'pi pi-check',
+      target: event.target,
+      message: choiceObj.description,
+      icon: choiceObj.isFallback ? 'pi pi-exclamation-triangle' : 'pi pi-info-circle',
+      acceptLabel: choiceObj.isFallback ? 'Yes, I am sure' : 'I consent',
+      rejectLabel: 'Back',
+      accept: () => {
+        const answer = choiceObj.isFallback ? 'I do not have any of the mentioned symptoms': `My concern also contains ${choiceObj.label}`;
+        this.createMessage(answer,false);
+        this.disableAllChoiceButtons();
+        this.toggleInputFooter(false);
+        this.ref.detectChanges();
+      },
+      reject: () => {
+        //
+      }
+  }
+ 
+  this.confirmationService.confirm(confirmation);
+}
+
 
 changeTheme(theme:string){
   this.themeSerivce.switchTheme(theme);

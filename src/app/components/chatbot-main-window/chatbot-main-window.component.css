@@ -86,3 +86,13 @@
     border-radius: 5px;
     border-bottom-left-radius: 1px;
 }
+
+:host ::ng-deep .multi-choice-button-label .p-button-label {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+:host ::ng-deep .multi-choice-button-icon .p-button-icon{
+    font-size: 15px;
+}
+
