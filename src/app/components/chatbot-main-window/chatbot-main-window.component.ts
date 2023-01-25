@@ -6,6 +6,7 @@ import { invertColor, returnColorForAnswers, returnColorForQuestions } from './c
 import { messageTypes } from './messageTypes';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { choiceServerObject } from 'src/app/services/communication/communicationHelper';
 
 @Component({
   selector: 'app-chatbot-main-window',
@@ -31,52 +32,7 @@ export class ChatbotMainWindowComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document, 
     private confirmationService: ConfirmationService,
     private ref: ChangeDetectorRef){
-    this.createMessage('Please pick one of the following symptoms to continue:',true);
-
-    const choice1: ChoiceObject = {
-      label: 'fever',
-      event: '',
-      description: 'This is fever',
-      isFallback: false,
-      symbolClass: 'pi pi-info-circle'
-    }
-    const choice2: ChoiceObject = {
-      label: 'headache',
-      event: '',
-      description: 'This is headache',
-      isFallback: false,
-      symbolClass: 'pi pi-info-circle'
-    }
-    const choice3: ChoiceObject = {
-      label: 'something something something',
-      event: '',
-      description: 'This is something',
-      isFallback: false,
-      symbolClass: 'pi pi-info-circle'
-    }
-    const choice4: ChoiceObject = {
-      label: 'yes yes yes yes',
-      event: '',
-      description: 'This is yes',
-      isFallback: false,
-      symbolClass: 'pi pi-info-circle'
-    }
-    const choice5: ChoiceObject = {
-      label: 'blablablabla',
-      event: '',
-      description: 'This is bla',
-      isFallback: false,
-      symbolClass: 'pi pi-info-circle'
-    }
-    const choice6: ChoiceObject = {
-      label: 'None of the mentioned',
-      event: '',
-      description: 'Are you sure you have none of the mentioned? Please consider reading the descriptions of every symptom by clicking on it before continuing.',
-      isFallback: true,
-      symbolClass: 'pi pi-times-circle'
-    }
-    const choices:ChoiceObject [] = [choice1,choice2,choice3,choice4,choice5,choice6];
-    this.createMultipleChoice(choices);
+  
   }
 
   ngOnInit() {
@@ -133,17 +89,34 @@ export class ChatbotMainWindowComponent implements OnInit {
 
   async onSendMessage(){
     if(this.inputFieldValue.trim().length >0){
-      this.toggleInputFooter(true);
       this.createMessage(this.inputFieldValue, false);
       this.showIsTyping = true;
       const response = await this.communicationService.sendMessageToDialogFlow(this.inputFieldValue);
       this.wait(800);
-      this.showIsTyping = false;
       this.createMessage(response.fulfillmentText,true);
+      if(response.isMultipleChoice){
+        this.createMultipleChoice(this.transformServerMultipleChoice(response.choiceContainer?.choices));
+      }
+      this.showIsTyping = false;
     }
     this.inputFieldValue = "";
-    this.toggleInputFooter(false);
   }
+
+transformServerMultipleChoice(choices: choiceServerObject[] | undefined):ChoiceObject[]{
+  const choiceObjects:ChoiceObject[] = [];
+  if(choices != undefined){
+  for(const choice of choices){
+    choiceObjects.push({
+      label: choice.label,
+      event: '',
+      description: choice.description,
+      isFallback: choice.isFallback,
+      symbolClass: choice.isFallback ? 'pi pi-times-circle' : 'pi pi-info-circle'
+    })
+  }
+  }
+  return choiceObjects;
+}
 
   //TODO maybe rework this fuction because it pauses the whole code
   //https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line

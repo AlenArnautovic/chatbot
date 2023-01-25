@@ -20,7 +20,7 @@
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor> 
                 <div class="message-container flex flex-row" [class]="messageObject.messageLayout.position">
-                    <p-card *ngIf="!messageObject.isMultipleChoice" [style]="{'width': '10rem', 'margin-bottom': '0.5rem'}" 
+                    <p-card *ngIf="!messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem'}" 
                     [ngClass]="messageObject.messageLayout.backgroundColor">
                         <div style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
                     </p-card>
@@ -42,4 +42,4 @@
     </p-panel>
 </div>
 <button class="login" (click)="logIn()">Login Page</button>
-<p-confirmPopup [style]="{'boxShadow':'0px 20px 30px 10px black', 'width':'30vw'}" rejectButtonStyleClass="p-button-outlined" [autoZIndex]="true"></p-confirmPopup>
+<p-confirmPopup [style]="{'boxShadow':'0px 20px 30px 10px black', 'width':'30vw', 'maxWidth':'350px'}" rejectButtonStyleClass="p-button-outlined" [autoZIndex]="true"></p-confirmPopup>
