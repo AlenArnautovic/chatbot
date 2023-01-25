@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';import { CommunicationService } from 'src/app/services/communication/communication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
-import { leftMessageLayout, MessageObject, rightMessageLayout } from './chatbotMainSupport';
+import { ChoiceObject, leftMessageLayout, MessageObject, multipleChoiceLayout, rightMessageLayout } from './chatbotMainSupport';
 import { invertColor, returnColorForAnswers, returnColorForQuestions } from './colorHelper';
 import { messageTypes } from './messageTypes';
 import { Router } from '@angular/router';
@@ -26,6 +26,34 @@ export class ChatbotMainWindowComponent implements OnInit {
   backgroundColor = "custom-card-body";
   constructor(private themeSerivce: ThemeService, private communicationService: CommunicationService, private router : Router, @Inject(DOCUMENT) private document: Document){
     this.createMessage('Test Message',true);
+
+    const choice1: ChoiceObject = {
+      label: 'fever',
+      event: '',
+      description: ''
+    }
+    const choice2: ChoiceObject = {
+      label: 'headache',
+      event: '',
+      description: ''
+    }
+    const choice3: ChoiceObject = {
+      label: 'something something something',
+      event: '',
+      description: ''
+    }
+    const choice4: ChoiceObject = {
+      label: 'yes yes yes yes',
+      event: '',
+      description: ''
+    }
+    const choice5: ChoiceObject = {
+      label: 'blablablabla',
+      event: '',
+      description: ''
+    }
+    const choices:ChoiceObject [] = [choice1,choice2,choice3,choice4,choice5];
+    this.createMultipleChoice(choices);
   }
 
   ngOnInit() {
@@ -46,6 +74,8 @@ export class ChatbotMainWindowComponent implements OnInit {
     const newMessage: MessageObject = {
       content: conent,
       messageLayout: isAnswer ? leftMessageLayout : rightMessageLayout,
+      isMultipleChoice: false,
+      choiceObjects: []
     }
     const currentTheme = this.themeSerivce.getCurrentTheme();
     if(isAnswer){
@@ -56,6 +86,16 @@ export class ChatbotMainWindowComponent implements OnInit {
       newMessage.messageLayout.textColor = invertColor(returnColorForQuestions(currentTheme,true));
     }
 
+    this.messageObjects.push(newMessage);
+  }
+
+  createMultipleChoice(choiceObjects: ChoiceObject[]){
+    const newMessage: MessageObject = {
+      content: "",
+      messageLayout: multipleChoiceLayout,
+      isMultipleChoice: true,
+      choiceObjects : choiceObjects
+    }
     this.messageObjects.push(newMessage);
   }
 

@@ -20,9 +20,14 @@
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor> 
                 <div class="message-container flex flex-row" [class]="messageObject.messageLayout.position">
-                    <p-card [style]="{'width': '10rem', 'margin-bottom': '0.5rem'}" 
+                    <p-card *ngIf="!messageObject.isMultipleChoice" [style]="{'width': '10rem', 'margin-bottom': '0.5rem'}" 
                     [ngClass]="messageObject.messageLayout.backgroundColor">
                         <div style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
+                    </p-card>
+                    <p-card *ngIf="messageObject.isMultipleChoice" [style]="{'width': '10rem', 'margin-bottom': '0.5rem'}">
+                        <ng-template [ngForOf]="messageObject.choiceObjects" let-choiceObject ngFor>
+                            <button pButton pRipple type="button" label="{{choiceObject.label}}" class="p-button-outlined"></button>
+                        </ng-template>
                     </p-card> 
                 </div> 
             </ng-template>

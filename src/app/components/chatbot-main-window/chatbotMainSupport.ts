@@ -1,9 +1,10 @@
 import { messageTypes } from "./messageTypes";
 
 export interface MessageObject{
-    content:string;
-    messageLayout:MessageLayout;
-
+    content: string;
+    messageLayout: MessageLayout;
+    choiceObjects: ChoiceObject[];
+    isMultipleChoice:boolean;
 }
 
 export interface MessageLayout{
@@ -11,6 +12,12 @@ export interface MessageLayout{
     backgroundColor: string;
     textColor: string;
     messageType:messageTypes;
+}
+
+export interface ChoiceObject{
+    label: string;
+    event: string;
+    description: string;
 }
 
 export const rightMessageLayout:MessageLayout = {
@@ -25,5 +32,12 @@ export const leftMessageLayout: MessageLayout = {
     backgroundColor: '',
     textColor:'',
     messageType: messageTypes.answer
+}
+
+export const multipleChoiceLayout: MessageLayout = {
+    position: 'flex',
+    backgroundColor: '',
+    textColor: '',
+    messageType: messageTypes.multipleChoice
 }
 
