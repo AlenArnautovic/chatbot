@@ -27,4 +27,9 @@ export class CommunicationService {
     const response: chatbotTransportObject  = await firstValueFrom(this.http.post(`${this.baseServerUrl}database/insert`,{message: messageContent, userId:'user-1'})) as chatbotTransportObject;
     return response;
   }
+
+  async triggerEventInDialogFlow(eventName:string):Promise<chatbotTransportObject>{
+    const response: chatbotTransportObject  = await firstValueFrom(this.http.post(`${this.baseServerUrl}dialogflow/eventRequest`,{message: eventName, userId:'user-1'})) as chatbotTransportObject;
+    return response;
+  }
 }

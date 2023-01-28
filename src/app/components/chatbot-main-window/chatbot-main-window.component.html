@@ -26,14 +26,14 @@
                     </p-card>
                     <div *ngIf="messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem', 'backgroundColor':'transparent', 'padding':'0.1rem'}">
                         <ng-template [ngForOf]="messageObject.choiceObjects" let-choiceObject ngFor>
-                            <button [icon]="choiceObject.symbolClass" [disabled]="messageObject.messageLayout.disabled" pButton pRipple type="button" label="{{choiceObject.label}}" class="p-button-outlined mr-1 mb-1" style="padding: 0.3rem;" ngClass="multi-choice-button-label multi-choice-button-icon" (click)="confirmChoice($event,choiceObject)"></button>
+                            <button [icon]="choiceObject.symbolClass" [disabled]="messageObject.messageLayout.disabled" pButton pRipple type="button" label="{{choiceObject.label}}" class="p-button-outlined mr-1 mb-1" style="padding: 0.3rem;" ngClass="multi-choice-button-label multi-choice-button-icon" (click)="confirmChoice($event,choiceObject)" [ngStyle]="{'color': choiceObject.isFallback ? 'orange': ''}"></button>
                         </ng-template>
                     </div> 
                 </div> 
             </ng-template>
         </div>
         <ng-template pTemplate="footer">
-            <div class="flex justify-content-center">
+            <div (keydown.enter)="onSendMessage()" class="flex justify-content-center">
             <input [disabled]="inputDisabled" [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" pInputText/>
             <button [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane"></button>
             <div></div>

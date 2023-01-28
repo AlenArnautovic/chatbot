@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "ts-node-dev server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "npm run dev:debug",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:debug": "ts-node-dev --transpile-only --respawn --inspect=4321 --project tsconfig.json server.ts" 
   },
   "author": "",
   "license": "ISC",

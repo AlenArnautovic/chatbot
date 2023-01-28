@@ -88,6 +88,7 @@ export class ChatbotMainWindowComponent implements OnInit {
   }
 
   async onSendMessage(){
+    this.toggleInputFooter(true);
     if(this.inputFieldValue.trim().length >0){
       this.createMessage(this.inputFieldValue, false);
       this.showIsTyping = true;
@@ -95,9 +96,11 @@ export class ChatbotMainWindowComponent implements OnInit {
       this.wait(800);
       this.createMessage(response.fulfillmentText,true);
       if(response.isMultipleChoice){
+        //response.fulfillmentText.length > 0 ? this.createMessage(response.fulfillmentText, true) : null;
         this.createMultipleChoice(this.transformServerMultipleChoice(response.choiceContainer?.choices));
       }
       this.showIsTyping = false;
+      this.toggleInputFooter(false);
     }
     this.inputFieldValue = "";
   }
@@ -108,7 +111,7 @@ transformServerMultipleChoice(choices: choiceServerObject[] | undefined):ChoiceO
   for(const choice of choices){
     choiceObjects.push({
       label: choice.label,
-      event: '',
+      event: choice.event,
       description: choice.description,
       isFallback: choice.isFallback,
       symbolClass: choice.isFallback ? 'pi pi-times-circle' : 'pi pi-info-circle'
@@ -157,12 +160,22 @@ confirmChoice(event:any, choiceObj: ChoiceObject) {
       icon: choiceObj.isFallback ? 'pi pi-exclamation-triangle' : 'pi pi-info-circle',
       acceptLabel: choiceObj.isFallback ? 'Yes, I am sure' : 'I consent',
       rejectLabel: 'Back',
-      accept: () => {
+      accept: async () => {
+        this.toggleInputFooter(false);
+        this.disableAllChoiceButtons();
+        this.ref.detectChanges();
         const answer = choiceObj.isFallback ? 'I do not have any of the mentioned symptoms': `My concern also contains ${choiceObj.label}`;
         this.createMessage(answer,false);
-        this.disableAllChoiceButtons();
-        this.toggleInputFooter(false);
-        this.ref.detectChanges();
+        this.showIsTyping = true;
+        const response = await this.communicationService.triggerEventInDialogFlow(choiceObj.event);
+        this.wait(1000);
+        if(response.isMultipleChoice){
+          this.createMessage(response.fulfillmentText, true);
+          this.createMultipleChoice(this.transformServerMultipleChoice(response.choiceContainer?.choices));
+        }else{
+          this.createMessage(response.fulfillmentText, true);
+        }
+        this.showIsTyping = false;
       },
       reject: () => {
         //
