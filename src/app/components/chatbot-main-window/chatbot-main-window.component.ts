@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { Confirmation, ConfirmationService, MenuItem } from 'primeng/api';import { CommunicationService } from 'src/app/services/communication/communication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { ChoiceObject, leftMessageLayout, MessageObject, multipleChoiceLayout, rightMessageLayout } from './chatbotMainSupport';
@@ -13,7 +13,9 @@ import { choiceServerObject } from 'src/app/services/communication/communication
   templateUrl: './chatbot-main-window.component.html',
   styleUrls: ['./chatbot-main-window.component.css']
 })
-export class ChatbotMainWindowComponent implements OnInit {
+export class ChatbotMainWindowComponent implements OnInit,AfterViewInit {
+  @ViewChild('inputField') inputField!: ElementRef;
+
   panelHeader = "Chatbot";
   isTypingContent = 'is typing...';
   panelSubHeader = 'online'
@@ -21,6 +23,7 @@ export class ChatbotMainWindowComponent implements OnInit {
   showIsTyping = false;
   slideMenuheigth = 230;
   inputDisabled= false;
+  inputPlaceholder= 'Say hi...';
 
   inputFieldValue!: string; 
   items!: MenuItem[];
@@ -33,6 +36,10 @@ export class ChatbotMainWindowComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private ref: ChangeDetectorRef){
   
+  }
+
+  ngAfterViewInit() {
+    this.inputField.nativeElement.focus();
   }
 
   ngOnInit() {
@@ -75,7 +82,9 @@ export class ChatbotMainWindowComponent implements OnInit {
       isMultipleChoice: true,
       choiceObjects : choiceObjects
     }
+    newMessage.messageLayout.disabled = false;
     this.messageObjects.push(newMessage);
+    this.inputPlaceholder = 'Choose an option!'
     this.toggleInputFooter(true);
   }
 
@@ -96,13 +105,19 @@ export class ChatbotMainWindowComponent implements OnInit {
       this.wait(800);
       this.createMessage(response.fulfillmentText,true);
       if(response.isMultipleChoice){
+        this.wait(800);
         //response.fulfillmentText.length > 0 ? this.createMessage(response.fulfillmentText, true) : null;
         this.createMultipleChoice(this.transformServerMultipleChoice(response.choiceContainer?.choices));
       }
-      this.showIsTyping = false;
-      this.toggleInputFooter(false);
+    }else{
+      //TODO Error catching
     }
+
+    this.showIsTyping = false;
+    this.inputPlaceholder = 'Type Here...';
+    this.toggleInputFooter(false);
     this.inputFieldValue = "";
+    this.inputField.nativeElement.focus();
   }
 
 transformServerMultipleChoice(choices: choiceServerObject[] | undefined):ChoiceObject[]{
@@ -168,10 +183,12 @@ confirmChoice(event:any, choiceObj: ChoiceObject) {
         this.createMessage(answer,false);
         this.showIsTyping = true;
         const response = await this.communicationService.triggerEventInDialogFlow(choiceObj.event);
-        this.wait(1000);
+        this.wait(800);
         if(response.isMultipleChoice){
           this.createMessage(response.fulfillmentText, true);
+          this.wait(800);
           this.createMultipleChoice(this.transformServerMultipleChoice(response.choiceContainer?.choices));
+          console.log(this.messageObjects);
         }else{
           this.createMessage(response.fulfillmentText, true);
         }

@@ -79,6 +79,15 @@ export class Chatbot{
                     case 'last-name':
                         this.patchPatientInfo(userId,null,fields[key].stringValue);
                         break;
+                    case 'patient_age':
+                        this.patchPatientInfo(userId,null,fields[key].stringValue);
+                        break;
+                    case 'vNumber':
+                        this.patchPatientInfo(userId,null,fields[key].stringValue);
+                        break;
+                    case 'illness':
+                        this.patchPatientInfo(userId,null,fields[key].stringValue);
+                        break;
                     default: 
                         // 
                         break;
@@ -93,8 +102,10 @@ export class Chatbot{
 
     private static patchPatientInfo(userId:string, firstName?:string, lastName?:string, age?:number, vNumber?:number, disease?:string){
            const activePatientsIterator = activePatiens;
-           for(const activePatient of  activePatientsIterator){
+           let patientExists = false;
+           for(const activePatient of activePatientsIterator){
             if(activePatient.userId == userId){
+                patientExists = true;
                 firstName != null ? activePatient.firstName = firstName : null;
                 lastName != null ? activePatient.lastName = lastName : null;
                 age != null ? activePatient.age = age : null;
@@ -102,21 +113,19 @@ export class Chatbot{
                 if(disease != null){
                     activePatient.disease.push(disease);
                 }
-                console.log(activePatiens);
-                return;
-            }else{
-                const newPatient: PatientInfo  = {
-                    userId: userId,
-                    firstName: firstName != null ? firstName : '',
-                    lastName: lastName != null ? lastName: '',
-                    age: age != null ? age:  -1,
-                    vNumber: vNumber != null ? vNumber : -1,
-                    disease: disease != null ? [disease] : []
-                }
-                activePatiens.push(newPatient);
-                console.log(activePatiens);
-                return;
+                break;
             }
+           }
+           if(!patientExists){
+            const newPatient: PatientInfo  = {
+                userId: userId,
+                firstName: firstName != null ? firstName : '',
+                lastName: lastName != null ? lastName: '',
+                age: age != null ? age:  -1,
+                vNumber: vNumber != null ? vNumber : -1,
+                disease: disease != null ? [disease] : []
+            }
+            activePatiens.push(newPatient);
            }
     }
 
@@ -136,6 +145,14 @@ export class Chatbot{
             case 'Event_Backpain_Red':
                 chatbotTransportObject.isMultipleChoice = true;
                 chatbotTransportObject.choiceContainer = chatbotDiseaseStore.backpain_orange;
+                break;
+            case 'Event_Backpain_Orange':
+                chatbotTransportObject.isMultipleChoice = true;
+                chatbotTransportObject.choiceContainer = chatbotDiseaseStore.backpain_yellow;
+                break;
+            case 'Event_Backpain_Yellow':
+                chatbotTransportObject.isMultipleChoice = true;
+                chatbotTransportObject.choiceContainer = chatbotDiseaseStore.backpain_green;
                 break;
             default: 
                 // 

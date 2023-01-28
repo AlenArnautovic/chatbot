@@ -45,6 +45,6 @@ export const multipleChoiceLayout: MessageLayout = {
     backgroundColor: '',
     textColor: '',
     messageType: messageTypes.multipleChoice,
-    disabled:false
+    disabled: false
 }
 

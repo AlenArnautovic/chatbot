@@ -109,13 +109,14 @@ export class chatbotDiseaseStore {
             description: `Pain that disables you to do normal activities.`,
             isFallback: false
         }
-
-        return [choice1,choice2,choice3,choice4,choice5,choice6,choice7,this.createChoiceFallback()];
+        const fallback = this.createChoiceFallback();
+        fallback.event = 'backpain_orange';
+        return [choice1,choice2,choice3,choice4,choice5,choice6,choice7,fallback];
     }
     private static initializeBackPainYellow():choiceServerObject[]{
         const choice1: choiceServerObject ={
             label: "Neurological deficit >24hours",
-            event: "",
+            event: "call_doctor_asap",
             description: `Any loss of neurological function including altered or lost
             sensation, weakness of the limbs (either transiently or
             permanently) and alterations in bladder or bowel function.`,
@@ -123,7 +124,7 @@ export class chatbotDiseaseStore {
         }
         const choice3: choiceServerObject = {
             label: "Back trauma",
-            event: "",
+            event: "call_doctor_asap",
             description: `This may be top to bottom (loading), for instance when people fall
             and land on their feet, bending (forwards, backwards or to the
             side) or twisting.`,
@@ -131,48 +132,51 @@ export class chatbotDiseaseStore {
         }
         const choice4: choiceServerObject = {
             label: "Unable to walk",
-            event: "",
+            event: "call_doctor_asap",
             description: `It is important to try and distinguish between someone who has
             pain and difficulty walking and those who cannot walk. Only the
             latter can be said to be unable to walk.`,
             isFallback: false
         }
         const choice5: choiceServerObject = {
-            label: "Fever ",
-            event: "",
+            label: "Fever",
+            event: "call_doctor_asap",
             description: `A temperature of more than 38 degrees Celsius.`,
             isFallback: false
         }
         const choice6: choiceServerObject = {
             label: "Colicky pain",
-            event: "",
+            event: "call_doctor_asap",
             description: `Pain that comes and goes in waves. Renal colic tends to come and
             go over 20 minutes or so.`,
             isFallback: false
         }
         const choice7: choiceServerObject = {
             label: "Moderate Pain",
-            event: "",
+            event: "call_doctor_asap",
             description: `Servere Difficulties. May stop you to do some things.`,
             isFallback: false
         }
-        return [choice1,choice3,choice4,choice5,choice6,choice7,this.createChoiceFallback()];
+        const fallback = this.createChoiceFallback();
+        fallback.event = 'backpain_yellow';
+        return [choice1,choice3,choice4,choice5,choice6,choice7,fallback];
     }
     private static initializeBackPainGreen():choiceServerObject[]{
         const choice1: choiceServerObject ={
             label: "Recent mild pain",
-            event: "",
+            event: "book_appointment_ask",
             description: `Mild stinging. Can do any normal acitivy, with only a few problems.`,
             isFallback: false
         }
         const choice2: choiceServerObject = {
             label: "Recent problem",
-            event: "",
+            event: "book_appointment_ask",
             description: `Any other problem that was not mentioned in the previous assensment.`,
             isFallback: false
         }
-
-        return [choice1,choice2,this.createChoiceFallback()];
+        const fallback = this.createChoiceFallback();
+        fallback.event = 'book_appointment_ask';
+        return [choice1,choice2,fallback];
     }
 
     private static createChoiceFallback(): choiceServerObject{
