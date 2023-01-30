@@ -4,40 +4,41 @@ import { Chatbot } from './chatbot/chatbotServer';
 
 const app = express.Router();
 
-export {app as routes};
+export { app as routes };
 
-app.get('/', (request, res)=> res.send('Hello World'));
+app.get('/', (request, res) => res.send('Hello World'));
 
-app.get('/users', (request, res)=> res.send([]));
+app.get('/users', (request, res) => res.send([]));
 
-app.post('/sendMessage', (request, res) => res.send({body: request.body}));
+app.post('/sendMessage', (request, res) => res.send({ body: request.body }));
 
-app.post('/dialogflow/sendMessage', async(req, res)=>{
-    const text = req.body.message;
-    const userId = req.body.userId;
-    const resultQurey = await Chatbot.textQuery(text,userId);
-    
-    const chatbotTransportObject = Chatbot.createChatbotTransportObject(resultQurey);
-    res.send(chatbotTransportObject);
+app.post('/dialogflow/sendMessage', async (req, res) => {
+  const text = req.body.message;
+  const userId = req.body.userId;
+  const resultQurey = await Chatbot.textQuery(text, userId);
+
+  const chatbotTransportObject =
+    Chatbot.createChatbotTransportObject(resultQurey);
+  res.send(chatbotTransportObject);
 });
 
-app.post('/dialogflow/eventRequest', async(req, res)=>{
-    const eventName = req.body.message;
-    const userId = req.body.userId;
-    console.log(eventName);
-    const resultQurey = await Chatbot.eventQuery(eventName,userId);
+app.post('/dialogflow/eventRequest', async (req, res) => {
+  const eventName = req.body.message;
+  const userId = req.body.userId;
+  console.log(eventName);
+  const resultQurey = await Chatbot.eventQuery(eventName, userId);
 
-    const chatbotTransportObject = Chatbot.createChatbotTransportObject(resultQurey);
-    res.send(chatbotTransportObject);
-})
+  const chatbotTransportObject =
+    Chatbot.createChatbotTransportObject(resultQurey);
+  res.send(chatbotTransportObject);
+});
 
 // app.post('/database/insert', async(req, res)=>{
 //     const text = req.body.message;
-//     executeInsert(); 
+//     executeInsert();
 // });
 
-app.post('/webhook', async(req, res)=>{
-    console.log(req.body);
-    const body = req.body;
-    
+app.post('/webhook', async (req, res) => {
+  console.log(req.body);
+  const body = req.body;
 });

@@ -2,24 +2,26 @@ import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
-  currentTheme!:string;
+  currentTheme!: string;
   constructor(@Inject(DOCUMENT) private document: Document) {
-    this.currentTheme = "lara-dark-blue";
+    this.currentTheme = 'lara-dark-blue';
   }
 
-  switchTheme(theme: string){
-    const themeLink = this.document.getElementById('app-theme')as HTMLLinkElement;
+  switchTheme(theme: string) {
+    const themeLink = this.document.getElementById(
+      'app-theme'
+    ) as HTMLLinkElement;
 
-    if(themeLink){
+    if (themeLink) {
       themeLink.href = theme + '.css';
     }
     this.currentTheme = theme;
   }
-  
-  getCurrentTheme():string{
+
+  getCurrentTheme(): string {
     return this.currentTheme;
   }
 }
