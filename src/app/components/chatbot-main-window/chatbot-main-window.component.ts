@@ -46,6 +46,8 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   isTypingContent = 'is typing...';
   panelSubHeader = 'online';
   mainWindowContainer = '';
+
+  confirmPopup = '';
   showIsTyping = false;
   slideMenuheigth = 230;
   inputDisabled = false;
@@ -316,6 +318,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   changeSizeOfComponent(size: number) {
     const zoomlevel = `zoom: ${size}`;
     this.mainWindowContainer = zoomlevel;
+    this.confirmPopup = `${size}`;
   }
 
   createTermsOfUsePopUp() {
