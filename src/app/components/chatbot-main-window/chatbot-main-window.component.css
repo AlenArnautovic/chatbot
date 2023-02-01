@@ -1,5 +1,5 @@
 :host>>> .p-panel{
-    width: 40vw;
+    width: 45vw;
     max-width: 400px;
     min-width: 250px;
 }
@@ -7,7 +7,7 @@
 :host>>> .p-panel .p-panel-content {
     padding: 0.5rem;
     height: 25vw;
-    max-height: 300px;
+    max-height: 320px;
     overflow: auto;
     display: flex;
     flex-direction: column-reverse;
@@ -94,5 +94,27 @@
 
 :host ::ng-deep .multi-choice-button-icon .p-button-icon{
     font-size: 15px;
+}
+
+:host ::ng-deep .message-service-icon .p-message-icon{
+    font-size: 1rem;
+}
+
+:host ::ng-deep .message-service-wrapper .p-message-wrapper{
+    padding: 0.5rem;
+    font-size: small;
+}
+
+:host ::ng-deep .message-service-summary .p-message-summary{
+    margin-left: 0.7rem;
+}
+:host ::ng-deep .message-service-summary .p-message-detail{
+    margin-right: 0.5rem;
+}
+:host ::ng-deep .message-inline .p-inline-message{
+    padding: 0.2rem;
+}
+:host ::ng-deep .message-inline-text .p-inline-message-text{
+    font-size:smaller;
 }
 

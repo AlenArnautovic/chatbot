@@ -7,7 +7,12 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Confirmation, ConfirmationService, MenuItem } from 'primeng/api';
+import {
+  Confirmation,
+  ConfirmationService,
+  MenuItem,
+  MessageService,
+} from 'primeng/api';
 import { CommunicationService } from 'src/app/services/communication/communication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import {
@@ -31,9 +36,11 @@ import { choiceServerObject } from 'src/app/services/communication/communication
   selector: 'app-chatbot-main-window',
   templateUrl: './chatbot-main-window.component.html',
   styleUrls: ['./chatbot-main-window.component.css'],
+  providers: [MessageService],
 })
 export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   @ViewChild('inputField') inputField!: ElementRef;
+  @ViewChild('menuButton') menuButton!: ElementRef;
 
   panelHeader = 'Chatbot';
   isTypingContent = 'is typing...';
@@ -43,7 +50,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   slideMenuheigth = 230;
   inputDisabled = false;
   inputPlaceholder = 'Say hi...';
-
+  headerButtonsHidden = true;
   inputFieldValue!: string;
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
@@ -54,11 +61,23 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     private router: Router,
     @Inject(DOCUMENT) private document: Document,
     private confirmationService: ConfirmationService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private messageService: MessageService
   ) {}
 
   ngAfterViewInit() {
     this.inputField.nativeElement.focus();
+    this.ref.detectChanges();
+    try {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Terms of Use',
+        detail:
+          'By typing the first message you agree with our terms of Use. Open the menu to view the Terms.',
+      });
+    } catch (error) {
+      this.createErrorMessage();
+    }
   }
 
   ngOnInit() {
@@ -125,32 +144,59 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async onSendMessage() {
-    this.toggleInputFooter(true);
-    if (this.inputFieldValue.trim().length > 0) {
-      this.createMessage(this.inputFieldValue, false);
-      this.showIsTyping = true;
-      const response = await this.communicationService.sendMessageToDialogFlow(
-        this.inputFieldValue
-      );
-      this.wait(800);
-      this.createMessage(response.fulfillmentText, true);
-      if (response.isMultipleChoice) {
-        this.wait(800);
-        //response.fulfillmentText.length > 0 ? this.createMessage(response.fulfillmentText, true) : null;
-        this.createMultipleChoice(
-          this.transformServerMultipleChoice(response.choiceContainer?.choices)
-        );
-      }
-    } else {
-      //TODO Error catching
-    }
+  createErrorMessage() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Oops, something went wrong.',
+    });
+  }
 
-    this.showIsTyping = false;
-    this.inputPlaceholder = 'Type Here...';
-    this.toggleInputFooter(false);
-    this.inputFieldValue = '';
-    this.inputField.nativeElement.focus();
+  async onSendMessage() {
+    try {
+      this.toggleInputFooter(true);
+      if (this.inputFieldValue.trim().length > 0) {
+        this.createMessage(this.inputFieldValue, false);
+        this.showIsTyping = true;
+        const response =
+          await this.communicationService.sendMessageToDialogFlow(
+            this.inputFieldValue
+          );
+        this.wait(1000);
+        if (
+          response != null &&
+          response.fulfillmentText &&
+          response.fulfillmentText.length > 0
+        ) {
+          this.createMessage(response.fulfillmentText, true);
+        } else {
+          this.createErrorMessage();
+        }
+        if (response.isMultipleChoice) {
+          if (
+            response.choiceContainer != null &&
+            response.choiceContainer.choices != null &&
+            response.choiceContainer.choices.length > 0
+          ) {
+            this.createMultipleChoice(
+              this.transformServerMultipleChoice(
+                response.choiceContainer?.choices
+              )
+            );
+          } else {
+            this.createErrorMessage();
+          }
+        }
+      } else {
+        //TODO Error catching
+      }
+      this.showIsTyping = false;
+      this.inputPlaceholder = 'Type Here...';
+      this.toggleInputFooter(false);
+      this.inputFieldValue = '';
+    } catch (error) {
+      this.createErrorMessage();
+    }
   }
 
   transformServerMultipleChoice(
@@ -169,8 +215,11 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
             : 'pi pi-info-circle',
         });
       }
+      return choiceObjects;
+    } else {
+      this.createErrorMessage();
     }
-    return choiceObjects;
+    return [];
   }
 
   //TODO maybe rework this fuction because it pauses the whole code
@@ -231,14 +280,15 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           : `My concern also contains ${choiceObj.label}`;
         this.createMessage(answer, false);
         this.showIsTyping = true;
+        console.log(choiceObj);
         const response =
           await this.communicationService.triggerEventInDialogFlow(
             choiceObj.event
           );
-        this.wait(800);
+
+        this.wait(1000);
         if (response.isMultipleChoice) {
           this.createMessage(response.fulfillmentText, true);
-          this.wait(800);
           this.createMultipleChoice(
             this.transformServerMultipleChoice(
               response.choiceContainer?.choices
@@ -266,6 +316,22 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   changeSizeOfComponent(size: number) {
     const zoomlevel = `zoom: ${size}`;
     this.mainWindowContainer = zoomlevel;
+  }
+
+  createTermsOfUsePopUp() {
+    const termsOfUse: Confirmation = {
+      acceptVisible: false,
+      target: this.menuButton.nativeElement,
+      rejectLabel: 'Close',
+      icon: 'pi pi-info-circle',
+      message: `By agreeing to the terms of use (typing and sending a message) you argee that 
+        we can save the in the chat mentioned information about yourself and use them for 
+        the purpose of appointment booking. We do not transfer the used data to 3rd parties.`,
+      reject: () => {
+        //
+      },
+    };
+    this.confirmationService.confirm(termsOfUse);
   }
 
   createMenu() {
@@ -362,6 +428,13 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
             },
           },
         ],
+      },
+      {
+        label: 'Terms of Use',
+        icon: 'pi pi-info-circle',
+        command: () => {
+          this.createTermsOfUsePopUp();
+        },
       },
     ];
   }

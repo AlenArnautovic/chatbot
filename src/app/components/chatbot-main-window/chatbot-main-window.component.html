@@ -9,14 +9,17 @@
                 <i *ngIf="showIsTyping"  class="pi pi-circle-fill  flex align-self-center mt-1 mr-1" style="font-size: 0.5rem; color: #f2c307"></i>
                 <label *ngIf="showIsTyping" class="flex text-sm">{{isTypingContent}}</label> 
             </div>
+            <p-message class="message-inline message-inline-text" severity="info" text="Hey! Open me for Help" styleClass="mr-2 mt-1"></p-message>
         </div>
         </ng-template>
-        <ng-template pTemplate="icons">
-            <button pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
+        <ng-template *ngIf="headerButtonsHidden" pTemplate="icons">
+            <button #menuButton pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
                 <span class="pi pi-ellipsis-h"></span>
             </button>
             <p-slideMenu #menu id="config_menu" [model]="items" [popup]="true" [viewportHeight]="slideMenuheigth" ></p-slideMenu>
     </ng-template>
+        <p-messages class="message-service-icon message-service-wrapper message-service-summary">   
+        </p-messages>
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor> 
                 <div class="message-container flex flex-row" [class]="messageObject.messageLayout.position">
