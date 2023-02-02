@@ -6,6 +6,7 @@ export class chatbotDiseaseStore {
   static backpain_orange: choiceContainer = { choices: null };
   static backpain_yellow: choiceContainer = { choices: null };
   static backpain_green: choiceContainer = { choices: null };
+  static available_diseases: choiceContainer = { choices: null };
 
   constructor() {
     chatbotDiseaseStore.backpain_red.choices =
@@ -16,6 +17,8 @@ export class chatbotDiseaseStore {
       chatbotDiseaseStore.initializeBackPainYellow();
     chatbotDiseaseStore.backpain_green.choices =
       chatbotDiseaseStore.initializeBackPainGreen();
+    chatbotDiseaseStore.available_diseases.choices =
+      chatbotDiseaseStore.createAvailableDiseases();
   }
 
   private static initializeBackPainRed(): choiceServerObject[] {
@@ -200,5 +203,16 @@ export class chatbotDiseaseStore {
       isFallback: true,
     };
     return choiceFallback;
+  }
+
+  private static createAvailableDiseases(): choiceServerObject[] {
+    const back_pain: choiceServerObject = {
+      label: 'back pain',
+      event: '',
+      description: 'Specified as any pain percieved in the back area.',
+      isFallback: false,
+    };
+
+    return [back_pain, this.createChoiceFallback()];
   }
 }

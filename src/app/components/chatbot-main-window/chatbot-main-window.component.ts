@@ -340,7 +340,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   createMenu() {
     this.items = [
       {
-        label: 'Change Theme',
+        label: 'Themes',
         icon: 'pi pi-palette',
         items: [
           {

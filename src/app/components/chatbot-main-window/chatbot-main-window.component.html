@@ -9,7 +9,7 @@
                 <i *ngIf="showIsTyping"  class="pi pi-circle-fill  flex align-self-center mt-1 mr-1" style="font-size: 0.5rem; color: #f2c307"></i>
                 <label *ngIf="showIsTyping" class="flex text-sm">{{isTypingContent}}</label> 
             </div>
-            <p-message class="message-inline message-inline-text" severity="info" text="Hey! Open me for Help" styleClass="mr-2 mt-1"></p-message>
+            <p-message [hidden]="true" class="message-inline message-inline-text" severity="info" text="Hey! Open me for Help" styleClass="mr-2 mt-1"></p-message>
         </div>
         </ng-template>
         <ng-template *ngIf="headerButtonsHidden" pTemplate="icons">

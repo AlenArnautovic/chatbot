@@ -189,6 +189,10 @@ export class Chatbot {
           chatbotTransportObject.choiceContainer =
             chatbotDiseaseStore.backpain_green;
           break;
+        case 'illness_disease_not_covered':
+          chatbotTransportObject.isMultipleChoice = true;
+          chatbotTransportObject.choiceContainer = null;
+          break;
         default:
           //
           break;
