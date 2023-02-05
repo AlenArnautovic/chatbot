@@ -1,14 +1,11 @@
 import express from 'express';
 import { Chatbot } from './chatbot/chatbotServer';
+import { ClientIdService } from './serverSupport/clientIdService';
 // import { executeInsert } from './database/snowflake';
 
 const app = express.Router();
 
 export { app as routes };
-
-app.get('/', (request, res) => res.send('Hello World'));
-
-app.get('/users', (request, res) => res.send([]));
 
 app.post('/sendMessage', (request, res) => res.send({ body: request.body }));
 
@@ -20,6 +17,11 @@ app.post('/dialogflow/sendMessage', async (req, res) => {
   const chatbotTransportObject =
     Chatbot.createChatbotTransportObject(resultQurey);
   res.send(chatbotTransportObject);
+});
+
+app.get('/registerClient', (req, res) => {
+  const clientId = ClientIdService.registerNewClient();
+  res.send({ clientId: clientId });
 });
 
 app.post('/dialogflow/eventRequest', async (req, res) => {

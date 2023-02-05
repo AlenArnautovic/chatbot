@@ -8,8 +8,13 @@ import { chatbotTransportObject } from './communicationHelper';
 })
 export class CommunicationService {
   baseServerUrl = 'http://localhost:4245/';
+  clientId = 0;
 
   constructor(private http: HttpClient) {}
+
+  getClientId() {
+    return `user-${this.clientId}`;
+  }
 
   sendMessageToServer(messageContent: string) {
     this.http
@@ -26,7 +31,7 @@ export class CommunicationService {
     const response: chatbotTransportObject = (await firstValueFrom(
       this.http.post(`${this.baseServerUrl}dialogflow/sendMessage`, {
         message: messageContent,
-        userId: 'user-1',
+        userId: this.getClientId(),
       })
     )) as chatbotTransportObject;
     return response;
@@ -39,7 +44,7 @@ export class CommunicationService {
     const response: chatbotTransportObject = (await firstValueFrom(
       this.http.post(`${this.baseServerUrl}database/insert`, {
         message: messageContent,
-        userId: 'user-1',
+        userId: this.getClientId(),
       })
     )) as chatbotTransportObject;
     return response;
@@ -51,9 +56,16 @@ export class CommunicationService {
     const response: chatbotTransportObject = (await firstValueFrom(
       this.http.post(`${this.baseServerUrl}dialogflow/eventRequest`, {
         message: eventName,
-        userId: 'user-1',
+        userId: this.getClientId(),
       })
     )) as chatbotTransportObject;
     return response;
+  }
+
+  async registerClient(): Promise<void> {
+    const response: any = await firstValueFrom(
+      this.http.get(`${this.baseServerUrl}registerClient`, {})
+    );
+    this.clientId = response.clientId;
   }
 }
