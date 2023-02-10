@@ -3,8 +3,17 @@ import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import e from 'express';
 import { v4 as uuid } from 'uuid';
 import { chatbotDiseaseStore } from './chatbotDiseaseStore';
-import { activePatiens, PatientInfo } from './chatbotPatientInfoStore';
-import { chatbotTransportObject } from './chatbotSupport';
+import {
+  activePatiens,
+  getDiseaseForId,
+  PatientInfo,
+} from './chatbotPatientInfoStore';
+import {
+  chatbotTransportObject,
+  choiceContainer,
+  ChoiceLevel,
+  Diseases,
+} from './chatbotSupport';
 import { devKeys } from './devKeyConfig';
 
 export class Chatbot {
@@ -24,7 +33,7 @@ export class Chatbot {
   });
 
   public static textQuery = async (userMessage: string, userId: string) => {
-    const fullUserId = Chatbot.sessionId + userId;
+    const fullUserId = this.getFullUserId(userId);
     const sessionPath = Chatbot.sessionClient.projectAgentSessionPath(
       Chatbot.projectId,
       fullUserId
@@ -52,7 +61,7 @@ export class Chatbot {
   public static eventQuery = async (eventName: string, userId: string) => {
     const sessionPath = Chatbot.sessionClient.projectAgentSessionPath(
       Chatbot.projectId,
-      Chatbot.sessionId + userId
+      this.getFullUserId(userId)
     );
     const request: google.cloud.dialogflow.v2.IDetectIntentRequest = {
       session: sessionPath,
@@ -72,6 +81,10 @@ export class Chatbot {
       return null;
     }
   };
+
+  private static getFullUserId(userId: string) {
+    return Chatbot.sessionId + userId;
+  }
 
   private static retiveInformationFromPatient(
     response: [
@@ -99,13 +112,31 @@ export class Chatbot {
               this.patchPatientInfo(userId, null, fields[key].stringValue);
               break;
             case 'patient_age':
-              this.patchPatientInfo(userId, null, fields[key].stringValue);
+              this.patchPatientInfo(
+                userId,
+                null,
+                null,
+                fields[key].numberValue
+              );
               break;
             case 'vNumber':
-              this.patchPatientInfo(userId, null, fields[key].stringValue);
+              this.patchPatientInfo(
+                userId,
+                null,
+                null,
+                null,
+                fields[key].numberValue
+              );
               break;
             case 'illness':
-              this.patchPatientInfo(userId, null, fields[key].stringValue);
+              this.patchPatientInfo(
+                userId,
+                null,
+                null,
+                null,
+                null,
+                fields[key].stringValue
+              );
               break;
             default:
               //
@@ -134,10 +165,8 @@ export class Chatbot {
         firstName != null ? (activePatient.firstName = firstName) : null;
         lastName != null ? (activePatient.lastName = lastName) : null;
         age != null ? (activePatient.age = age) : null;
-        vNumber != null ? activePatient.vNumber : null;
-        if (disease != null) {
-          activePatient.disease.push(disease);
-        }
+        vNumber != null ? (activePatient.vNumber = vNumber) : null;
+        disease != null ? (activePatient.disease = disease) : null;
         break;
       }
     }
@@ -148,7 +177,7 @@ export class Chatbot {
         lastName: lastName != null ? lastName : '',
         age: age != null ? age : -1,
         vNumber: vNumber != null ? vNumber : -1,
-        disease: disease != null ? [disease] : [],
+        disease: disease != null ? disease : '',
       };
       activePatiens.push(newPatient);
     }
@@ -159,20 +188,37 @@ export class Chatbot {
       google.cloud.dialogflow.v2.IDetectIntentResponse,
       google.cloud.dialogflow.v2.IDetectIntentRequest,
       any
-    ]
+    ],
+    userId: string
   ): chatbotTransportObject {
     new chatbotDiseaseStore();
     const chatbotTransportObject: chatbotTransportObject = {
+      isError: false,
       fulfillmentText: '',
       isMultipleChoice: false,
     };
     try {
       const intentName = response[0].queryResult.intent.displayName;
       switch (intentName) {
-        case 'Get_Versichertennummer':
-          chatbotTransportObject.isMultipleChoice = true;
-          chatbotTransportObject.choiceContainer =
-            chatbotDiseaseStore.backpain_red;
+        case 'Illness_Start':
+        case 'related_person_is_ill':
+        case 'user_is_well_approve':
+          if (response[0].queryResult.allRequiredParamsPresent) {
+            console.log(activePatiens);
+            const disease = getDiseaseForId(this.getFullUserId(userId));
+            if (disease != null) {
+              chatbotTransportObject.isMultipleChoice = true;
+              chatbotTransportObject.choiceContainer = this.getInfoForDisease(
+                disease,
+                ChoiceLevel.RED
+              );
+            } else {
+              chatbotTransportObject.isError = true;
+              chatbotTransportObject.errorMessage =
+                'Disease was not found. Please reload the Website.';
+            }
+          }
+
           break;
         case 'Event_Backpain_Red':
           chatbotTransportObject.isMultipleChoice = true;
@@ -201,12 +247,29 @@ export class Chatbot {
       console.log(error);
     }
     try {
-      chatbotTransportObject.fulfillmentText =
-        response[0].queryResult.fulfillmentText;
+      if (
+        response[0].queryResult.fulfillmentText != null &&
+        response[0].queryResult.fulfillmentText.length > 0
+      ) {
+        chatbotTransportObject.fulfillmentText =
+          response[0].queryResult.fulfillmentText;
+      }
     } catch (error2) {
       console.log(error2);
     }
     console.log(chatbotTransportObject);
     return chatbotTransportObject;
+  }
+
+  private static getInfoForDisease(
+    disease: Diseases,
+    choiceLevel: ChoiceLevel
+  ): choiceContainer {
+    switch (disease) {
+      case Diseases.BACKPAIN:
+        return chatbotDiseaseStore.getBackpainForChoiceLevel(choiceLevel);
+      default:
+        break;
+    }
   }
 }

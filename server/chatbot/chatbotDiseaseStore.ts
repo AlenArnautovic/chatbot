@@ -1,4 +1,8 @@
-import { choiceContainer, choiceServerObject } from './chatbotSupport';
+import {
+  choiceContainer,
+  ChoiceLevel,
+  choiceServerObject,
+} from './chatbotSupport';
 
 //DISCLAIMER: all content inside the variables is either indirectly or directly cited by the article "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
 export class chatbotDiseaseStore {
@@ -19,6 +23,21 @@ export class chatbotDiseaseStore {
       chatbotDiseaseStore.initializeBackPainGreen();
     chatbotDiseaseStore.available_diseases.choices =
       chatbotDiseaseStore.createAvailableDiseases();
+  }
+
+  public static getBackpainForChoiceLevel(
+    choiceLevel: ChoiceLevel
+  ): choiceContainer {
+    switch (choiceLevel) {
+      case ChoiceLevel.RED:
+        return this.backpain_red;
+      case ChoiceLevel.ORANGE:
+        return this.backpain_orange;
+      case ChoiceLevel.YELLOW:
+        return this.backpain_yellow;
+      case ChoiceLevel.GREEN:
+        return this.backpain_green;
+    }
   }
 
   private static initializeBackPainRed(): choiceServerObject[] {

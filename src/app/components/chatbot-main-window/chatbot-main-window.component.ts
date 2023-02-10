@@ -78,7 +78,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           'By typing the first message you agree with our terms of Use. Open the menu to view the Terms.',
       });
     } catch (error) {
-      this.createErrorMessage();
+      this.createErrorMessage('');
     }
   }
 
@@ -132,8 +132,13 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       isMultipleChoice: true,
       choiceObjects: choiceObjects,
     };
-    newMessage.messageLayout.disabled = false;
+    this.INPUT_setupForMultipleChoice();
     this.messageObjects.push(newMessage);
+  }
+
+  INPUT_setupForMultipleChoice() {
+    this.showIsTyping = false;
+    this.inputFieldValue = '';
     this.inputPlaceholder = 'Choose an option!';
     this.toggleInputFooter(true);
   }
@@ -146,59 +151,74 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     });
   }
 
-  createErrorMessage() {
+  createErrorMessage(detail: string) {
     this.messageService.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Oops, something went wrong.',
+      detail: detail.length > 0 ? detail : 'Oops, something went wrong.',
     });
   }
 
   async onSendMessage() {
     try {
-      this.toggleInputFooter(true);
       if (this.inputFieldValue.trim().length > 0) {
         this.createMessage(this.inputFieldValue, false);
-        this.showIsTyping = true;
+        this.INPUT_blockInput();
         const response =
           await this.communicationService.sendMessageToDialogFlow(
             this.inputFieldValue
           );
         this.wait(1000);
-        if (
-          response != null &&
-          response.fulfillmentText &&
-          response.fulfillmentText.length > 0
-        ) {
-          this.createMessage(response.fulfillmentText, true);
-        } else {
-          this.createErrorMessage();
-        }
-        if (response.isMultipleChoice) {
+        if (!response.isError) {
           if (
-            response.choiceContainer != null &&
-            response.choiceContainer.choices != null &&
-            response.choiceContainer.choices.length > 0
+            response != null &&
+            response.fulfillmentText &&
+            response.fulfillmentText.length > 0
           ) {
-            this.createMultipleChoice(
-              this.transformServerMultipleChoice(
-                response.choiceContainer?.choices
-              )
-            );
-          } else {
-            this.createErrorMessage();
+            this.createMessage(response.fulfillmentText, true);
           }
+
+          if (response.isMultipleChoice) {
+            if (
+              response.choiceContainer != null &&
+              response.choiceContainer.choices != null &&
+              response.choiceContainer.choices.length > 0
+            ) {
+              this.createMultipleChoice(
+                this.transformServerMultipleChoice(
+                  response.choiceContainer?.choices
+                )
+              );
+            } else {
+              this.createErrorMessage('');
+            }
+          } else {
+            this.INPUT_setupForNextInput();
+          }
+        } else {
+          this.createErrorMessage(
+            response.errorMessage != null ? response.errorMessage : ''
+          );
+          this.INPUT_setupForNextInput();
         }
       } else {
         //TODO Error catching
       }
-      this.showIsTyping = false;
-      this.inputPlaceholder = 'Type Here...';
-      this.toggleInputFooter(false);
-      this.inputFieldValue = '';
     } catch (error) {
-      this.createErrorMessage();
+      this.createErrorMessage('');
     }
+  }
+
+  INPUT_blockInput() {
+    this.toggleInputFooter(true);
+    this.showIsTyping = true;
+  }
+
+  INPUT_setupForNextInput() {
+    this.showIsTyping = false;
+    this.inputPlaceholder = 'Type Here...';
+    this.toggleInputFooter(false);
+    this.inputFieldValue = '';
   }
 
   transformServerMultipleChoice(
@@ -219,7 +239,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       }
       return choiceObjects;
     } else {
-      this.createErrorMessage();
+      this.createErrorMessage('');
     }
     return [];
   }

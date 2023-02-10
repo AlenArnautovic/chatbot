@@ -10,6 +10,8 @@ export interface choiceContainer {
 }
 
 export interface chatbotTransportObject {
+  isError: boolean;
+  errorMessage?: string;
   fulfillmentText: string;
   isMultipleChoice: boolean;
   choiceContainer?: choiceContainer;
