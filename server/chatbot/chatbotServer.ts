@@ -2,7 +2,7 @@ import dialogflow from '@google-cloud/dialogflow';
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import e from 'express';
 import { v4 as uuid } from 'uuid';
-import { chatbotDiseaseStore } from './chatbotDiseaseStore';
+import { chatbotDiseaseManager } from './chatbotDiseaseManager';
 import {
   activePatiens,
   getDiseaseForId,
@@ -191,7 +191,7 @@ export class Chatbot {
     ],
     userId: string
   ): chatbotTransportObject {
-    new chatbotDiseaseStore();
+    new chatbotDiseaseManager();
     const chatbotTransportObject: chatbotTransportObject = {
       isError: false,
       fulfillmentText: '',
@@ -208,42 +208,29 @@ export class Chatbot {
             const disease = getDiseaseForId(this.getFullUserId(userId));
             if (disease != null) {
               chatbotTransportObject.isMultipleChoice = true;
-              chatbotTransportObject.choiceContainer = this.getInfoForDisease(
-                disease,
-                ChoiceLevel.RED
-              );
+              chatbotTransportObject.choiceContainer =
+                chatbotDiseaseManager.getInfoForDisease(
+                  disease,
+                  ChoiceLevel.RED
+                );
             } else {
               chatbotTransportObject.isError = true;
               chatbotTransportObject.errorMessage =
                 'Disease was not found. Please reload the Website.';
             }
           }
-
-          break;
-        case 'Event_Backpain_Red':
-          chatbotTransportObject.isMultipleChoice = true;
-          chatbotTransportObject.choiceContainer =
-            chatbotDiseaseStore.backpain_orange;
-          break;
-        case 'Event_Backpain_Orange':
-          chatbotTransportObject.isMultipleChoice = true;
-          chatbotTransportObject.choiceContainer =
-            chatbotDiseaseStore.backpain_yellow;
-          break;
-        case 'Event_Backpain_Yellow':
-          chatbotTransportObject.isMultipleChoice = true;
-          chatbotTransportObject.choiceContainer =
-            chatbotDiseaseStore.backpain_green;
           break;
         case 'illness_disease_not_covered':
+          //TODO
           chatbotTransportObject.isMultipleChoice = true;
           chatbotTransportObject.choiceContainer = null;
           break;
         default:
-          //
+          chatbotTransportObject.isError = true;
           break;
       }
     } catch (error) {
+      chatbotTransportObject.isError = true;
       console.log(error);
     }
     try {
@@ -255,21 +242,10 @@ export class Chatbot {
           response[0].queryResult.fulfillmentText;
       }
     } catch (error2) {
+      chatbotTransportObject.isError = true;
       console.log(error2);
     }
     console.log(chatbotTransportObject);
     return chatbotTransportObject;
-  }
-
-  private static getInfoForDisease(
-    disease: Diseases,
-    choiceLevel: ChoiceLevel
-  ): choiceContainer {
-    switch (disease) {
-      case Diseases.BACKPAIN:
-        return chatbotDiseaseStore.getBackpainForChoiceLevel(choiceLevel);
-      default:
-        break;
-    }
   }
 }

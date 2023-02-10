@@ -19,6 +19,15 @@ export interface chatbotTransportObject {
 
 export enum Diseases {
   BACKPAIN = 'backpain',
+  EAR_PROBLEMS = 'ear-problems',
+  EYE_PROBLEMS = 'eye-problems',
+  SORE_THROAT = 'sore-throat',
+}
+
+export enum DialogEvents {
+  AMBULANCE_EXIT = 'ambulance_exit',
+  CALL_DOCTOR_ASAP = 'call_doctor_asap',
+  BOOK_APPOINTMENT_ASK = 'book_appointment_ask',
 }
 
 export enum ChoiceLevel {
