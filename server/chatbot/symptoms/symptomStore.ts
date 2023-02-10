@@ -1,4 +1,5 @@
 import { choiceServerObject, DialogEvents } from '../chatbotSupport';
+//DISCLAIMER: all content inside the variables is either indirectly or directly cited by the article "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
 
 export const airway_compromise: choiceServerObject = {
   label: 'Airway compromise',
@@ -88,7 +89,7 @@ export const abdominal_pain: choiceServerObject = {
 export const servere_pain: choiceServerObject = {
   label: 'Severe pain',
   event: DialogEvents.AMBULANCE_EXIT,
-  description: `Pain that disables you to do normal activities.`,
+  description: `Pain that disables the patient to do normal activities.`,
   isFallback: false,
 };
 
@@ -152,7 +153,7 @@ export const recent_problem: choiceServerObject = {
 export const altered_concious_level: choiceServerObject = {
   label: 'Altered conciousness',
   event: DialogEvents.AMBULANCE_EXIT,
-  description: `Ill person will respond to voice altered or only to pain or doesn't respond to anything.`,
+  description: `The patient will respond to voice altered or only to pain or doesn't respond to anything.`,
   isFallback: false,
 };
 
@@ -270,5 +271,116 @@ export const diplopia: choiceServerObject = {
   label: 'Diplopia',
   event: DialogEvents.BOOK_APPOINTMENT_ASK,
   description: `Double vision that resolves when one eye is closed.`,
+  isFallback: false,
+};
+
+export const stridor: choiceServerObject = {
+  label: 'Stridor',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `This may be an inspiratory or expiratory noise, or both. Stridor is
+    heard best on breathing with the mouth open.`,
+  isFallback: false,
+};
+
+export const drooling: choiceServerObject = {
+  label: 'Drooling',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `Saliva running from the mouth as a result of being unable to swallow.`,
+  isFallback: false,
+};
+
+export const known_or_likely_immunosuppression: choiceServerObject = {
+  label: 'Immunsuppression',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `Any patient who is known or likely to be immunosuppressed
+    including those on immunosuppressive drugs (including long-term
+    steroids).`,
+  isFallback: false,
+};
+
+export const special_risk_of_infection: choiceServerObject = {
+  label: 'Extended infection risk',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `Known exposure to a dangerous pathogen, or travel to an area with
+    an identified, current, serious infectious risk.`,
+  isFallback: false,
+};
+
+export const history_of_recent_foreign_travel: choiceServerObject = {
+  label: 'Foreign travel',
+  event: DialogEvents.CALL_DOCTOR_ASAP,
+  description: `Recent significant foreign travel (within 2 weeks).`,
+  isFallback: false,
+};
+
+export const rapid_onset: choiceServerObject = {
+  label: 'Rapid onset',
+  event: DialogEvents.CALL_DOCTOR_ASAP,
+  description: `Onset within the preceding 12 hours.`,
+  isFallback: false,
+};
+
+export const vomiting: choiceServerObject = {
+  label: 'Vomiting',
+  event: DialogEvents.BOOK_APPOINTMENT_ASK,
+  description: `Onset within the preceding 12 hours.`,
+  isFallback: false,
+};
+
+export const history_of_unconsciousness: choiceServerObject = {
+  label: 'Unconciousness',
+  event: DialogEvents.CALL_DOCTOR_ASAP,
+  description: `There may be a reliable witness who can state whether the patient
+    was unconscious (and for how long). If not, a patient who is
+    unable to remember the incident should be assumed to have been
+    unconscious.`,
+  isFallback: false,
+};
+
+export const temporal_scalp_tenderness: choiceServerObject = {
+  label: 'Scalp tenderness',
+  event: DialogEvents.CALL_DOCTOR_ASAP,
+  description: `Tenderness on palpation over the temporal area (especially over the
+        artery).`,
+  isFallback: false,
+};
+
+export const currently_fitting: choiceServerObject = {
+  label: 'currently fitting',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `The patients are
+    currently fitting or who have fitted.`,
+  isFallback: false,
+};
+
+export const signs_of_meningism: choiceServerObject = {
+  label: 'Meningism',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `Classically a stiff neck together with headache and photophobia.`,
+  isFallback: false,
+};
+
+export const purpura: choiceServerObject = {
+  label: 'Purpura',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `A rash on any part of the body that is caused by small haemorrhages
+    under the skin. A purpuric rash does not blanch (go white) when
+    pressure is applied to it.`,
+  isFallback: false,
+};
+
+export const non_blanching_rash: choiceServerObject = {
+  label: 'Non-blanching rash',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `A rash that does not blanch (go white) when pressure is applied to it.
+    Often tested using a glass tumbler to apply pressure as any colour
+    change can be observed through the bottom of the tumbler.`,
+  isFallback: false,
+};
+
+export const abrupt_onset: choiceServerObject = {
+  label: 'Abrupt onset',
+  event: DialogEvents.AMBULANCE_EXIT,
+  description: `Onset within seconds or minutes. May cause waking from sleep.`,
   isFallback: false,
 };

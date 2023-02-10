@@ -226,7 +226,7 @@ export class Chatbot {
           chatbotTransportObject.choiceContainer = null;
           break;
         default:
-          chatbotTransportObject.isError = true;
+          //chatbotTransportObject.isError = true;
           break;
       }
     } catch (error) {

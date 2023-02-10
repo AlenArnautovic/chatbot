@@ -25,6 +25,7 @@ import {
   very_hot,
 } from '../symptoms/symptomStore';
 
+//Emergency Triage (2013) pages 80-81
 export class back_pain {
   static backpain_red: choiceContainer = { choices: null };
   static backpain_orange: choiceContainer = { choices: null };

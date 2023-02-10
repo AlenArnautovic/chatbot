@@ -26,6 +26,7 @@ import {
   warm,
 } from '../symptoms/symptomStore';
 
+//Emergency Triage (2013) pages 102-103
 export class ear_problems {
   static ear_problems_red: choiceContainer = { choices: null };
   static ear_problems_orange: choiceContainer = { choices: null };

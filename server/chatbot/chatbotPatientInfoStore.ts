@@ -25,6 +25,14 @@ function getEnumForDiseaseName(disease: string): Diseases {
   switch (disease) {
     case 'backpain':
       return Diseases.BACKPAIN;
+    case 'ear-problems':
+      return Diseases.EAR_PROBLEMS;
+    case 'eye-problems':
+      return Diseases.EYE_PROBLEMS;
+    case 'sore-throat':
+      return Diseases.SORE_THROAT;
+    case 'headache':
+      return Diseases.HEADACHE;
     default:
       return null;
   }

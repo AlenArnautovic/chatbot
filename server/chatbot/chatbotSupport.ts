@@ -22,6 +22,7 @@ export enum Diseases {
   EAR_PROBLEMS = 'ear-problems',
   EYE_PROBLEMS = 'eye-problems',
   SORE_THROAT = 'sore-throat',
+  HEADACHE = 'headache',
 }
 
 export enum DialogEvents {

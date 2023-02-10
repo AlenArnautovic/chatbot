@@ -7,12 +7,19 @@ import {
 import { back_pain } from './diseases/back-pain';
 import { ear_problems } from './diseases/ear-problems';
 import { eye_problems } from './diseases/eye-problem';
+import { headache } from './diseases/headache';
+import { sore_throat } from './diseases/sore-throat';
 
 //DISCLAIMER: all content inside the variables is either indirectly or directly cited by the article "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
 export class chatbotDiseaseManager {
   static available_diseases: choiceContainer = { choices: null };
 
   constructor() {
+    new back_pain();
+    new ear_problems();
+    new eye_problems();
+    new sore_throat();
+    new headache();
     chatbotDiseaseManager.available_diseases.choices =
       chatbotDiseaseManager.createAvailableDiseases();
   }
@@ -28,6 +35,10 @@ export class chatbotDiseaseManager {
         return ear_problems.getSymptomForChoiceLevel(choiceLevel);
       case Diseases.EYE_PROBLEMS:
         return eye_problems.getSymptomForChoiceLevel(choiceLevel);
+      case Diseases.SORE_THROAT:
+        return sore_throat.getSymptomForChoiceLevel(choiceLevel);
+      case Diseases.HEADACHE:
+        return headache.getSymptomForChoiceLevel(choiceLevel);
       default:
         break;
     }
