@@ -166,6 +166,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
 
   async onSendMessage() {
     try {
+      this.messageService.clear();
       if (this.inputFieldValue.trim().length > 0) {
         this.createMessage(this.inputFieldValue, false);
         this.INPUT_blockInput();
@@ -173,7 +174,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           await this.communicationService.sendMessageToDialogFlow(
             this.inputFieldValue
           );
-        this.wait(1000);
+        this.wait(700);
         if (!response.isError) {
           if (
             response != null &&

@@ -228,8 +228,26 @@ export class Chatbot {
       const intentName = response[0].queryResult.intent.displayName;
       switch (intentName) {
         case 'Illness_Start':
+          this.setIsRelatedPerson(userId, false);
+          if (response[0].queryResult.allRequiredParamsPresent) {
+            this.createTransportObjectForDiseaseLevel(
+              userId,
+              chatbotTransportObject,
+              ChoiceLevel.RED
+            );
+          }
+          break;
         case 'related_person_is_ill':
         case 'user_is_well_approve':
+          this.setIsRelatedPerson(userId, true);
+          if (response[0].queryResult.allRequiredParamsPresent) {
+            this.createTransportObjectForDiseaseLevel(
+              userId,
+              chatbotTransportObject,
+              ChoiceLevel.RED
+            );
+          }
+          break;
         case 'event_selected_illness':
           if (response[0].queryResult.allRequiredParamsPresent) {
             this.createTransportObjectForDiseaseLevel(
@@ -264,6 +282,8 @@ export class Chatbot {
           chatbotTransportObject.isMultipleChoice = true;
           chatbotTransportObject.choiceContainer =
             chatbotDiseaseManager.available_diseases;
+          break;
+        case '':
           break;
         default:
           //chatbotTransportObject.isError = true;
@@ -310,5 +330,18 @@ export class Chatbot {
     chatbotTransportObject.isError = true;
     chatbotTransportObject.errorMessage =
       'Disease was not found. Please reload the Website.';
+  }
+
+  private static setIsRelatedPerson(userId: string, isRelated: boolean) {
+    this.patchPatientInfo(
+      userId,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      isRelated
+    );
   }
 }
