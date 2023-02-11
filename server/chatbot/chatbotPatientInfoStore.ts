@@ -9,7 +9,9 @@ export interface PatientInfo {
   age: number;
   vNumber: number;
   disease: string;
+  isRelatedPerson: boolean;
   symptom?: string;
+
   //TODO extend
 }
 

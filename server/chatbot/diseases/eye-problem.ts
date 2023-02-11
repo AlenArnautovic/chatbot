@@ -3,6 +3,7 @@ import {
   choiceContainer,
   ChoiceLevel,
   choiceServerObject,
+  DialogEvents,
 } from '../chatbotSupport';
 import {
   acute_chemical_eye_injury,
@@ -53,7 +54,9 @@ export class eye_problems {
   private static initializeRed(): choiceServerObject[] {
     const redList = [
       acute_chemical_eye_injury,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_ORANGE
+      ),
     ];
     return redList;
   }
@@ -64,7 +67,9 @@ export class eye_problems {
       servere_pain,
       very_hot,
       possible_sepsis,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_YELLOW
+      ),
     ];
     return orangeList;
   }
@@ -73,7 +78,9 @@ export class eye_problems {
       recent_reduced_visual_acuity,
       hot,
       moderate_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_GREEN
+      ),
     ];
     return yellowList;
   }
@@ -84,7 +91,9 @@ export class eye_problems {
       diplopia,
       recent_mild_pain,
       recent_problem,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.BOOK_APPOINTMENT_ASK
+      ),
     ];
     return greenList;
   }

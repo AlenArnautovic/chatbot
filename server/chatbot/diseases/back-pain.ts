@@ -3,6 +3,7 @@ import {
   choiceContainer,
   ChoiceLevel,
   choiceServerObject,
+  DialogEvents,
 } from '../chatbotSupport';
 import {
   abdominal_pain,
@@ -59,7 +60,9 @@ export class back_pain {
       airway_compromise,
       inadequate_breathing,
       shock,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_ORANGE
+      ),
     ];
     return redList;
   }
@@ -73,7 +76,9 @@ export class back_pain {
       aortic_pain,
       abdominal_pain,
       servere_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_YELLOW
+      ),
     ];
     return orangeList;
   }
@@ -85,7 +90,9 @@ export class back_pain {
       hot,
       colicky_pain,
       moderate_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_GREEN
+      ),
     ];
 
     return orangeList;
@@ -94,7 +101,9 @@ export class back_pain {
     const greenList = [
       recent_mild_pain,
       recent_problem,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.BOOK_APPOINTMENT_ASK
+      ),
     ];
 
     return greenList;

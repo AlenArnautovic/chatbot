@@ -17,6 +17,7 @@ import {
 import { devKeys } from './devKeyConfig';
 
 export class Chatbot {
+  static eventSplitter = '#';
   static projectId = devKeys.googleProjectId;
   static languageCode = devKeys.dialogFlowSessionLanguageCode;
 
@@ -63,6 +64,24 @@ export class Chatbot {
       Chatbot.projectId,
       this.getFullUserId(userId)
     );
+
+    if (eventName.includes(this.eventSplitter)) {
+      try {
+        const splittedEvent = eventName.split(this.eventSplitter);
+        eventName = splittedEvent[0];
+        this.patchPatientInfo(
+          this.getFullUserId(userId),
+          null,
+          null,
+          null,
+          null,
+          splittedEvent[1]
+        );
+      } catch (errorEvent) {
+        console.log(errorEvent);
+      }
+    }
+
     const request: google.cloud.dialogflow.v2.IDetectIntentRequest = {
       session: sessionPath,
       queryInput: {
@@ -155,7 +174,9 @@ export class Chatbot {
     lastName?: string,
     age?: number,
     vNumber?: number,
-    disease?: string
+    disease?: string,
+    symptom?: string,
+    isRelatedPerson?: boolean
   ) {
     const activePatientsIterator = activePatiens;
     let patientExists = false;
@@ -167,6 +188,10 @@ export class Chatbot {
         age != null ? (activePatient.age = age) : null;
         vNumber != null ? (activePatient.vNumber = vNumber) : null;
         disease != null ? (activePatient.disease = disease) : null;
+        symptom != null ? (activePatient.symptom = symptom) : null;
+        isRelatedPerson != null
+          ? (activePatient.isRelatedPerson = isRelatedPerson)
+          : null;
         break;
       }
     }
@@ -178,6 +203,8 @@ export class Chatbot {
         age: age != null ? age : -1,
         vNumber: vNumber != null ? vNumber : -1,
         disease: disease != null ? disease : '',
+        symptom: symptom != null ? symptom : '',
+        isRelatedPerson: isRelatedPerson != null ? isRelatedPerson : false,
       };
       activePatiens.push(newPatient);
     }
@@ -203,27 +230,40 @@ export class Chatbot {
         case 'Illness_Start':
         case 'related_person_is_ill':
         case 'user_is_well_approve':
+        case 'event_selected_illness':
           if (response[0].queryResult.allRequiredParamsPresent) {
-            console.log(activePatiens);
-            const disease = getDiseaseForId(this.getFullUserId(userId));
-            if (disease != null) {
-              chatbotTransportObject.isMultipleChoice = true;
-              chatbotTransportObject.choiceContainer =
-                chatbotDiseaseManager.getInfoForDisease(
-                  disease,
-                  ChoiceLevel.RED
-                );
-            } else {
-              chatbotTransportObject.isError = true;
-              chatbotTransportObject.errorMessage =
-                'Disease was not found. Please reload the Website.';
-            }
+            this.createTransportObjectForDiseaseLevel(
+              userId,
+              chatbotTransportObject,
+              ChoiceLevel.RED
+            );
           }
           break;
+        case 'event_choice_orange':
+          this.createTransportObjectForDiseaseLevel(
+            userId,
+            chatbotTransportObject,
+            ChoiceLevel.ORANGE
+          );
+          break;
+        case 'event_choice_yellow':
+          this.createTransportObjectForDiseaseLevel(
+            userId,
+            chatbotTransportObject,
+            ChoiceLevel.YELLOW
+          );
+          break;
+        case 'event_choice_green':
+          this.createTransportObjectForDiseaseLevel(
+            userId,
+            chatbotTransportObject,
+            ChoiceLevel.GREEN
+          );
+          break;
         case 'illness_disease_not_covered':
-          //TODO
           chatbotTransportObject.isMultipleChoice = true;
-          chatbotTransportObject.choiceContainer = null;
+          chatbotTransportObject.choiceContainer =
+            chatbotDiseaseManager.available_diseases;
           break;
         default:
           //chatbotTransportObject.isError = true;
@@ -247,5 +287,28 @@ export class Chatbot {
     }
     console.log(chatbotTransportObject);
     return chatbotTransportObject;
+  }
+
+  private static createTransportObjectForDiseaseLevel(
+    userId: string,
+    chatbotTransportObject: chatbotTransportObject,
+    choiceLevel: ChoiceLevel
+  ) {
+    const disease = getDiseaseForId(this.getFullUserId(userId));
+    if (disease != null) {
+      chatbotTransportObject.isMultipleChoice = true;
+      chatbotTransportObject.choiceContainer =
+        chatbotDiseaseManager.getInfoForDisease(disease, choiceLevel);
+    } else {
+      this.createErrorForNotfoundDisease(chatbotTransportObject);
+    }
+  }
+
+  private static createErrorForNotfoundDisease(
+    chatbotTransportObject: chatbotTransportObject
+  ) {
+    chatbotTransportObject.isError = true;
+    chatbotTransportObject.errorMessage =
+      'Disease was not found. Please reload the Website.';
   }
 }

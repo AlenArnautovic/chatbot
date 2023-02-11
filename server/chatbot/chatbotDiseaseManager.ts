@@ -2,6 +2,7 @@ import {
   choiceContainer,
   ChoiceLevel,
   choiceServerObject,
+  DialogEvents,
   Diseases,
 } from './chatbotSupport';
 import { back_pain } from './diseases/back-pain';
@@ -57,20 +58,51 @@ export class chatbotDiseaseManager {
 
   private static createAvailableDiseases(): choiceServerObject[] {
     const back_pain: choiceServerObject = {
-      label: 'back pain',
-      event: '',
+      label: 'Back pain',
+      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.BACKPAIN,
       description: 'Specified as any pain percieved in the back area.',
       isFallback: false,
     };
 
     const ear_problems: choiceServerObject = {
-      label: 'ear problems',
-      event: '',
+      label: 'Ear problems',
+      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.EAR_PROBLEMS,
       description:
-        'Specified as any pain radiating around the ear or hearing problems.',
+        'Specified as any pain radiating from the ear or hearing problems.',
       isFallback: false,
     };
 
-    return [back_pain, ear_problems, this.createChoiceFallback('')];
+    const eye_problems: choiceServerObject = {
+      label: 'Eye problems',
+      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.EYE_PROBLEMS,
+      description:
+        'Specified as any pain radiating from the eye or vision related problems.',
+      isFallback: false,
+    };
+
+    const headache: choiceServerObject = {
+      label: 'Headache',
+      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.HEADACHE,
+      description:
+        'Specified as any pain radiating from the forhead or upper head area.',
+      isFallback: false,
+    };
+
+    const throat: choiceServerObject = {
+      label: 'Sore throat',
+      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.SORE_THROAT,
+      description:
+        'Specified as any pain radiating from the throat or swallowing problems.',
+      isFallback: false,
+    };
+
+    return [
+      back_pain,
+      ear_problems,
+      eye_problems,
+      headache,
+      throat,
+      this.createChoiceFallback(DialogEvents.EVENT_SELECTED_ILLNESS_NOT_THERE),
+    ];
   }
 }

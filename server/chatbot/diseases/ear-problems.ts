@@ -3,6 +3,7 @@ import {
   choiceContainer,
   ChoiceLevel,
   choiceServerObject,
+  DialogEvents,
 } from '../chatbotSupport';
 import {
   airway_compromise,
@@ -60,7 +61,9 @@ export class ear_problems {
       airway_compromise,
       inadequate_breathing,
       shock,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_ORANGE
+      ),
     ];
     return redList;
   }
@@ -71,7 +74,9 @@ export class ear_problems {
       very_hot,
       possible_sepsis,
       servere_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_YELLOW
+      ),
     ];
     return orangeList;
   }
@@ -82,7 +87,9 @@ export class ear_problems {
       persistent_vomiting,
       hot,
       moderate_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_GREEN
+      ),
     ];
     return yellowList;
   }
@@ -94,7 +101,9 @@ export class ear_problems {
       warm,
       recent_mild_pain,
       recent_problem,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.BOOK_APPOINTMENT_ASK
+      ),
     ];
     return greenList;
   }

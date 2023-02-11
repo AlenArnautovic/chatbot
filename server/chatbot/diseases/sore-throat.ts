@@ -3,6 +3,7 @@ import {
   choiceContainer,
   ChoiceLevel,
   choiceServerObject,
+  DialogEvents,
 } from '../chatbotSupport';
 import {
   airway_compromise,
@@ -59,7 +60,9 @@ export class sore_throat {
       drooling,
       airway_compromise,
       inadequate_breathing,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_ORANGE
+      ),
     ];
     return redList;
   }
@@ -71,7 +74,9 @@ export class sore_throat {
       very_hot,
       possible_sepsis,
       servere_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_YELLOW
+      ),
     ];
     return orangeList;
   }
@@ -81,7 +86,9 @@ export class sore_throat {
       history_of_recent_foreign_travel,
       hot,
       moderate_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_GREEN
+      ),
     ];
     return yellowList;
   }
@@ -90,7 +97,9 @@ export class sore_throat {
       warm,
       recent_mild_pain,
       recent_problem,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.BOOK_APPOINTMENT_ASK
+      ),
     ];
     return greenList;
   }

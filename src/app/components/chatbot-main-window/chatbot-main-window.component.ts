@@ -19,7 +19,6 @@ import {
   ChoiceObject,
   leftMessageLayout,
   MessageObject,
-  multipleChoiceLayout,
   rightMessageLayout,
 } from './chatbotMainSupport';
 import {
@@ -128,7 +127,13 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   createMultipleChoice(choiceObjects: ChoiceObject[]) {
     const newMessage: MessageObject = {
       content: '',
-      messageLayout: multipleChoiceLayout,
+      messageLayout: {
+        position: 'flex',
+        backgroundColor: '',
+        textColor: '',
+        messageType: messageTypes.multipleChoice,
+        disabled: false,
+      },
       isMultipleChoice: true,
       choiceObjects: choiceObjects,
     };
@@ -302,12 +307,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           : `My concern also contains ${choiceObj.label}`;
         this.createMessage(answer, false);
         this.showIsTyping = true;
-        console.log(choiceObj);
         const response =
           await this.communicationService.triggerEventInDialogFlow(
             choiceObj.event
           );
-
         this.wait(1000);
         if (response.isMultipleChoice) {
           this.createMessage(response.fulfillmentText, true);
@@ -316,7 +319,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
               response.choiceContainer?.choices
             )
           );
-          console.log(this.messageObjects);
         } else {
           this.createMessage(response.fulfillmentText, true);
         }

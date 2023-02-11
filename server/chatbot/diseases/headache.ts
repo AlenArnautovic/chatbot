@@ -3,6 +3,7 @@ import {
   choiceContainer,
   ChoiceLevel,
   choiceServerObject,
+  DialogEvents,
 } from '../chatbotSupport';
 import {
   abrupt_onset,
@@ -67,7 +68,9 @@ export class headache {
       inadequate_breathing,
       shock,
       currently_fitting,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_ORANGE
+      ),
     ];
     return redList;
   }
@@ -83,7 +86,9 @@ export class headache {
       very_hot,
       possible_sepsis,
       servere_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_YELLOW
+      ),
     ];
     return orangeList;
   }
@@ -96,7 +101,9 @@ export class headache {
       persistent_vomiting,
       hot,
       moderate_pain,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.EVENT_CHOICE_GREEN
+      ),
     ];
     return yellowList;
   }
@@ -106,7 +113,9 @@ export class headache {
       warm,
       recent_mild_pain,
       recent_problem,
-      chatbotDiseaseManager.createChoiceFallback(''),
+      chatbotDiseaseManager.createChoiceFallback(
+        DialogEvents.BOOK_APPOINTMENT_ASK
+      ),
     ];
     return greenList;
   }
