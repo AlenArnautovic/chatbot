@@ -12,6 +12,7 @@ import {
   chatbotTransportObject,
   choiceContainer,
   ChoiceLevel,
+  DialogEvents,
   Diseases,
 } from './chatbotSupport';
 import { devKeys } from './devKeyConfig';
@@ -81,16 +82,34 @@ export class Chatbot {
         console.log(errorEvent);
       }
     }
-
-    const request: google.cloud.dialogflow.v2.IDetectIntentRequest = {
-      session: sessionPath,
-      queryInput: {
-        event: {
-          name: eventName,
-          languageCode: Chatbot.languageCode,
+    let request: google.cloud.dialogflow.v2.IDetectIntentRequest;
+    if (eventName == DialogEvents.CALL_DOCTOR_ASAP) {
+      request = {
+        session: sessionPath,
+        queryInput: {
+          event: {
+            name: eventName,
+            languageCode: Chatbot.languageCode,
+            parameters: {
+              fields: {
+                //TODO get phone number of doctors office
+                number: { numberValue: 12345678 },
+              },
+            },
+          },
         },
-      },
-    };
+      };
+    } else {
+      request = {
+        session: sessionPath,
+        queryInput: {
+          event: {
+            name: eventName,
+            languageCode: Chatbot.languageCode,
+          },
+        },
+      };
+    }
 
     try {
       const response = await Chatbot.sessionClient.detectIntent(request);
