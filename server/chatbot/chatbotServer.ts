@@ -6,6 +6,7 @@ import { chatbotDiseaseManager } from './chatbotDiseaseManager';
 import {
   activePatiens,
   getDiseaseForId,
+  getIsRelatedForId,
   PatientInfo,
 } from './chatbotPatientInfoStore';
 import {
@@ -82,35 +83,11 @@ export class Chatbot {
         console.log(errorEvent);
       }
     }
-    let request: google.cloud.dialogflow.v2.IDetectIntentRequest;
-    if (eventName == DialogEvents.CALL_DOCTOR_ASAP) {
-      request = {
-        session: sessionPath,
-        queryInput: {
-          event: {
-            name: eventName,
-            languageCode: Chatbot.languageCode,
-            parameters: {
-              fields: {
-                //TODO get phone number of doctors office
-                number: { numberValue: 12345678 },
-              },
-            },
-          },
-        },
-      };
-    } else {
-      request = {
-        session: sessionPath,
-        queryInput: {
-          event: {
-            name: eventName,
-            languageCode: Chatbot.languageCode,
-          },
-        },
-      };
-    }
-
+    const request = this.buildEventRequest(
+      eventName,
+      this.getFullUserId(userId),
+      sessionPath
+    );
     try {
       const response = await Chatbot.sessionClient.detectIntent(request);
       return response;
@@ -119,6 +96,75 @@ export class Chatbot {
       return null;
     }
   };
+
+  private static buildEventRequest(
+    eventName: string,
+    userId: string,
+    sessionPath: string
+  ): google.cloud.dialogflow.v2.IDetectIntentRequest {
+    let request: google.cloud.dialogflow.v2.IDetectIntentRequest;
+    switch (eventName) {
+      case DialogEvents.BOOK_APPOINTMENT_ASK:
+        if (getIsRelatedForId(userId)) {
+          eventName = DialogEvents.EVENT_BOOK_APPOINTMENT_RELATED_ASK;
+        }
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+            },
+          },
+        };
+        break;
+      case DialogEvents.EVENT_ASK_WHO_IS_ILL:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+              parameters: {
+                fields: {
+                  illness: { stringValue: getDiseaseForId(userId) },
+                },
+              },
+            },
+          },
+        };
+        break;
+      case DialogEvents.CALL_DOCTOR_ASAP:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+              parameters: {
+                fields: {
+                  //TODO get phone number of doctors office
+                  number: { numberValue: 12345678 },
+                },
+              },
+            },
+          },
+        };
+        break;
+      default:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+            },
+          },
+        };
+        break;
+    }
+    return request;
+  }
 
   private static getFullUserId(userId: string) {
     return Chatbot.sessionId + userId;
@@ -176,6 +222,19 @@ export class Chatbot {
                 fields[key].stringValue
               );
               break;
+            case 'phone-number':
+              this.patchPatientInfo(
+                userId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                fields[key].numberValue
+              );
+              break;
             default:
               //
               break;
@@ -195,7 +254,8 @@ export class Chatbot {
     vNumber?: number,
     disease?: string,
     symptom?: string,
-    isRelatedPerson?: boolean
+    isRelatedPerson?: boolean,
+    phoneNumber?: number
   ) {
     const activePatientsIterator = activePatiens;
     let patientExists = false;
@@ -211,6 +271,7 @@ export class Chatbot {
         isRelatedPerson != null
           ? (activePatient.isRelatedPerson = isRelatedPerson)
           : null;
+        phoneNumber != null ? (activePatient.phoneNumber = phoneNumber) : null;
         break;
       }
     }
@@ -224,6 +285,7 @@ export class Chatbot {
         disease: disease != null ? disease : '',
         symptom: symptom != null ? symptom : '',
         isRelatedPerson: isRelatedPerson != null ? isRelatedPerson : false,
+        phoneNumber: phoneNumber != null ? phoneNumber : null,
       };
       activePatiens.push(newPatient);
     }
@@ -247,7 +309,8 @@ export class Chatbot {
       const intentName = response[0].queryResult.intent.displayName;
       switch (intentName) {
         case 'Illness_Start':
-          this.setIsRelatedPerson(userId, false);
+        case 'ask_who_is_ill_person':
+          this.setIsRelatedPerson(this.getFullUserId(userId), false);
           if (response[0].queryResult.allRequiredParamsPresent) {
             this.createTransportObjectForDiseaseLevel(
               userId,
@@ -258,16 +321,8 @@ export class Chatbot {
           break;
         case 'related_person_is_ill':
         case 'user_is_well_approve':
-          this.setIsRelatedPerson(userId, true);
-          if (response[0].queryResult.allRequiredParamsPresent) {
-            this.createTransportObjectForDiseaseLevel(
-              userId,
-              chatbotTransportObject,
-              ChoiceLevel.RED
-            );
-          }
-          break;
-        case 'event_selected_illness':
+        case 'ask_who_is_ill_related':
+          this.setIsRelatedPerson(this.getFullUserId(userId), true);
           if (response[0].queryResult.allRequiredParamsPresent) {
             this.createTransportObjectForDiseaseLevel(
               userId,

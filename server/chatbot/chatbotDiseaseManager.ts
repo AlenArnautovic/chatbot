@@ -59,14 +59,14 @@ export class chatbotDiseaseManager {
   private static createAvailableDiseases(): choiceServerObject[] {
     const back_pain: choiceServerObject = {
       label: 'Back pain',
-      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.BACKPAIN,
+      event: DialogEvents.EVENT_ASK_WHO_IS_ILL + '#' + Diseases.BACKPAIN,
       description: 'Specified as any pain percieved in the back area.',
       isFallback: false,
     };
 
     const ear_problems: choiceServerObject = {
       label: 'Ear problems',
-      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.EAR_PROBLEMS,
+      event: DialogEvents.EVENT_ASK_WHO_IS_ILL + '#' + Diseases.EAR_PROBLEMS,
       description:
         'Specified as any pain radiating from the ear or hearing problems.',
       isFallback: false,
@@ -74,7 +74,7 @@ export class chatbotDiseaseManager {
 
     const eye_problems: choiceServerObject = {
       label: 'Eye problems',
-      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.EYE_PROBLEMS,
+      event: DialogEvents.EVENT_ASK_WHO_IS_ILL + '#' + Diseases.EYE_PROBLEMS,
       description:
         'Specified as any pain radiating from the eye or vision related problems.',
       isFallback: false,
@@ -82,7 +82,7 @@ export class chatbotDiseaseManager {
 
     const headache: choiceServerObject = {
       label: 'Headache',
-      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.HEADACHE,
+      event: DialogEvents.EVENT_ASK_WHO_IS_ILL + '#' + Diseases.HEADACHE,
       description:
         'Specified as any pain radiating from the forhead or upper head area.',
       isFallback: false,
@@ -90,7 +90,7 @@ export class chatbotDiseaseManager {
 
     const throat: choiceServerObject = {
       label: 'Sore throat',
-      event: DialogEvents.EVENT_SELECTED_ILLNESS + '#' + Diseases.SORE_THROAT,
+      event: DialogEvents.EVENT_ASK_WHO_IS_ILL + '#' + Diseases.SORE_THROAT,
       description:
         'Specified as any pain radiating from the throat or swallowing problems.',
       isFallback: false,

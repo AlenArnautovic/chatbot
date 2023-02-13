@@ -10,6 +10,7 @@ export interface PatientInfo {
   vNumber: number;
   disease: string;
   isRelatedPerson: boolean;
+  phoneNumber: number;
   symptom?: string;
 
   //TODO extend
@@ -21,6 +22,15 @@ export function getDiseaseForId(userId: string): Diseases {
       return getEnumForDiseaseName(patient.disease);
     }
   }
+}
+
+export function getIsRelatedForId(userId: string): boolean {
+  for (const patient of activePatiens) {
+    if (patient.userId == userId) {
+      return patient.isRelatedPerson;
+    }
+  }
+  return false;
 }
 
 function getEnumForDiseaseName(disease: string): Diseases {

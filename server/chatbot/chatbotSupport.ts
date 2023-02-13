@@ -32,8 +32,9 @@ export enum DialogEvents {
   EVENT_CHOICE_ORANGE = 'event_choice_orange',
   EVENT_CHOICE_YELLOW = 'event_choice_yellow',
   EVENT_CHOICE_GREEN = 'event_choice_green',
-  EVENT_SELECTED_ILLNESS = 'event_selected_illness',
+  EVENT_ASK_WHO_IS_ILL = 'event_ask_who_is_ill',
   EVENT_SELECTED_ILLNESS_NOT_THERE = 'event_selected_illness_not_there',
+  EVENT_BOOK_APPOINTMENT_RELATED_ASK = 'event_book_appointment_related_ask',
 }
 
 export enum ChoiceLevel {
