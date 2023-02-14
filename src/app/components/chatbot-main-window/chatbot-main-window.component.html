@@ -1,7 +1,13 @@
 <div [style]="mainWindowContainer" style="width: 100%;" class="flex justify-content-center">
     <p-panel [toggleable]="true">
         <ng-template pTemplate="header">
+            <div class="flex">
+                
+                <p-avatar class="flex mr-2" size="large" >
+                    <i class="pi pi-user"></i>
+                </p-avatar>
             <div class="flex flex-column">
+                
             <label class="flex text-lg font-medium"> {{panelHeader}}</label>
             <div class="flex flex-row align-content-center">
                 <i *ngIf="!showIsTyping"  class="pi pi-circle-fill flex align-self-center mt-1 mr-1" style="font-size: 0.5rem; color: #04d190"></i>
@@ -11,6 +17,7 @@
             </div>
             <p-message [hidden]="true" class="message-inline message-inline-text" severity="info" text="Hey! Open me for Help" styleClass="mr-2 mt-1"></p-message>
         </div>
+    </div>
         </ng-template>
         <ng-template *ngIf="headerButtonsHidden" pTemplate="icons">
             <button #menuButton pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">

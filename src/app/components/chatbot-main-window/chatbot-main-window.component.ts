@@ -41,7 +41,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   @ViewChild('inputField') inputField!: ElementRef;
   @ViewChild('menuButton') menuButton!: ElementRef;
 
-  panelHeader = 'Chatbot';
+  panelHeader = 'MeoBot';
   isTypingContent = 'is typing...';
   panelSubHeader = 'online';
   mainWindowContainer = '';

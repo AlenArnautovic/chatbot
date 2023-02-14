@@ -19,11 +19,13 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { AvatarModule } from 'primeng/avatar';
 
 @NgModule({
   declarations: [AppComponent, ChatbotMainWindowComponent, LoginComponent],
   imports: [
     BrowserModule,
+    AvatarModule,
     HttpClientModule,
     ConfirmDialogModule,
     MessagesModule,
