@@ -20,13 +20,25 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { AutoFocusModule } from 'primeng/autofocus';
+import { ChatbotInplaceComponent } from './components/chatbot-inplace/chatbot-inplace.component';
+import { InplaceModule } from 'primeng/inplace';
 
 @NgModule({
-  declarations: [AppComponent, ChatbotMainWindowComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    ChatbotMainWindowComponent,
+    LoginComponent,
+    ChatbotInplaceComponent,
+  ],
   imports: [
     BrowserModule,
+    BadgeModule,
     AvatarModule,
+    AutoFocusModule,
     HttpClientModule,
+    InplaceModule,
     ConfirmDialogModule,
     MessagesModule,
     MessageModule,
@@ -41,7 +53,7 @@ import { AvatarModule } from 'primeng/avatar';
     MenuModule,
     SlideMenuModule,
     RouterModule.forRoot([
-      { path: '', component: ChatbotMainWindowComponent },
+      { path: '', component: ChatbotInplaceComponent },
       { path: 'login', component: LoginComponent },
     ]),
   ],

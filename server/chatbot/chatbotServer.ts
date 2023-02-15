@@ -357,7 +357,10 @@ export class Chatbot {
           chatbotTransportObject.choiceContainer =
             chatbotDiseaseManager.available_diseases;
           break;
-        case '':
+        case 'appointment_date_time':
+          if (response[0].queryResult.allRequiredParamsPresent) {
+            //TODO
+          }
           break;
         default:
           //chatbotTransportObject.isError = true;

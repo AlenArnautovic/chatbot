@@ -1,9 +1,8 @@
 <div [style]="mainWindowContainer" style="width: 100%;" class="flex justify-content-center">
-    <p-panel [toggleable]="true">
+    <p-panel>
         <ng-template pTemplate="header">
-            <div class="flex">
-                
-                <p-avatar class="flex mr-2" size="large" >
+            <div class="flex"> 
+                <p-avatar class="flex mr-2" size="large">
                     <i class="pi pi-user"></i>
                 </p-avatar>
             <div class="flex flex-column">
@@ -22,6 +21,9 @@
         <ng-template *ngIf="headerButtonsHidden" pTemplate="icons">
             <button #menuButton pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
                 <span class="pi pi-ellipsis-h"></span>
+            </button>
+            <button class="p-panel-header-icon p-link" (click)="closeWindow()">
+                <span class="pi pi-times"></span>
             </button>
             <p-slideMenu #menu id="config_menu" [model]="items" [popup]="true" [viewportHeight]="slideMenuheigth"></p-slideMenu>
     </ng-template>
@@ -44,12 +46,12 @@
         </div>
         <ng-template pTemplate="footer">
             <div (keydown.enter)="onSendMessage()" class="flex justify-content-center">
-            <input #inputField [disabled]="inputDisabled" [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" [placeholder]="inputPlaceholder" [autofocus]="true" pInputText/>
+            <input #inputField [disabled]="inputDisabled" [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" [placeholder]="inputPlaceholder" pAutoFocus [autofocus]="InputAutoFocus" pInputText/>
             <button [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane"></button>
         </div>
         </ng-template>
     </p-panel>
 </div>
-<button class="login" (click)="logIn()">Login Page</button>
+<button hidden class="login" (click)="logIn()">Login Page</button>
 <p-confirmPopup  [style]="{'boxShadow':'0px 20px 30px 10px black', 'width':'30vw', 'maxWidth':'350px', 'zoom': confirmPopup}" rejectButtonStyleClass="p-button-outlined" [autoZIndex]="true"></p-confirmPopup>
  

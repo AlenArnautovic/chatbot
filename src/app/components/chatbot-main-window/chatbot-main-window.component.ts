@@ -3,8 +3,10 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Inject,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import {
@@ -40,8 +42,9 @@ import { choiceServerObject } from 'src/app/services/communication/communication
 export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   @ViewChild('inputField') inputField!: ElementRef;
   @ViewChild('menuButton') menuButton!: ElementRef;
+  @Output() messageEvent = new EventEmitter<string>();
 
-  panelHeader = 'MeoBot';
+  panelHeader = 'Chatbot';
   isTypingContent = 'is typing...';
   panelSubHeader = 'online';
   mainWindowContainer = '';
@@ -56,6 +59,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   items!: MenuItem[];
   messageObjects: MessageObject[] = [];
   backgroundColor = 'custom-card-body';
+
+  InputAutoFocus = true;
+  avatarBadgeContent = 'Hey!';
+
   constructor(
     private themeSerivce: ThemeService,
     private communicationService: CommunicationService,
@@ -67,7 +74,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    this.inputField.nativeElement.focus();
     this.ref.detectChanges();
     try {
       this.messageService.add({
@@ -83,6 +89,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.createMenu();
+  }
+
+  closeWindow() {
+    this.messageEvent.emit('closeWindow');
   }
 
   logIn() {
