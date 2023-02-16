@@ -54,7 +54,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   slideMenuheigth = 230;
   sendButtonDelay = 1000;
   inputDisabled = false;
-  inputPlaceholder = 'Say hi...';
+  inputPlaceholder = 'Say Hi...';
   headerButtonsHidden = true;
   inputFieldValue!: string;
   items!: MenuItem[];
@@ -82,6 +82,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       savedMessages.length > this.messageObjects.length
     ) {
       this.messageObjects = savedMessages;
+      this.INPUT_setInputFieldstatus();
     }
     try {
       if (this.messageObjects != null && this.messageObjects.length > 0) {
@@ -175,6 +176,23 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.toggleInputFooter(true);
   }
 
+  INPUT_setInputFieldstatus() {
+    if (this.messageObjects.length == 0) {
+      this.inputPlaceholder = 'Say Hi...';
+      this.toggleInputFooter(false);
+    } else if (
+      this.messageObjects[this.messageObjects.length - 1].isMultipleChoice
+    ) {
+      this.inputPlaceholder = 'Choose an Option...';
+      this.toggleInputFooter(true);
+    } else if (
+      !this.messageObjects[this.messageObjects.length - 1].isMultipleChoice
+    ) {
+      this.inputPlaceholder = 'Type Here...';
+      this.toggleInputFooter(false);
+    }
+  }
+
   disableAllChoiceButtons() {
     this.messageObjects.forEach((messageObject) => {
       if (messageObject.isMultipleChoice) {
@@ -257,8 +275,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
 
   INPUT_setupForNextInput() {
     this.showIsTyping = false;
-    this.inputPlaceholder = 'Type Here...';
-    this.toggleInputFooter(false);
+    this.INPUT_setInputFieldstatus();
     this.inputFieldValue = '';
   }
 
@@ -335,7 +352,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       acceptLabel: choiceObj.isFallback ? 'Yes, I am sure' : 'I consent',
       rejectLabel: 'Back',
       accept: async () => {
-        this.toggleInputFooter(false);
         this.disableAllChoiceButtons();
         this.ref.detectChanges();
         const answer = choiceObj.isFallback
@@ -359,6 +375,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           this.createMessage(response.fulfillmentText, true);
         }
         this.showIsTyping = false;
+        this.INPUT_setInputFieldstatus();
       },
       reject: () => {
         //
