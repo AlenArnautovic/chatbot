@@ -9,10 +9,10 @@
                 
             <label class="flex text-lg font-medium"> {{panelHeader}}</label>
             <div class="flex flex-row align-content-center">
-                <i *ngIf="!showIsTyping"  class="pi pi-circle-fill flex align-self-center mt-1 mr-1" style="font-size: 0.5rem; color: #04d190"></i>
-                <label *ngIf="!showIsTyping"  class="flex text-sm flex align-self-center"> {{panelSubHeader}}</label> 
-                <i *ngIf="showIsTyping"  class="pi pi-circle-fill  flex align-self-center mt-1 mr-1" style="font-size: 0.5rem; color: #f2c307"></i>
-                <label *ngIf="showIsTyping" class="flex text-sm">{{isTypingContent}}</label> 
+                <i *ngIf="!showIsTyping"  class="pi pi-circle-fill flex align-self-center mt-1 mr-1 fadein" style="font-size: 0.5rem; color: #04d190"></i>
+                <label *ngIf="!showIsTyping"  class="flex text-sm flex align-self-center fadein"> {{panelSubHeader}}</label> 
+                <i *ngIf="showIsTyping"  class="pi pi-circle-fill  flex align-self-center mt-1 mr-1 fadein" style="font-size: 0.5rem; color: #f2c307"></i>
+                <label *ngIf="showIsTyping" class="flex text-sm fadein">{{isTypingContent}}</label> 
             </div>
             <p-message [hidden]="true" class="message-inline message-inline-text" severity="info" text="Hey! Open me for Help" styleClass="mr-2 mt-1"></p-message>
         </div>

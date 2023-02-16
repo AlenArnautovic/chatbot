@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { MessageObject } from 'src/app/components/chatbot-main-window/chatbotMainSupport';
 import { chatbotTransportObject } from './communicationHelper';
 
 @Injectable({
@@ -9,11 +10,20 @@ import { chatbotTransportObject } from './communicationHelper';
 export class CommunicationService {
   baseServerUrl = 'http://localhost:4245/';
   clientId = 0;
+  private messageObjects: MessageObject[] = [];
 
   constructor(private http: HttpClient) {}
 
   getClientId() {
     return `user-${this.clientId}`;
+  }
+
+  saveMessages(messageObjects: MessageObject[]) {
+    this.messageObjects = messageObjects;
+  }
+
+  getSavedMessages(): MessageObject[] {
+    return this.messageObjects;
   }
 
   sendMessageToServer(messageContent: string) {

@@ -75,14 +75,29 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    this.ref.detectChanges();
+    const savedMessages = this.communicationService.getSavedMessages();
+    if (
+      savedMessages != null &&
+      savedMessages.length > 0 &&
+      savedMessages.length > this.messageObjects.length
+    ) {
+      this.messageObjects = savedMessages;
+    }
     try {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Terms of Use',
-        detail:
-          'By typing the first message you agree with our terms of Use. Open the menu to view the Terms.',
-      });
+      if (this.messageObjects != null && this.messageObjects.length > 0) {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Reload',
+          detail: 'Reloaded conversation',
+        });
+      } else {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Terms of Use',
+          detail:
+            'By typing the first message you agree with our terms of Use. Open the menu to view the Terms.',
+        });
+      }
     } catch (error) {
       this.createErrorMessage('');
     }
@@ -94,6 +109,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
 
   closeWindow() {
     this.messageEvent.emit('closeWindow');
+    this.communicationService.saveMessages(this.messageObjects);
   }
 
   logIn() {
@@ -224,7 +240,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       } else {
         this.messageService.add({
           severity: 'info',
-          summary: 'Message',
+          summary: 'Hey',
           detail: 'type something :))',
         });
       }
