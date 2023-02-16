@@ -1,4 +1,4 @@
-<div [style]="mainWindowContainer" style="width: 100%;" class="flex justify-content-center">
+<div [style]="mainWindowContainer" style="width: 100%;" class="flex justify-content-center zoomin fadeout">
     <p-panel>
         <ng-template pTemplate="header">
             <div class="flex"> 
@@ -19,10 +19,10 @@
     </div>
         </ng-template>
         <ng-template *ngIf="headerButtonsHidden" pTemplate="icons">
-            <button #menuButton pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
+            <button #menuButton pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)" pTooltip="Open Menu" tooltipPosition="top">
                 <span class="pi pi-ellipsis-h"></span>
             </button>
-            <button class="p-panel-header-icon p-link" (click)="closeWindow()">
+            <button class="p-panel-header-icon p-link" (click)="closeWindow()" pTooltip="Close Chatbot" tooltipPosition="top">
                 <span class="pi pi-times"></span>
             </button>
             <p-slideMenu #menu id="config_menu" [model]="items" [popup]="true" [viewportHeight]="slideMenuheigth"></p-slideMenu>
@@ -31,7 +31,7 @@
         </p-messages>
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor> 
-                <div class="message-container flex flex-row" [class]="messageObject.messageLayout.position">
+                <div class="message-container flex flex-row fadeindown" [class]="messageObject.messageLayout.position">
                     <p-card *ngIf="!messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem'}" 
                     [ngClass]="messageObject.messageLayout.backgroundColor">
                         <div style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
@@ -47,7 +47,7 @@
         <ng-template pTemplate="footer">
             <div (keydown.enter)="onSendMessage()" class="flex justify-content-center">
             <input #inputField [disabled]="inputDisabled" [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" [placeholder]="inputPlaceholder" pAutoFocus [autofocus]="InputAutoFocus" pInputText/>
-            <button [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane"></button>
+            <button [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane" pTooltip="Send Message" tooltipPosition="top" [showDelay]="sendButtonDelay" ></button>
         </div>
         </ng-template>
     </p-panel>

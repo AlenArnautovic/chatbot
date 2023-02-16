@@ -24,6 +24,7 @@ import { BadgeModule } from 'primeng/badge';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { ChatbotInplaceComponent } from './components/chatbot-inplace/chatbot-inplace.component';
 import { InplaceModule } from 'primeng/inplace';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { InplaceModule } from 'primeng/inplace';
   imports: [
     BrowserModule,
     BadgeModule,
+    TooltipModule,
     AvatarModule,
     AutoFocusModule,
     HttpClientModule,

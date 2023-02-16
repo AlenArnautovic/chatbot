@@ -52,6 +52,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   confirmPopup = '';
   showIsTyping = false;
   slideMenuheigth = 230;
+  sendButtonDelay = 1000;
   inputDisabled = false;
   inputPlaceholder = 'Say hi...';
   headerButtonsHidden = true;
@@ -177,7 +178,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   async onSendMessage() {
     try {
       this.messageService.clear();
-      if (this.inputFieldValue.trim().length > 0) {
+      if (
+        this.inputFieldValue != null &&
+        this.inputFieldValue.trim().length > 0
+      ) {
         this.createMessage(this.inputFieldValue, false);
         this.INPUT_blockInput();
         const response =
@@ -218,9 +222,14 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           this.INPUT_setupForNextInput();
         }
       } else {
-        //TODO Error catching
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Message',
+          detail: 'type something :))',
+        });
       }
     } catch (error) {
+      console.log('#');
       this.createErrorMessage('');
     }
   }
