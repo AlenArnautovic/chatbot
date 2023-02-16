@@ -4,7 +4,7 @@ import {
   ChoiceLevel,
   choiceServerObject,
   DialogEvents,
-} from '../chatbotSupport';
+} from '../support/chatbotSupport';
 import {
   abdominal_pain,
   airway_compromise,

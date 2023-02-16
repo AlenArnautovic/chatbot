@@ -8,15 +8,15 @@ import {
   getDiseaseForId,
   getIsRelatedForId,
   PatientInfo,
-} from './chatbotPatientInfoStore';
+} from './support/chatbotPatientInfoStore';
 import {
   chatbotTransportObject,
   choiceContainer,
   ChoiceLevel,
   DialogEvents,
   Diseases,
-} from './chatbotSupport';
-import { devKeys } from './devKeyConfig';
+} from './support/chatbotSupport';
+import { devKeys } from './support/devKeyConfig';
 
 export class Chatbot {
   static eventSplitter = '#';
@@ -88,6 +88,7 @@ export class Chatbot {
       this.getFullUserId(userId),
       sessionPath
     );
+    console.log(request);
     try {
       const response = await Chatbot.sessionClient.detectIntent(request);
       return response;
@@ -186,54 +187,83 @@ export class Chatbot {
       ) {
         const fields = response[0].queryResult.parameters.fields;
         const keys = Object.keys(fields);
-        console.log(keys);
         for (const key of keys) {
           switch (key) {
             case 'given-name':
-              this.patchPatientInfo(userId, fields[key].stringValue);
+              if (
+                fields[key].stringValue != null &&
+                fields[key].stringValue.length > 0
+              ) {
+                this.patchPatientInfo(userId, fields[key].stringValue);
+              }
               break;
             case 'last-name':
-              this.patchPatientInfo(userId, null, fields[key].stringValue);
+              if (
+                fields[key].stringValue != null &&
+                fields[key].stringValue.length > 0
+              ) {
+                this.patchPatientInfo(userId, null, fields[key].stringValue);
+              }
               break;
             case 'patient_age':
-              this.patchPatientInfo(
-                userId,
-                null,
-                null,
-                fields[key].numberValue
-              );
+              if (
+                fields[key].numberValue != null &&
+                fields[key].numberValue > 0
+              ) {
+                this.patchPatientInfo(
+                  userId,
+                  null,
+                  null,
+                  fields[key].numberValue
+                );
+              }
               break;
             case 'vNumber':
-              this.patchPatientInfo(
-                userId,
-                null,
-                null,
-                null,
-                fields[key].numberValue
-              );
+              if (
+                fields[key].numberValue != null &&
+                fields[key].numberValue > 0
+              ) {
+                this.patchPatientInfo(
+                  userId,
+                  null,
+                  null,
+                  null,
+                  fields[key].numberValue
+                );
+              }
               break;
             case 'illness':
-              this.patchPatientInfo(
-                userId,
-                null,
-                null,
-                null,
-                null,
-                fields[key].stringValue
-              );
+              if (
+                fields[key].stringValue != null &&
+                fields[key].stringValue.length > 0
+              ) {
+                this.patchPatientInfo(
+                  userId,
+                  null,
+                  null,
+                  null,
+                  null,
+                  fields[key].stringValue
+                );
+              }
               break;
             case 'phone-number':
-              this.patchPatientInfo(
-                userId,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                fields[key].numberValue
-              );
+              if (
+                fields[key].numberValue != null &&
+                fields[key].numberValue > 0
+              ) {
+                this.patchPatientInfo(
+                  userId,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  fields[key].numberValue
+                );
+              }
               break;
             default:
               //
@@ -397,6 +427,7 @@ export class Chatbot {
       chatbotTransportObject.choiceContainer =
         chatbotDiseaseManager.getInfoForDisease(disease, choiceLevel);
     } else {
+      console.log(activePatiens);
       this.createErrorForNotfoundDisease(chatbotTransportObject);
     }
   }

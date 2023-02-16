@@ -1,4 +1,4 @@
-import { choiceServerObject, DialogEvents } from '../chatbotSupport';
+import { choiceServerObject, DialogEvents } from '../support/chatbotSupport';
 //DISCLAIMER: all content inside the variables is either indirectly or directly cited by the article "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
 
 export const airway_compromise: choiceServerObject = {

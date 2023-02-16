@@ -4,7 +4,7 @@ import {
   choiceServerObject,
   DialogEvents,
   Diseases,
-} from './chatbotSupport';
+} from './support/chatbotSupport';
 import { back_pain } from './diseases/back-pain';
 import { ear_problems } from './diseases/ear-problems';
 import { eye_problems } from './diseases/eye-problem';

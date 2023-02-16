@@ -4,7 +4,7 @@ import {
   ChoiceLevel,
   choiceServerObject,
   DialogEvents,
-} from '../chatbotSupport';
+} from '../support/chatbotSupport';
 import {
   abrupt_onset,
   acute_complete_loss_of_vision,

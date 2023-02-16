@@ -4,7 +4,7 @@ import {
   ChoiceLevel,
   choiceServerObject,
   DialogEvents,
-} from '../chatbotSupport';
+} from '../support/chatbotSupport';
 import {
   airway_compromise,
   altered_concious_level,

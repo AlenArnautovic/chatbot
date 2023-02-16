@@ -4,7 +4,7 @@ import {
   ChoiceLevel,
   choiceServerObject,
   DialogEvents,
-} from '../chatbotSupport';
+} from '../support/chatbotSupport';
 import {
   acute_chemical_eye_injury,
   acute_complete_loss_of_vision,
