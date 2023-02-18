@@ -3,6 +3,7 @@ import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import e from 'express';
 import { v4 as uuid } from 'uuid';
 import { chatbotDiseaseManager } from './chatbotDiseaseManager';
+import { AppointmentHelper } from './support/chatbotAppointmentHelper';
 import {
   activePatiens,
   getDiseaseForId,
@@ -389,11 +390,20 @@ export class Chatbot {
           break;
         case 'appointment_date_time':
           if (response[0].queryResult.allRequiredParamsPresent) {
-            //TODO
+            const timeObject =
+              AppointmentHelper.retrieveAppointmentFromResponse(
+                response,
+                this.getFullUserId(userId)
+              );
+            const message = AppointmentHelper.createAppointmentMessage(
+              timeObject,
+              this.getFullUserId(userId)
+            );
+            response[0].queryResult.fulfillmentText = message;
           }
+
           break;
         default:
-          //chatbotTransportObject.isError = true;
           break;
       }
     } catch (error) {

@@ -22,6 +22,7 @@ import {
   leftMessageLayout,
   MessageObject,
   rightMessageLayout,
+  timeStampPlaceholder,
 } from './chatbotMainSupport';
 import {
   invertColor,
@@ -48,6 +49,8 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   isTypingContent = 'is typing...';
   panelSubHeader = 'online';
   mainWindowContainer = '';
+  messageTimeStamp = '';
+  messageTimeStampColor = '';
 
   confirmPopup = '';
   showIsTyping = false;
@@ -131,24 +134,23 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       choiceObjects: [],
     };
     const currentTheme = this.themeSerivce.getCurrentTheme();
+    let textHexCode: string;
     if (isAnswer) {
       newMessage.messageLayout.backgroundColor = returnColorForAnswers(
         currentTheme,
         false
       );
-      newMessage.messageLayout.textColor = invertColor(
-        returnColorForAnswers(currentTheme, true)
-      );
+      textHexCode = invertColor(returnColorForAnswers(currentTheme, true));
+      newMessage.messageLayout.textColor = textHexCode;
     } else {
       newMessage.messageLayout.backgroundColor = returnColorForQuestions(
         currentTheme,
         false
       );
-      newMessage.messageLayout.textColor = invertColor(
-        returnColorForQuestions(currentTheme, true)
-      );
+      textHexCode = invertColor(returnColorForQuestions(currentTheme, true));
+      newMessage.messageLayout.textColor = textHexCode;
     }
-
+    this.setMessageTimeStamp(textHexCode, newMessage);
     this.messageObjects.push(newMessage);
   }
 
@@ -161,6 +163,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
         textColor: '',
         messageType: messageTypes.multipleChoice,
         disabled: false,
+        timeStamp: timeStampPlaceholder,
       },
       isMultipleChoice: true,
       choiceObjects: choiceObjects,
@@ -266,6 +269,16 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       console.log('#');
       this.createErrorMessage('');
     }
+  }
+
+  setMessageTimeStamp(hexCode: string, message: MessageObject) {
+    const hours = new Date().getUTCHours();
+    const minutes = new Date().getUTCMinutes();
+    message.messageLayout.timeStamp = {
+      hidden: false,
+      value: hours + ':' + minutes,
+      color: hexCode,
+    };
   }
 
   INPUT_blockInput() {

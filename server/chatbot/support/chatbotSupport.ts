@@ -44,3 +44,8 @@ export enum ChoiceLevel {
   GREEN = 'green',
   BLUE = 'blue',
 }
+
+export interface timeObject {
+  date: string;
+  time: string;
+}

@@ -15,6 +15,13 @@ export interface PatientInfo {
 
   //TODO extend
 }
+export function getPatientInfoObjectForId(userId: string): PatientInfo {
+  for (const patient of activePatiens) {
+    if (patient.userId == userId) {
+      return patient;
+    }
+  }
+}
 
 export function getDiseaseForId(userId: string): Diseases {
   for (const patient of activePatiens) {

@@ -15,8 +15,13 @@
 
 :host>>> .p-card .p-card-content{
     padding: 0rem;
-    margin: auto;
-   
+    margin: auto; 
+}
+
+:host ::ng-deep .text-card-custom .p-card-body{
+    width: fit-content;
+    max-width: 15rem;
+    min-width: 4rem;
 }
 
 :host>>> .p-card .p-card-body{

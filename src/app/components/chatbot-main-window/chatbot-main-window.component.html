@@ -32,9 +32,10 @@
         <div class="content-container">
             <ng-template [ngForOf]="messageObjects" let-messageObject ngFor> 
                 <div class="message-container flex flex-row fadeindown" [class]="messageObject.messageLayout.position">
-                    <p-card *ngIf="!messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem'}" 
+                    <p-card class="text-card-custom" *ngIf="!messageObject.isMultipleChoice" [style]="{'margin-bottom': '0.5rem'}" 
                     [ngClass]="messageObject.messageLayout.backgroundColor">
-                        <div style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
+                        <div class="flex ml-2 mr-2" style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
+                        <label *ngIf="!messageObject.messageLayout.timeStamp.hidden" class="flex justify-content-end mr-1 mt-1" style="font-size: 0.7rem; opacity: 0.7;" [style]="{'color':messageObject.messageLayout.timeStamp.color}">{{messageObject.messageLayout.timeStamp.value}}</label>
                     </p-card>
                     <div *ngIf="messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem', 'backgroundColor':'transparent', 'padding':'0.1rem'}">
                         <ng-template [ngForOf]="messageObject.choiceObjects" let-choiceObject ngFor>
