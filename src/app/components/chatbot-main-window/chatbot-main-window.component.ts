@@ -274,11 +274,18 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   setMessageTimeStamp(hexCode: string, message: MessageObject) {
     const hours = new Date().getUTCHours();
     const minutes = new Date().getUTCMinutes();
+    let minutesString: string;
+    if (minutes < 10) {
+      minutesString = '0' + minutes;
+    } else {
+      minutesString = minutes.toString();
+    }
     message.messageLayout.timeStamp = {
       hidden: false,
-      value: hours + ':' + minutes,
+      value: hours + ':' + minutesString,
       color: hexCode,
     };
+    console.log(message.messageLayout.timeStamp);
   }
 
   INPUT_blockInput() {

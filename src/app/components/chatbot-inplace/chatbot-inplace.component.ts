@@ -16,6 +16,7 @@ export class ChatbotInplaceComponent {
   avatarBadgeContent = 'Hey!';
   avatarBadgeDisabled = false;
   contentActive = true;
+  openButtonDelay = 700;
 
   constructor(private ref: ChangeDetectorRef) {}
 
