@@ -34,18 +34,26 @@
                 <div class="message-container flex flex-row fadeindown" [class]="messageObject.messageLayout.position">
                     <p-card class="text-card-custom" *ngIf="!messageObject.isMultipleChoice" [style]="{'margin-bottom': '0.5rem'}" 
                     [ngClass]="messageObject.messageLayout.backgroundColor">
-                        <div class="flex ml-2 mr-2" style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}">{{messageObject.content}}</div>
-                        <label *ngIf="!messageObject.messageLayout.timeStamp.hidden" class="flex justify-content-end mr-1 mt-1" style="font-size: 0.7rem; opacity: 0.7;" [style]="{'color':messageObject.messageLayout.timeStamp.color}">{{messageObject.messageLayout.timeStamp.value}}</label>
+                        <div class="flex ml-2 mr-2" style="word-wrap: break-word;" [ngStyle]="{'color': messageObject.messageLayout.textColor}"
+                        >{{messageObject.content}}</div>
+                        <label *ngIf="!messageObject.messageLayout.timeStamp.hidden" class="flex justify-content-end mr-1 mt-1" 
+                        style="font-size: 0.7rem; opacity: 0.7;" [style]="{'color':messageObject.messageLayout.timeStamp.color}"
+                        >{{messageObject.messageLayout.timeStamp.value}}</label>
                     </p-card>
-                    <div *ngIf="messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem', 'backgroundColor':'transparent', 'padding':'0.1rem'}">
+                    <div *ngIf="messageObject.isMultipleChoice" [style]="{'width': '15rem', 'margin-bottom': '0.5rem', 
+                    'backgroundColor':'transparent', 'padding':'0.1rem'}">
                         <ng-template [ngForOf]="messageObject.choiceObjects" let-choiceObject ngFor>
-                            <button [icon]="choiceObject.symbolClass" [disabled]="messageObject.messageLayout.disabled" pButton pRipple type="button" label="{{choiceObject.label}}" class="p-button-outlined mr-1 mb-1" style="padding: 0.3rem;" ngClass="multi-choice-button-label multi-choice-button-icon" (click)="confirmChoice($event,choiceObject)" [ngStyle]="{'color': choiceObject.isFallback ? '#f2c307': ''}"></button>
+                            <button [icon]="choiceObject.symbolClass" [disabled]="messageObject.messageLayout.disabled" 
+                            pButton pRipple type="button" label="{{choiceObject.label}}" class="p-button-outlined mr-1 mb-1" 
+                            style="padding: 0.3rem;" ngClass="multi-choice-button-label multi-choice-button-icon" 
+                            (click)="confirmChoice($event,choiceObject)" [ngStyle]="{'color': choiceObject.isFallback ? '#f2c307': ''}">
+                            </button>
                         </ng-template>
                     </div> 
                 </div> 
             </ng-template>
         </div>
-        <ng-template pTemplate="footer">
+        <ng-template pTemplate="footer" >
             <div (keydown.enter)="onSendMessage()" class="flex justify-content-center">
             <input #inputField [disabled]="inputDisabled" [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" [placeholder]="inputPlaceholder" pAutoFocus [autofocus]="InputAutoFocus" pInputText/>
             <button [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane" pTooltip="Send Message" tooltipPosition="top" [showDelay]="sendButtonDelay" ></button>

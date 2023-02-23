@@ -2,12 +2,12 @@
 <p-inplace #inplace [style]="{'min-height':'auto'}" [active]="contentActive"  >
     <ng-template pTemplate="display">
         <div >
-        <p-avatar class="flex glow" size="large" pBadge [value]="avatarBadgeContent" severity="info" [badgeDisabled]="avatarBadgeDisabled">
+        <p-avatar class="flex glow" size="large" pBadge [value]="avatarBadgeContent" severity="info" [badgeDisabled]="avatarBadgeDisabled" pTooltip="Click to open me" [showDelay]="openButtonDelay">
             <i class="pi pi-user"></i>
         </p-avatar>
     </div>
     </ng-template>
-    <ng-template pTemplate="content">
+    <ng-template pTemplate="content" >
         <app-chatbot-main-window (messageEvent)="receiveMessage($event)"></app-chatbot-main-window>
     </ng-template>
 </p-inplace>

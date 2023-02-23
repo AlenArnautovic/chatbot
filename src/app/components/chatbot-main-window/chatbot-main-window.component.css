@@ -6,7 +6,7 @@
 
 :host>>> .p-panel .p-panel-content {
     padding: 0.5rem;
-    height: 25vw;
+    height: 30vw;
     max-height: 320px;
     overflow: auto;
     display: flex;
@@ -121,5 +121,9 @@
 }
 :host ::ng-deep .message-inline-text .p-inline-message-text{
     font-size:smaller;
+}
+
+:host>>> .p-panel .p-panel-footer{
+    border-radius: 5px;
 }
 
