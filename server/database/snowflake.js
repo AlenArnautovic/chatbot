@@ -19,8 +19,9 @@ snowConnect.connect(function (err, conn) {
         console.log("Successfully connected as id: " + snowConnect.getId());
     }
 });
+/*
 snowConnect.execute({
-    sqlText: "INSERT INTO CHATBOT.PATIENT.PATIENT VALUES (4,'test','test')",
+    sqlText: "INSERT INTO CHATBOT.PATIENT.PATIENT VALUES (76,'test','test')",
     complete: function (err, stmt) {
         if (err) {
             console.error("Failed to execute statement due to the following error: " + err.message);
@@ -30,3 +31,5 @@ snowConnect.execute({
         }
     }
 });
+
+*/

@@ -18,7 +18,7 @@ export class LoginComponent {
   patient = 'TestPatient';
 
   logIn(){
-    this.router.navigate(['/']);
+    //this.router.navigate(['/']);
     //var url = "localhost";
     this.comm.sendMessageToDatabase("blabla");
   }
