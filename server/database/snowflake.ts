@@ -19,7 +19,7 @@ snowConnect.connect(function (err, conn) {
         } 
     });
 
-/*
+
 export function executeInsert(){
     snowConnect.execute({
         sqlText: `INSERT INTO CHATBOT.PATIENT.PATIENT VALUES (77,'test','test')`,
@@ -31,15 +31,18 @@ export function executeInsert(){
         }
         }});
     }
-*/
+
+
+//Gibt yes zurück , wenn Patient in DB gefunden wurde,
+//Ansonsten NULL
 export function checkPatientData (age:number ,prename:string, lastname:string, vNumber:string){
     snowConnect.execute({
         sqlText: `SELECT 	'Yes' AS Correct_PATIENT_Data
                     FROM 	CHATBOT.DOCTORSPRACTICE.PATIENT
-                    WHERE 	floor(datediff(month,birthdate,sysdate())/12) = ${age}
-                    AND		PRENAME = ${prename}
-                    AND		LASTNAME = ${lastname}
-                    AND		vnumber = ${vNumber}`,
+                    WHERE 	floor(datediff(month,birthdate,sysdate())/12) = '30'
+                    AND		PRENAME = Charles 
+                    AND		LASTNAME = Garcia
+                    AND		vnumber = 123456789`,
         complete: function (err, stmt) {
         if (err) {
         console.error("Failed to execute statement due to the following error: " + err.message)
@@ -47,8 +50,10 @@ export function checkPatientData (age:number ,prename:string, lastname:string, v
         console.log("Successfully executed Check Patient Data statement: " + stmt.getSqlText())
         }
         }});
-    }
+     }
 
+//Gibt Selecr Part aus, wenn es einen treffer mit der DB gibt
+//Anonsten NULL
 export function checkIfPatientHasAppointmentForDisease(vNumber:string,disease:string){
     snowConnect.execute({
         sqlText: `SELECT    d.prename || ' '|| d.lastname AS DocName
@@ -80,6 +85,7 @@ export function checkIfPatientHasAppointmentForDisease(vNumber:string,disease:st
         }});
     }
 
+
     export function checkIfPatientHasAppointmentAtTime(vNumber:string,appointment:string){
         snowConnect.execute({
             sqlText: `SELECT 		p.prename || ' '||  p.lastname AS PatientName
@@ -109,6 +115,9 @@ export function checkIfPatientHasAppointmentForDisease(vNumber:string,disease:st
             }
             }});
         }
+
+
+    //Gibt alle Termine zurück die frei sind für eine Disease
   export function checkIfDoctorForDiseaseIsAvailable(disease:string){
         snowConnect.execute({
             sqlText: `SELECT 		oh.time_from, oh.time_to
@@ -137,6 +146,71 @@ export function checkIfPatientHasAppointmentForDisease(vNumber:string,disease:st
             }
             }});
         }
+
+        //Gibt einen Wert zurück, wenn Termin frei ist
+        export function checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(disease:string, appointment:string){
+            snowConnect.execute({
+                sqlText: `SELECT 		oh.time_from, oh.time_to
+                            FROM 		appointment a
+                            RIGHT JOIN 	openinghours oh
+                            ON 			a.openinghours_id = oh.openinghours_id
+                            LEFT JOIN 	doctor_location dl
+                            ON 			a.docloc_id = dl.doctor_location_id 
+                            LEFT JOIN 	doctor d
+                            ON 			d.doc_id = dl.doc_id
+                            WHERE 		a.docloc_id NOT IN (SELECT 		d.doc_id 
+                                                            FROM 		DOCTOR d
+                                                            INNER JOIN 	doctor_specialization ds
+                                                            ON 			d.doc_id = ds.doc_id 
+                                                            LEFT JOIN 	SPECIALIZATION s
+                                                            ON 			ds.spec_id = s.spec_id
+                                                            WHERE		s.spec_name = ${disease}                                
+                                                            ) 
+                            OR a.docloc_id iS NULL
+                            AND time_from = ${appointment}
+                            ORDER BY oh.openinghours_id;`,
+                complete: function (err, stmt) {
+                if (err) {
+                console.error("Failed to execute statement due to the following error: " + err.message)
+                } else {
+                console.log("Successfully executed Check If Patient Has Appointment With Doctor statement: " + stmt.getSqlText())
+                }
+                }});
+            }
+
+
+export function checkIfDoctorForDiseaseIsAvailableAndReturnFirstFiveValues(disease:string, appointment:string){
+            snowConnect.execute({
+                sqlText: `SELECT 		oh.time_from, oh.time_to
+                            FROM 		appointment a
+                            RIGHT JOIN 	openinghours oh
+                            ON 			a.openinghours_id = oh.openinghours_id
+                            LEFT JOIN 	doctor_location dl
+                            ON 			a.docloc_id = dl.doctor_location_id 
+                            LEFT JOIN 	doctor d
+                            ON 			d.doc_id = dl.doc_id
+                            WHERE 		a.docloc_id NOT IN (SELECT 		d.doc_id 
+                                                            FROM 		DOCTOR d
+                                                            INNER JOIN 	doctor_specialization ds
+                                                            ON 			d.doc_id = ds.doc_id 
+                                                            LEFT JOIN 	SPECIALIZATION s
+                                                            ON 			ds.spec_id = s.spec_id
+                                                            WHERE		s.spec_name = ${disease}                                
+                                                            ) 
+                            OR a.docloc_id iS NULL
+                            AND time_from >= ${appointment}
+                            ORDER BY oh.openinghours_id
+                            LIMIT 5;`,
+                complete: function (err, stmt) {
+                if (err) {
+                console.error("Failed to execute statement due to the following error: " + err.message)
+                } else {
+                console.log("Successfully executed Check If Patient Has Appointment With Doctor statement: " + stmt.getSqlText())
+                }
+                }});
+            }
+
+
 export function getInformationOfAppointment(vNumber:string,appointment:string ){
     snowConnect.execute({
         sqlText: `SELECT 		
