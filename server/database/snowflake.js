@@ -2,7 +2,7 @@
 exports.__esModule = true;
 var snowflake = require("snowflake-sdk");
 var snowConnect = snowflake.createConnection({
-    account: "ob95661.europe-west4.gcp",
+    account: "dk51672.europe-west4.gcp",
     username: "CHATBOT",
     password: "Chatbot123",
     authenticator: "SNOWFLAKE",

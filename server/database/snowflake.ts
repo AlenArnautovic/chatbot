@@ -19,6 +19,7 @@ snowConnect.connect(function (err, conn) {
         } 
     });
 
+/*
 export function executeInsert(){
     snowConnect.execute({
         sqlText: `INSERT INTO CHATBOT.PATIENT.PATIENT VALUES (77,'test','test')`,
@@ -30,7 +31,7 @@ export function executeInsert(){
         }
         }});
     }
-
+*/
 export function checkPatientData (age:number ,prename:string, lastname:string, vNumber:string){
     snowConnect.execute({
         sqlText: `SELECT 	'Yes' AS Correct_PATIENT_Data
@@ -158,8 +159,8 @@ export function getInformationOfAppointment(vNumber:string,appointment:string ){
                 ON			a.pat_id = p.patient_id
                 INNER JOIN	DOCTOR d
                 ON			dl.doc_id = d.doc_id
-                WHERE 		p.vnumber = '555666777' 
-                AND			oh.time_from = '2023-02-01 07:15:00';`,
+                WHERE 		p.vnumber = ${vNumber} 
+                AND			oh.time_from = ${appointment};`,
         complete: function (err, stmt) {
         if (err) {
         console.error("Failed to execute statement due to the following error: " + err.message)
