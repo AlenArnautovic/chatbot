@@ -339,7 +339,9 @@ describe('ChatbotMainWindowComponent', () => {
     expect(returnValue.length).toBeGreaterThan(1);
   });
 
-  it('METHOD: returnColorForQuestions(), TARGET: should return a value length above 1, OUTCOME: return.length > 1', () => {
+  it('METHOD: closeWindow(), TARGET: should call method to save messages when component is closed, OUTCOME: none specific', () => {
+    const spy = spyOn(mockCommunicationSerivce, 'saveMessages');
     component.closeWindow();
+    expect(spy).toHaveBeenCalled();
   });
 });
