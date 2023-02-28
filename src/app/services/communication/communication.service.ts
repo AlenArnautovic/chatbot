@@ -26,14 +26,6 @@ export class CommunicationService {
     return this.messageObjects;
   }
 
-  sendMessageToServer(messageContent: string) {
-    this.http
-      .post<any[]>(`${this.baseServerUrl}sendMessage`, {
-        message: messageContent,
-      })
-      .subscribe((next) => console.log(next));
-  }
-
   //TODO add new userId method to server that gives every client a unique user id;
   async sendMessageToDialogFlow(
     messageContent: string
@@ -47,7 +39,7 @@ export class CommunicationService {
     return response;
   }
 
-  //TODO change method to own requirement
+  //TODO remove, only test method!!
   async sendMessageToDatabase(
     messageContent: string
   ): Promise<chatbotTransportObject> {

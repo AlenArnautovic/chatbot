@@ -120,11 +120,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.communicationService.sendMessageToDatabase('yes');
   }
 
-  logIn() {
-    console.log('Test');
-    this.router.navigate(['/login']);
-  }
-
   /**
    * Creates an new Message as a chatbubble
    * @param conent message content
@@ -256,6 +251,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
             response.fulfillmentText.length > 0
           ) {
             this.createMessage(response.fulfillmentText, true);
+            console.log(response.fulfillmentText);
           }
 
           if (response.isMultipleChoice) {
@@ -313,7 +309,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       value: hours + ':' + minutesString,
       color: hexCode,
     };
-    console.log(message.messageLayout.timeStamp);
   }
 
   /**
