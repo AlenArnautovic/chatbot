@@ -1,7 +1,10 @@
 import express from 'express';
 import { Chatbot } from './chatbot/chatbotServer';
+import {
+  checkIfDoctorForDiseaseIsAvailable,
+  executeInsert,
+} from './database/snowflake';
 import { ClientIdService } from './serverSupport/clientIdService';
-// import { executeInsert } from './database/snowflake';
 
 const app = express.Router();
 
@@ -37,10 +40,10 @@ app.post('/dialogflow/eventRequest', async (req, res) => {
   res.send(chatbotTransportObject);
 });
 
-// app.post('/database/insert', async(req, res)=>{
-//     const text = req.body.message;
-//     executeInsert();
-// });
+app.post('/database/insert', async (req, res) => {
+  const text = req.body.message;
+  executeInsert();
+});
 
 app.post('/webhook', async (req, res) => {
   console.log(req.body);

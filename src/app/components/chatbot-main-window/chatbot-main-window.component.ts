@@ -116,6 +116,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.communicationService.saveMessages(this.messageObjects);
   }
 
+  testDataBase() {
+    this.communicationService.sendMessageToDatabase('yes');
+  }
+
   logIn() {
     console.log('Test');
     this.router.navigate(['/login']);
@@ -154,6 +158,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.messageObjects.push(newMessage);
   }
 
+  /**
+   * Creates multiple-choice block out of given object list
+   * @param choiceObjects ChoiceObject[]
+   */
   createMultipleChoice(choiceObjects: ChoiceObject[]) {
     const newMessage: MessageObject = {
       content: '',
@@ -168,17 +176,22 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       isMultipleChoice: true,
       choiceObjects: choiceObjects,
     };
-    this.INPUT_setupForMultipleChoice();
     this.messageObjects.push(newMessage);
+    this.INPUT_setupForMultipleChoice();
   }
 
+  /**
+   * Sets up Inputfield for Multiple-choice
+   */
   INPUT_setupForMultipleChoice() {
     this.showIsTyping = false;
     this.inputFieldValue = '';
-    this.inputPlaceholder = 'Choose an option!';
-    this.toggleInputFooter(true);
+    this.INPUT_setInputFieldstatus();
   }
 
+  /**
+   * Sets placeholder for input field depending on previous message in messageObjets list
+   */
   INPUT_setInputFieldstatus() {
     if (this.messageObjects.length == 0) {
       this.inputPlaceholder = 'Say Hi...';
@@ -196,6 +209,9 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Disables all Multiple-Choice buttons that are already in messageObjects
+   */
   disableAllChoiceButtons() {
     this.messageObjects.forEach((messageObject) => {
       if (messageObject.isMultipleChoice) {
@@ -204,6 +220,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Creates an Error pop-up Message
+   * @param detail string
+   */
   createErrorMessage(detail: string) {
     this.messageService.add({
       severity: 'error',
@@ -212,6 +232,9 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * Called form html when the send Button is pressed. Sends content to server and awaits answer.
+   */
   async onSendMessage() {
     try {
       this.messageService.clear();
@@ -271,6 +294,11 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Sets the current time into the timestamp parameter for the given message.
+   * @param hexCode Color of Text
+   * @param message MessageObject
+   */
   setMessageTimeStamp(hexCode: string, message: MessageObject) {
     const hours = new Date().getUTCHours();
     const minutes = new Date().getUTCMinutes();
@@ -288,17 +316,28 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     console.log(message.messageLayout.timeStamp);
   }
 
+  /**
+   * Blocks input field. Used when a message is send an a response is awaitet.
+   */
   INPUT_blockInput() {
     this.toggleInputFooter(true);
     this.showIsTyping = true;
   }
 
+  /**
+   * Sets up the input field for next input.
+   */
   INPUT_setupForNextInput() {
     this.showIsTyping = false;
     this.INPUT_setInputFieldstatus();
     this.inputFieldValue = '';
   }
 
+  /**
+   * Transforms the server information into the front-end objects needed for multiple-choice.
+   * @param choices choiceServerObject[]
+   * @returns ChoiceObject[]
+   */
   transformServerMultipleChoice(
     choices: choiceServerObject[] | undefined
   ): ChoiceObject[] {
@@ -322,7 +361,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     return [];
   }
 
-  //TODO maybe rework this fuction because it pauses the whole code
+  /**
+   * Pauses thread to simulate waiting time for user.
+   * @param ms Miliseconds
+   */
   //https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line
   wait(ms: number) {
     const start = new Date().getTime();
@@ -332,10 +374,17 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * Toggles disabling or enabling the input field.
+   * @param disable true if inputfield should be disabled. false otherwise.
+   */
   toggleInputFooter(disable: boolean) {
     this.inputDisabled = disable;
   }
 
+  /**
+   * Changes the theme to the current theme given in the theme service for all exising objects in messageObjects list.
+   */
   changeThemeForExistingMessages() {
     const currentTheme = this.themeSerivce.getCurrentTheme();
     this.messageObjects.forEach((element) => {
@@ -360,6 +409,12 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     console.log(this.themeSerivce.getCurrentTheme());
   }
 
+  /**
+   * Called from Html. Handles the confirmation of choices for the pop-up texts for multiplce choices.
+   * In core creates a pop-up and defines the conditions for accept and decline buttons.
+   * @param event Event
+   * @param choiceObj ChoiceObject
+   */
   confirmChoice(event: any, choiceObj: ChoiceObject) {
     const confirmation: Confirmation = {
       rejectIcon: 'pi pi-times',
@@ -405,17 +460,28 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.confirmationService.confirm(confirmation);
   }
 
+  /**
+   * Changes Theme for all Messages and inside the service.
+   * @param theme string
+   */
   changeTheme(theme: string) {
     this.themeSerivce.switchTheme(theme);
     this.changeThemeForExistingMessages();
   }
 
+  /**
+   * Changes Size of Component
+   * @param size number
+   */
   changeSizeOfComponent(size: number) {
     const zoomlevel = `zoom: ${size}`;
     this.mainWindowContainer = zoomlevel;
     this.confirmPopup = `${size}`;
   }
 
+  /**
+   * Called from Menu. Creates a pop-up for terms of use information for the user.
+   */
   createTermsOfUsePopUp() {
     const termsOfUse: Confirmation = {
       acceptVisible: false,
@@ -432,6 +498,9 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.confirmationService.confirm(termsOfUse);
   }
 
+  /**
+   * Creates the slide menu located inside the windows header.
+   */
   createMenu() {
     this.items = [
       {
