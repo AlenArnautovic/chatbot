@@ -227,6 +227,17 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     });
   }
 
+  createWarnMessage(detail: string) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Cau tion!',
+      detail:
+        detail.length > 0
+          ? detail
+          : 'The reccomendation is oriented solely on your input, and may deviate from a real doctors conclusion. Please take this result carefully!',
+    });
+  }
+
   /**
    * Called form html when the send Button is pressed. Sends content to server and awaits answer.
    */
@@ -451,6 +462,12 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
             );
           } else {
             this.createMessage(response.fulfillmentText, true);
+          }
+          if (
+            response.isReminderForPatient != null &&
+            response.isReminderForPatient
+          ) {
+            this.createWarnMessage('');
           }
         } else {
           this.createErrorMessage(

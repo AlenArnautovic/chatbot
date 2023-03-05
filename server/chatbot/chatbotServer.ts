@@ -335,6 +335,7 @@ export class Chatbot {
       isError: false,
       fulfillmentText: '',
       isMultipleChoice: false,
+      isReminderForPatient: false,
     };
     try {
       const intentName = response[0].queryResult.intent.displayName;
@@ -402,6 +403,12 @@ export class Chatbot {
             response[0].queryResult.fulfillmentText = message;
           }
 
+          break;
+        case 'Event_book_appointment_Ask':
+        case 'Event_Call_Ambulace_Exit':
+        case 'event_book_appointment_related_ask':
+        case 'Event_Call_Doctor_ASAP':
+          chatbotTransportObject.isReminderForPatient = true;
           break;
         default:
           break;

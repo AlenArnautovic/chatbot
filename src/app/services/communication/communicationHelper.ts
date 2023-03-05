@@ -15,4 +15,5 @@ export interface chatbotTransportObject {
   fulfillmentText: string;
   isMultipleChoice: boolean;
   choiceContainer?: choiceContainer;
+  isReminderForPatient?: boolean;
 }

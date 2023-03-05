@@ -1,9 +1,6 @@
 import express from 'express';
 import { Chatbot } from './chatbot/chatbotServer';
-import {
-  checkIfDoctorForDiseaseIsAvailable,
-  executeInsert,
-} from './database/snowflake';
+import { executeInsert } from './database/snowflake';
 import { ClientIdService } from './serverSupport/clientIdService';
 import { encyptionService } from './serverSupport/encryptionService';
 
