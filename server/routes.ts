@@ -5,39 +5,49 @@ import {
   executeInsert,
 } from './database/snowflake';
 import { ClientIdService } from './serverSupport/clientIdService';
+import { encyptionService } from './serverSupport/encryptionService';
 
 const app = express.Router();
 
 export { app as routes };
 
 app.post('/dialogflow/sendMessage', async (req, res) => {
-  const text = req.body.message;
-  const userId = req.body.userId;
+  let text = req.body.message;
+  text = encyptionService.decrypt(text);
+  let userId = req.body.userId;
+  userId = encyptionService.decrypt(userId);
+  console.log(text);
   const resultQurey = await Chatbot.textQuery(text, userId);
-
   const chatbotTransportObject = Chatbot.createChatbotTransportObject(
     resultQurey,
     userId
   );
-  res.send(chatbotTransportObject);
+  const answer = encyptionService.encrypt(chatbotTransportObject);
+  res.send({ answer: answer });
 });
 
 app.get('/registerClient', (req, res) => {
-  const clientId = ClientIdService.registerNewClient();
+  let clientId = ClientIdService.registerNewClient();
+  clientId = encyptionService.encrypt(clientId);
   res.send({ clientId: clientId });
 });
 
 app.post('/dialogflow/eventRequest', async (req, res) => {
-  const eventName = req.body.message;
-  const userId = req.body.userId;
+  let eventName = req.body.message;
+  eventName = encyptionService.decrypt(eventName);
   console.log(eventName);
+  let userId = req.body.userId;
+  userId = encyptionService.decrypt(userId);
+
   const resultQurey = await Chatbot.eventQuery(eventName, userId);
 
   const chatbotTransportObject = Chatbot.createChatbotTransportObject(
     resultQurey,
     userId
   );
-  res.send(chatbotTransportObject);
+
+  const answer = encyptionService.encrypt(chatbotTransportObject);
+  res.send({ answer: answer });
 });
 
 app.post('/database/insert', async (req, res) => {

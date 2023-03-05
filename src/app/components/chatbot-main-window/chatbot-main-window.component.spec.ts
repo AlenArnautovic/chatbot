@@ -53,6 +53,9 @@ describe('ChatbotMainWindowComponent', () => {
     saveMessages(obj: any) {
       return null;
     },
+    triggerEventInDialogFlow(value: string) {
+      return null;
+    },
   };
 
   const mockThemeService: any = {
@@ -86,7 +89,7 @@ describe('ChatbotMainWindowComponent', () => {
         HttpClient,
         HttpHandler,
         { provide: CommunicationService, useValue: mockCommunicationSerivce },
-        { provide: ConfirmationService, useValue: mockConfirmationService },
+        ConfirmationService,
         { provide: MessageService, useValue: mockMessageService },
         { provide: ThemeService, useValue: mockThemeService },
       ],
@@ -124,7 +127,7 @@ describe('ChatbotMainWindowComponent', () => {
     );
   });
 
-  it('METHOD: createMessage(), TARGET: create the right message, OUTCOME: messageType == question', () => {
+  it('METHOD: createMessage(), TARGET: create a question message in the message list, OUTCOME: messageType == question', () => {
     const content = 'Hello';
     const isAnswer = false;
     component.createMessage(content, isAnswer);
@@ -297,13 +300,6 @@ describe('ChatbotMainWindowComponent', () => {
     expect(component.messageObjects.length).toBe(0);
   });
 
-  it('METHOD: confirmChoice(), TARGET: should call confirm, OUTCOME: none Specific', () => {
-    const event: any = {};
-    const spy = spyOn(mockConfirmationService, 'confirm');
-    component.confirmChoice(event, choiceObjects);
-    expect(spy).toHaveBeenCalled();
-  });
-
   it('METHOD: toggleInputFooter(), TARGET: should disable input footer, OUTCOME: inputDisabled == true', () => {
     component.toggleInputFooter(true);
     expect(component.inputDisabled).toBe(true);
@@ -343,5 +339,28 @@ describe('ChatbotMainWindowComponent', () => {
     const spy = spyOn(mockCommunicationSerivce, 'saveMessages');
     component.closeWindow();
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('METHOD: confirmChoice(), TARGET: should call confirm, OUTCOME: none Specific', () => {
+    const confirmationService: ConfirmationService =
+      TestBed.get(ConfirmationService);
+    const mockConfirm: any = spyOn(
+      ConfirmationService.prototype,
+      'confirm'
+    ).and.callFake((c: any) => {
+      return c.accept();
+    });
+    const event: any = {
+      target: null,
+    };
+    const choiceObj: ChoiceObject = {
+      label: 'Test123',
+      event: 'Test123',
+      description: 'Test123',
+      isFallback: false,
+      symbolClass: 'Test123',
+    };
+    component.confirmChoice(event, choiceObj);
+    expect(mockConfirm).toHaveBeenCalled();
   });
 });

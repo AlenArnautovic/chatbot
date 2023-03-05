@@ -5,16 +5,25 @@ import {
 } from '@angular/common/http/testing';
 
 import { CommunicationService } from './communication.service';
+import { EncryptionService } from '../encryption/encryption.service';
 
 //https://stackoverflow.com/questions/64748224/how-to-test-http-post-request-with-parameters-in-angular-9
 //https://angular.io/guide/http#testing-http-requests
 describe('CommunicationService', () => {
   let httpMock: HttpTestingController;
   let service: CommunicationService;
-
+  const encryptionMock: any = {
+    encrypt(value: any) {
+      return value;
+    },
+    decrypt(value: any) {
+      return value;
+    },
+  };
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
+      providers: [{ provide: EncryptionService, useValue: encryptionMock }],
     });
     service = TestBed.inject(CommunicationService);
     httpMock = TestBed.inject(HttpTestingController);

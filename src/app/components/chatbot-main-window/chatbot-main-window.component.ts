@@ -243,50 +243,57 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           await this.communicationService.sendMessageToDialogFlow(
             this.inputFieldValue
           );
-        this.wait(700);
-        if (!response.isError) {
-          if (
-            response != null &&
-            response.fulfillmentText &&
-            response.fulfillmentText.length > 0
-          ) {
-            this.createMessage(response.fulfillmentText, true);
-            console.log(response.fulfillmentText);
-          }
-
-          if (response.isMultipleChoice) {
+        if (response != null) {
+          this.wait(700);
+          if (!response.isError) {
             if (
-              response.choiceContainer != null &&
-              response.choiceContainer.choices != null &&
-              response.choiceContainer.choices.length > 0
+              response != null &&
+              response.fulfillmentText &&
+              response.fulfillmentText.length > 0
             ) {
-              this.createMultipleChoice(
-                this.transformServerMultipleChoice(
-                  response.choiceContainer?.choices
-                )
-              );
+              this.createMessage(response.fulfillmentText, true);
+              console.log(response.fulfillmentText);
+            }
+
+            if (response.isMultipleChoice) {
+              if (
+                response.choiceContainer != null &&
+                response.choiceContainer.choices != null &&
+                response.choiceContainer.choices.length > 0
+              ) {
+                this.createMultipleChoice(
+                  this.transformServerMultipleChoice(
+                    response.choiceContainer?.choices
+                  )
+                );
+              } else {
+                this.createErrorMessage('');
+              }
             } else {
-              this.createErrorMessage('');
+              this.INPUT_setupForNextInput();
             }
           } else {
+            this.createErrorMessage(
+              response.errorMessage != null ? response.errorMessage : ''
+            );
             this.INPUT_setupForNextInput();
           }
         } else {
-          this.createErrorMessage(
-            response.errorMessage != null ? response.errorMessage : ''
-          );
-          this.INPUT_setupForNextInput();
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Hey',
+            detail: 'type something :))',
+          });
         }
       } else {
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Hey',
-          detail: 'type something :))',
-        });
+        this.createErrorMessage(
+          'Oops something went wrong. Please reload the website!'
+        );
       }
     } catch (error) {
-      console.log('#');
-      this.createErrorMessage('');
+      this.createErrorMessage(
+        'Oops something went wrong. Please reload the website!'
+      );
     }
   }
 
@@ -433,16 +440,22 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           await this.communicationService.triggerEventInDialogFlow(
             choiceObj.event
           );
-        this.wait(1000);
-        if (response.isMultipleChoice) {
-          this.createMessage(response.fulfillmentText, true);
-          this.createMultipleChoice(
-            this.transformServerMultipleChoice(
-              response.choiceContainer?.choices
-            )
-          );
+        if (response != null) {
+          this.wait(1000);
+          if (response.isMultipleChoice) {
+            this.createMessage(response.fulfillmentText, true);
+            this.createMultipleChoice(
+              this.transformServerMultipleChoice(
+                response.choiceContainer?.choices
+              )
+            );
+          } else {
+            this.createMessage(response.fulfillmentText, true);
+          }
         } else {
-          this.createMessage(response.fulfillmentText, true);
+          this.createErrorMessage(
+            'Oops something went wrong. Please reload the website!'
+          );
         }
         this.showIsTyping = false;
         this.INPUT_setInputFieldstatus();

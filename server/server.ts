@@ -1,8 +1,10 @@
 import express from 'express';
 import { routes } from './routes';
+import helmet from 'helmet';
 
 const app = express();
 
+app.use(helmet());
 app.use((request, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -17,12 +19,11 @@ app.use((request, res, next) => {
     next();
   }
 });
-
+app.disable('x-powered-by');
 app.use(express.json());
+
 app.set('trust proxy', true);
-
 app.use('/', routes);
-
 app.listen(4245, '127.0.0.1', function () {
   console.log('Server now listening on 4245');
 });
