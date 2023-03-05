@@ -4,7 +4,7 @@ import helmet from 'helmet';
 
 const app = express();
 
-app.use(helmet());
+//app.use(helmet());
 app.use((request, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -19,7 +19,7 @@ app.use((request, res, next) => {
     next();
   }
 });
-app.disable('x-powered-by');
+//app.disable('x-powered-by');
 app.use(express.json());
 
 app.set('trust proxy', true);
