@@ -513,9 +513,33 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       target: this.menuButton.nativeElement,
       rejectLabel: 'Close',
       icon: 'pi pi-info-circle',
-      message: `By agreeing to the terms of use (typing and sending a message) you argee that 
-        we can save the in the chat mentioned information about yourself and use them for 
-        the purpose of appointment booking. We do not transfer the used data to 3rd parties.`,
+      message: `By agreeing to the terms of use (typing and sending a message) you argee: 
+      1. that we can save the in the chat mentioned information about yourself and use them for the purpose of appointment booking. 
+      2. Consequently the information is also saved on servers of the respective doctors office. 
+      3. Furthermore you also agree with the Terms of Google DialogFlow (See menu!) 
+      DISCAIMER: If you don't agree with our terms, you should not use our chatbot!`,
+      reject: () => {
+        //
+      },
+    };
+    this.confirmationService.confirm(termsOfUse);
+  }
+
+  /**
+   * Called from Menu. Creates a pop-up for terms of use information for the user.
+   */
+  createTermsOfUseGooglePopUp() {
+    const termsOfUse: Confirmation = {
+      acceptVisible: false,
+      target: this.menuButton.nativeElement,
+      rejectLabel: 'Close',
+      icon: 'pi pi-google',
+      message: `Since this chatbot uses Googles DialogFlow to process Information, 
+      with the agreement of our terms you also agree with 
+      the terms of Google. In short you agree that Google uses the data to train their AI Algorithm and also
+      our adaption of AI for our dialog. These can be viewed under this link: 
+      https://cloud.google.com/dialogflow/
+      docs/data-logging-terms?hl=de`,
       reject: () => {
         //
       },
@@ -624,9 +648,22 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       {
         label: 'Terms of Use',
         icon: 'pi pi-info-circle',
-        command: () => {
-          this.createTermsOfUsePopUp();
-        },
+        items: [
+          {
+            label: 'General Information',
+            icon: 'pi pi-question',
+            command: () => {
+              this.createTermsOfUsePopUp();
+            },
+          },
+          {
+            label: 'Google Terms',
+            icon: 'pi pi-google',
+            command: () => {
+              this.createTermsOfUseGooglePopUp();
+            },
+          },
+        ],
       },
     ];
   }

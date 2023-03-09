@@ -258,6 +258,12 @@ describe('ChatbotMainWindowComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('METHOD: createTermsOfUseGooglePopUp(), TARGET: should call message function, OUTCOME: None specific ', () => {
+    const spy = spyOn(component, 'createTermsOfUseGooglePopUp');
+    component.createTermsOfUseGooglePopUp();
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
   it('METHOD: changeSizeOfComponent(), TARGET: change size inside variables, OUTCOME: size == 1.2 ', () => {
     const size = 1.2;
     component.changeSizeOfComponent(size);
