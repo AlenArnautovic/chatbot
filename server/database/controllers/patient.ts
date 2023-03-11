@@ -137,7 +137,7 @@ export const changeAppointment = async (vNumber:string, disease:string, oldAppoi
     });
     (await Connection).end;
 }
-
+ 
 //Add  Patient
 export const addPatient = async (vNumber:string, preName:string,lastName:string, phone:string, birthdate:string, address_ID:string, req:Request, res:Response) => {        
     console.log(NAMESPACE,  "Add Patient");
