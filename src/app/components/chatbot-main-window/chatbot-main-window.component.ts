@@ -117,7 +117,18 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   }
 
   testDataBase() {
-    this.communicationService.sendMessageToDatabase('yes');
+    //this.communicationService.createDatabase();
+    //this.communicationService.insertTestData();
+    //this.communicationService.checkPatientsData(30,'Charles ', 'Garcia','123456789' );
+    //this.communicationService.checkIfPatientHasAppointmentForDisease('123456789','Ear Problem');
+    //this.communicationService.checkIfPatientHasAppointmentAtTime('123456789','2023-02-01 07:00:00' );
+    //this.communicationService.checkIfDoctorForDiseaseIsAvailable('Ear Problem');
+    //this.communicationService.checkIfDoctorForDiseaseIsAvailableForASpecificAppointment('Ear Problem','2023-03-01 10:00:00');
+    //this.communicationService.getInformationOfAppointment('555666777' ,'2023-02-01 07:15:00');
+    //this.communicationService.bookAppointment('555666777','2023-02-01 10:15:00','Headache', 'Pressure, Cant hear anything, Stucked');
+    //this.communicationService.changeAppointment('123456789','Back Pain', '2023-02-01 07:00:00','2023-02-01 09:15:00' );
+    //this.communicationService.deleteAppointment('123456789','2023-02-01 09:15:00'); 
+    this.communicationService.addPatient("0000000","Alen","Arnautovic","15771517805","1997-05-26","3")
   }
 
   /**

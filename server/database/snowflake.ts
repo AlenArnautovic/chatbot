@@ -1,7 +1,7 @@
 import * as snowflake from 'snowflake-sdk'
 
 const snowConnect = snowflake.createConnection({
-    account: "ob95661.europe-west4.gcp",
+    account: "dk51672.europe-west4.gcp",
     username: "CHATBOT", 
     password: "Chatbot123",
     authenticator: "SNOWFLAKE", 
@@ -20,9 +20,9 @@ snowConnect.connect(function (err, conn) {
     });
 
 
-export function executeInsert(){
+export function executeDrop(){
     snowConnect.execute({
-        sqlText: `INSERT INTO CHATBOT.PATIENT.PATIENT VALUES (77,'test','test')`,
+        sqlText: `DROP DATABASE TEST3`,
         complete: function (err, stmt) {
         if (err) {
         console.error("Failed to execute statement due to the following error: " + err.message)
