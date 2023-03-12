@@ -287,4 +287,22 @@ export class CommunicationService {
     )) as chatbotTransportObject;
     return response;
   }
+
+  async checkIfAppointmentForDiseaseIsAvailable(
+    disease: string,
+    appointment: string
+  ): Promise<chatbotTransportObject> {
+    const response: chatbotTransportObject = (await firstValueFrom(
+      this.http.post(
+        `${this.baseServerUrl}database/checkIfAppointmentForDiseaseIsAvailable`,
+        {
+          disease,
+          appointment,
+          userId: this.getClientId(),
+        }
+      )
+    )) as chatbotTransportObject;
+    return response;
+  }
+  
 }

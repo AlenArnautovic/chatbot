@@ -91,6 +91,29 @@ export const checkIfDoctorForDiseaseIsAvailable = async (disease: string) => {
   (await Connection).end;
 };
 
+//Gibt True zurück wenn Appointment verfügbar ist ansonsten nichts
+export const checkIfAppointmentForDiseaseIsAvailable = async (
+  disease: string,
+  appointment: string
+) => {
+  console.log(
+    NAMESPACE,
+    'True if Appointment for a Speficic Disease is avaialable'
+  );
+  const query =
+    'SELECT "True"  AS TerminIsAvaiable FROM chatbot.appointment a RIGHT JOIN chatbot.openinghours oh ON a.openinghours_id = oh.openinghours_id LEFT JOIN chatbot.doctor_location dl ON a.docloc_id = dl.doctor_location_id LEFT JOIN chatbot.doctor d ON d.doc_id = dl.doc_id WHERE (a.docloc_id NOT IN (SELECT d.doc_id FROM chatbot.DOCTOR d INNER JOIN chatbot.doctor_specialization ds ON d.doc_id = ds.doc_id LEFT JOIN chatbot.SPECIALIZATION s ON ds.spec_id = s.spec_id WHERE s.spec_name = ?) OR a.docloc_id iS NULL) AND time_from = ? ORDER BY oh.openinghours_id ; ';
+    (await Connection).query(query, [disease, appointment], (error, result) => {
+    if (error) {
+      console.log(NAMESPACE, error.message, error);
+      return null;
+    }
+    console.log(result);
+    //return res.status(200).json({result});
+    return result;
+  });
+  (await Connection).end;
+};
+
 //Gibt die nächsten 5 Termine zurück die frei sind für eine Disease
 //Ab einem bestimmten Zeitpunkt
 export const checkIfDoctorForDiseaseIsAvailableForASpecificAppointment = async (

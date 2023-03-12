@@ -136,12 +136,12 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     //   '2023-03-01 10:00:00'
     // );
     //this.communicationService.getInformationOfAppointment('555666777' ,'2023-02-01 07:15:00');
-    this.communicationService.bookAppointment(
-      '123456789',
-      '2023-02-01 10:15:00',
-      'Headache',
-      'Pressure, Cant hear anything, Stucked'
-    );
+    //this.communicationService.bookAppointment(
+    //  '123456789',
+    //  '2023-02-01 10:15:00',
+    //  'Headache',
+    //  'Pressure, Cant hear anything, Stucked'
+    //);
     //this.communicationService.changeAppointment('123456789','Back Pain', '2023-02-01 07:00:00','2023-02-01 09:15:00' );
     //this.communicationService.deleteAppointment('123456789','2023-02-01 09:15:00');
     // this.communicationService.addPatient(
@@ -152,6 +152,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     //   '1997-05-26',
     //   '3'
     // );
+    this.communicationService.checkIfAppointmentForDiseaseIsAvailable('Ear Problem','2023-02-01 08:00:00' );
   }
 
   /**

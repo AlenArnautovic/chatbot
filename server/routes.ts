@@ -11,6 +11,7 @@ import {
   changeAppointment,
   deleteAppointment,
   addPatient,
+  checkIfAppointmentForDiseaseIsAvailable,
 } from './database/controllers/patient';
 import {
   createDatabase,
@@ -103,6 +104,13 @@ app.post('/database/checkIfPatientHasAppointmentAtTime', async (req, res) => {
   const vNumber = req.body.vNumber;
   const appointment = req.body.appointment;
   checkIfPatientHasAppointmentAtTime(vNumber, appointment);
+});
+
+
+app.post('/database/checkIfAppointmentForDiseaseIsAvailable', async (req, res) => {
+  const disease = req.body.disease;  
+  const appointment = req.body.appointment;
+  checkIfAppointmentForDiseaseIsAvailable(disease,appointment);
 });
 
 app.post('/database/checkIfDoctorForDiseaseIsAvailable', async (req, res) => {
