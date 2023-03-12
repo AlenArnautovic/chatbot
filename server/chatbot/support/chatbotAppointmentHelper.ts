@@ -1,5 +1,13 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
-import { getPatientInfoObjectForId } from './chatbotPatientInfoStore';
+import {
+  addPatient,
+  checkIfPatientHasAppointmentForDisease,
+  checkPatientsData,
+} from '../../database/controllers/patient';
+import {
+  getPatientInfoObjectForId,
+  PatientInfo,
+} from './chatbotPatientInfoStore';
 import { timeObject } from './chatbotSupport';
 
 export class AppointmentHelper {
@@ -86,4 +94,103 @@ export class AppointmentHelper {
       return null;
     }
   }
+
+  public static async checkIfUserIsInDataBase(
+    userId: string
+  ): Promise<boolean> {
+    const patient: PatientInfo = getPatientInfoObjectForId(userId);
+    const result: any = await checkPatientsData(
+      patient.birthdate,
+      patient.firstName,
+      patient.lastName,
+      patient.vNumber.toString()
+    );
+
+    if (
+      result != null &&
+      result.length > 0 &&
+      result[0].Correct_PATIENT_Data == 'Yes'
+    ) {
+      console.log('true');
+      return true;
+    } else {
+      console.log('false');
+      return false;
+    }
+  }
+
+  public static convertDatabaseIntoJSON(result: any): any[] {
+    try {
+      if (result != null) {
+        const data = JSON.parse(JSON.stringify(result));
+        console.log(data);
+        return data;
+      } else {
+        console.log('Database Object could not be converted!');
+        return null;
+      }
+    } catch (error) {
+      console.log('Database Object  could not be converted!');
+      return null;
+    }
+  }
+
+  public static async saveUserInDatabase(userId: string): Promise<boolean> {
+    const patient: PatientInfo = getPatientInfoObjectForId(userId);
+
+    const vnumber = patient.vNumber;
+    const firstName = patient.firstName;
+    const lastName = patient.lastName;
+    const phone = patient.phoneNumber;
+    const birthdate = patient.birthdate;
+
+    const result = await addPatient(
+      vnumber.toString(),
+      firstName,
+      lastName,
+      phone.toString(),
+      birthdate,
+      '1'
+    );
+    return result != null ? true : false;
+  }
+
+  public static splitBirthdate(dateTime: string): string {
+    if (dateTime != null && dateTime.length > 0) {
+      try {
+        const splitted = dateTime.split('T');
+        return splitted[0];
+      } catch (error) {
+        return '';
+      }
+    } else {
+      return '';
+    }
+  }
+
+  public static async isPatientForDiseaseAlreadyRegistered(
+    userId: string
+  ): Promise<boolean> {
+    const patient: PatientInfo = getPatientInfoObjectForId(userId);
+    const result = await checkIfPatientHasAppointmentForDisease(
+      patient.vNumber.toString(),
+      patient.disease
+    );
+
+    if (result != null) {
+      return result[0] != null ? true : false;
+    } else {
+      return false;
+    }
+  }
+
+  // public static async createDataResponse(userId:string):Promise<string>{
+  //   const toProof = await AppointmentHelper.checkIfUserIsInDataBase(userId);
+  //   if(toProof){
+  //     const toProofDisease = await AppointmentHelper.isPatientForDiseaseAlreadyRegistered(userId);
+  //     if()
+  //   }else{
+
+  //   }
+  // }
 }

@@ -6,7 +6,7 @@ export interface PatientInfo {
   userId: string;
   firstName: string;
   lastName: string;
-  age: number;
+  birthdate: string;
   vNumber: number;
   disease: string;
   isRelatedPerson: boolean;

@@ -206,17 +206,15 @@ export class Chatbot {
                 this.patchPatientInfo(userId, null, fields[key].stringValue);
               }
               break;
-            case 'patient_age':
+            case 'patient-birthdate':
               if (
-                fields[key].numberValue != null &&
-                fields[key].numberValue > 0
+                fields[key].stringValue != null &&
+                fields[key].stringValue.length > 0
               ) {
-                this.patchPatientInfo(
-                  userId,
-                  null,
-                  null,
-                  fields[key].numberValue
+                const birthdate = AppointmentHelper.splitBirthdate(
+                  fields[key].stringValue
                 );
+                this.patchPatientInfo(userId, null, null, birthdate);
               }
               break;
             case 'vNumber':
@@ -281,7 +279,7 @@ export class Chatbot {
     userId: string,
     firstName?: string,
     lastName?: string,
-    age?: number,
+    birthdate?: string,
     vNumber?: number,
     disease?: string,
     symptom?: string,
@@ -295,7 +293,7 @@ export class Chatbot {
         patientExists = true;
         firstName != null ? (activePatient.firstName = firstName) : null;
         lastName != null ? (activePatient.lastName = lastName) : null;
-        age != null ? (activePatient.age = age) : null;
+        birthdate != null ? (activePatient.birthdate = birthdate) : null;
         vNumber != null ? (activePatient.vNumber = vNumber) : null;
         disease != null ? (activePatient.disease = disease) : null;
         symptom != null ? (activePatient.symptom = symptom) : null;
@@ -311,7 +309,7 @@ export class Chatbot {
         userId: userId,
         firstName: firstName != null ? firstName : '',
         lastName: lastName != null ? lastName : '',
-        age: age != null ? age : -1,
+        birthdate: birthdate != null ? birthdate : '',
         vNumber: vNumber != null ? vNumber : -1,
         disease: disease != null ? disease : '',
         symptom: symptom != null ? symptom : '',
@@ -322,14 +320,14 @@ export class Chatbot {
     }
   }
 
-  public static createChatbotTransportObject(
+  public static async createChatbotTransportObject(
     response: [
       google.cloud.dialogflow.v2.IDetectIntentResponse,
       google.cloud.dialogflow.v2.IDetectIntentRequest,
       any
     ],
     userId: string
-  ): chatbotTransportObject {
+  ): Promise<chatbotTransportObject> {
     new chatbotDiseaseManager();
     const chatbotTransportObject: chatbotTransportObject = {
       isError: false,
@@ -409,6 +407,10 @@ export class Chatbot {
         case 'event_book_appointment_related_ask':
         case 'Event_Call_Doctor_ASAP':
           chatbotTransportObject.isReminderForPatient = true;
+          break;
+        case 'patient_get_phone_number':
+        case 'related_person_get_phone_number':
+          // response[0].queryResult.fulfillmentText = message;
           break;
         default:
           break;

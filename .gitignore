@@ -43,3 +43,5 @@ Thumbs.db
 
 #additional
 server/node_modules
+Chatbot.session.sql
+.vscode/settings.json
