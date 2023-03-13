@@ -24,6 +24,24 @@ export function getPatientInfoObjectForId(userId: string): PatientInfo {
   }
 }
 
+export function deletePatientData(userId: string) {
+  try {
+    const patient = getPatientInfoObjectForId(userId);
+
+    const index = activePatiens.indexOf(patient, 0);
+    if (index > -1) {
+      activePatiens.splice(index, 1);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getFullNameById(userId: string): string {
+  const patient = getPatientInfoObjectForId(userId);
+  return patient.firstName + ' ' + patient.lastName;
+}
+
 export function getDiseaseForId(userId: string): Diseases {
   for (const patient of activePatiens) {
     if (patient.userId == userId) {

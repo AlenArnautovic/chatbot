@@ -20,6 +20,7 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 import {
   ChoiceObject,
   leftMessageLayout,
+  MessageLayout,
   MessageObject,
   rightMessageLayout,
   timeStampPlaceholder,
@@ -33,6 +34,7 @@ import { messageTypes } from './messageTypes';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { choiceServerObject } from 'src/app/services/communication/communicationHelper';
+import { timestamp } from 'rxjs';
 
 @Component({
   selector: 'app-chatbot-main-window',
@@ -131,10 +133,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     // );
     //this.communicationService.checkIfPatientHasAppointmentAtTime('123456789','2023-02-01 07:00:00' );
     //this.communicationService.checkIfDoctorForDiseaseIsAvailable('Ear Problem');
-    // this.communicationService.checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(
-    //   'Ear Problem',
-    //   '2023-03-01 10:00:00'
-    // );
+    this.communicationService.checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(
+      'Ear Problem',
+      '2023-03-01 10:00:00'
+    );
     //this.communicationService.getInformationOfAppointment('555666777' ,'2023-02-01 07:15:00');
     //this.communicationService.bookAppointment(
     //  '123456789',
@@ -152,7 +154,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     //   '1997-05-26',
     //   '3'
     // );
-    this.communicationService.checkIfAppointmentForDiseaseIsAvailable('Ear Problem','2023-02-01 08:00:00' );
+    // this.communicationService.checkIfAppointmentForDiseaseIsAvailable(
+    //   'Ear Problem',
+    //   '2023-02-01 08:00:00'
+    // );
   }
 
   /**
@@ -161,9 +166,16 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
    * @param isAnswer true if message is created from chatbot else false
    */
   createMessage(conent: string, isAnswer: boolean) {
+    let newMessageLayout: MessageLayout;
+    if (isAnswer) {
+      newMessageLayout = { ...leftMessageLayout };
+    } else {
+      newMessageLayout = { ...rightMessageLayout };
+    }
+
     const newMessage: MessageObject = {
       content: conent,
-      messageLayout: isAnswer ? leftMessageLayout : rightMessageLayout,
+      messageLayout: newMessageLayout,
       isMultipleChoice: false,
       choiceObjects: [],
     };
@@ -452,12 +464,20 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
         element.messageLayout.textColor = invertColor(
           returnColorForQuestions(currentTheme, true)
         );
+
+        element.messageLayout.timeStamp.color = invertColor(
+          returnColorForQuestions(currentTheme, true)
+        );
       } else {
         element.messageLayout.backgroundColor = returnColorForAnswers(
           currentTheme,
           false
         );
         element.messageLayout.textColor = invertColor(
+          returnColorForAnswers(currentTheme, true)
+        );
+
+        element.messageLayout.timeStamp.color = invertColor(
           returnColorForAnswers(currentTheme, true)
         );
       }
@@ -485,9 +505,19 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       accept: async () => {
         this.disableAllChoiceButtons();
         this.ref.detectChanges();
-        const answer = choiceObj.isFallback
-          ? 'I do not have any of the mentioned symptoms'
-          : `My concern also contains ${choiceObj.label}`;
+        let answer: string;
+        if (
+          choiceObj.event.includes('appointment_is_available') ||
+          choiceObj.event.includes('event_appointment_is_available_decline')
+        ) {
+          answer = choiceObj.isFallback
+            ? 'None of these timeslots fit my scedule.'
+            : `Yes the timslot ${choiceObj.label} fits for me!`;
+        } else {
+          answer = choiceObj.isFallback
+            ? 'I do not have any of the mentioned symptoms'
+            : `My concern also contains ${choiceObj.label}`;
+        }
         this.createMessage(answer, false);
         this.showIsTyping = true;
         const response =

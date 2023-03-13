@@ -250,29 +250,44 @@ export class AppointmentHelper {
         patient.disease,
         patient.appointment
       );
-    const choice: choiceServerObject = {
+    const choiceFallback: choiceServerObject = {
       label: 'none of the above',
-      event: DialogEvents.EVENT_APPOINTMENT_NOT_AVAILABLE,
+      event: DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE_DECLINE,
       description:
         'If you have no time on the given appointments select this. There are possibly other appointments available later on that could be fitting. To trigger these, it is however necessary to reload the website!',
       isFallback: true,
     };
-    const choiceObjects: choiceServerObject[] = [choice];
+    const choiceObjects: choiceServerObject[] = [];
 
     result.forEach((element) => {
+      const dateTime = element.Time_From.toISOString()
+        .slice(0, 19)
+        .replace('T', ' ');
+      console.log();
       const choice: choiceServerObject = {
-        label: this.convertDataBaseIntoViewFormat(element.Time_From),
-        event: DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE,
+        label: dateTime,
+        event: DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE + '#' + dateTime,
         description:
           'The Appointment takes up a time slot of about 15min with the Doctor. Click consent to select.',
         isFallback: false,
       };
       choiceObjects.push(choice);
     });
+    choiceObjects.push(choiceFallback);
     const container: choiceContainer = {
       choices: choiceObjects,
     };
 
     return container;
+  }
+
+  public static async bookAppointment(userId: string) {
+    const patient = getPatientInfoObjectForId(userId);
+    await Database.bookAppointment(
+      patient.vNumber.toString(),
+      patient.appointment,
+      patient.disease,
+      patient.symptom != null ? patient.symptom : ''
+    );
   }
 }

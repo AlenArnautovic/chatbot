@@ -41,6 +41,7 @@ export enum DialogEvents {
 
   EVENT_APPOINTMENT_IS_AVAILABLE = 'appointment_is_available',
   EVENT_APPOINTMENT_NOT_AVAILABLE = 'appointment_not_available',
+  EVENT_APPOINTMENT_IS_AVAILABLE_DECLINE = 'event_appointment_is_available_decline',
 }
 
 export enum ChoiceLevel {

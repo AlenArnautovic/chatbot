@@ -2,12 +2,15 @@ import dialogflow from '@google-cloud/dialogflow';
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import e from 'express';
 import { v4 as uuid } from 'uuid';
+import { Database } from '../database/controllers/databaseMain';
 import { getInformationOfAppointment } from '../database/controllers/patient';
 import { chatbotDiseaseManager } from './chatbotDiseaseManager';
 import { AppointmentHelper } from './support/chatbotAppointmentHelper';
 import {
   activePatiens,
+  deletePatientData,
   getDiseaseForId,
+  getFullNameById,
   getIsRelatedForId,
   getPatientInfoObjectForId,
   PatientInfo,
@@ -74,14 +77,19 @@ export class Chatbot {
       try {
         const splittedEvent = eventName.split(this.eventSplitter);
         eventName = splittedEvent[0];
-        this.patchPatientInfo(
-          this.getFullUserId(userId),
-          null,
-          null,
-          null,
-          null,
-          splittedEvent[1]
-        );
+        if (eventName == DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE) {
+          const patient = getPatientInfoObjectForId(this.getFullUserId(userId));
+          patient.appointment = splittedEvent[1];
+        } else {
+          this.patchPatientInfo(
+            this.getFullUserId(userId),
+            null,
+            null,
+            null,
+            null,
+            splittedEvent[1]
+          );
+        }
       } catch (errorEvent) {
         console.log(errorEvent);
       }
@@ -200,6 +208,25 @@ export class Chatbot {
                 fields: {
                   //TODO get phone number of doctors office
                   number: { numberValue: 12345678 },
+                },
+              },
+            },
+          },
+        };
+        break;
+      case DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+              parameters: {
+                fields: {
+                  name: { stringValue: getFullNameById(userId) },
+                  time: {
+                    stringValue: getPatientInfoObjectForId(userId).appointment,
+                  },
                 },
               },
             },
@@ -482,6 +509,12 @@ export class Chatbot {
           if (response[0].queryResult.fulfillmentText == null) {
             chatbotTransportObject.isError = true;
           }
+          break;
+        case 'appointment_available_agree':
+          AppointmentHelper.bookAppointment(this.getFullUserId(userId));
+          break;
+        case 'appointment_available_disagree':
+          deletePatientData(this.getFullUserId(userId));
           break;
         default:
           break;
