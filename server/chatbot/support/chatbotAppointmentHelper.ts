@@ -1,11 +1,5 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
-import {
-  addPatient,
-  checkIfAppointmentForDiseaseIsAvailable,
-  checkIfDoctorForDiseaseIsAvailableForASpecificAppointment,
-  checkIfPatientHasAppointmentForDisease,
-  checkPatientsData,
-} from '../../database/controllers/patient';
+import { Database } from '../../database/controllers/databaseMain';
 import {
   getPatientInfoObjectForId,
   PatientInfo,
@@ -103,7 +97,9 @@ export class AppointmentHelper {
     userId: string
   ): Promise<boolean> {
     const patient: PatientInfo = getPatientInfoObjectForId(userId);
-    const result: any = await checkPatientsData(patient.vNumber.toString());
+    const result: any = await Database.checkPatientsData(
+      patient.vNumber.toString()
+    );
 
     if (
       result != null &&
@@ -143,7 +139,7 @@ export class AppointmentHelper {
     const phone = patient.phoneNumber;
     const birthdate = patient.birthdate;
 
-    const result = await addPatient(
+    const result = await Database.addPatient(
       vnumber.toString(),
       firstName,
       lastName,
@@ -171,7 +167,7 @@ export class AppointmentHelper {
     userId: string
   ): Promise<boolean> {
     const patient: PatientInfo = getPatientInfoObjectForId(userId);
-    const result = await checkIfPatientHasAppointmentForDisease(
+    const result = await Database.checkIfPatientHasAppointmentForDisease(
       patient.vNumber.toString(),
       patient.disease
     );
@@ -185,7 +181,7 @@ export class AppointmentHelper {
 
   public static async getTimeFromAppointment(userId: string): Promise<string> {
     const patient: PatientInfo = getPatientInfoObjectForId(userId);
-    const result = await checkIfPatientHasAppointmentForDisease(
+    const result = await Database.checkIfPatientHasAppointmentForDisease(
       patient.vNumber.toString(),
       patient.disease
     );
@@ -228,7 +224,7 @@ export class AppointmentHelper {
     userId: string
   ): Promise<DialogEvents> {
     const patient = getPatientInfoObjectForId(userId);
-    const result: any = await checkIfAppointmentForDiseaseIsAvailable(
+    const result: any = await Database.checkIfAppointmentForDiseaseIsAvailable(
       patient.disease,
       patient.appointment
     );
@@ -250,7 +246,7 @@ export class AppointmentHelper {
     const patient = getPatientInfoObjectForId(userId);
     console.log(patient);
     const result: any =
-      await checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(
+      await Database.checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(
         patient.disease,
         patient.appointment
       );
