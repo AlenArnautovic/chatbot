@@ -10,8 +10,9 @@ export interface PatientInfo {
   vNumber: number;
   disease: string;
   isRelatedPerson: boolean;
-  phoneNumber: number;
+  phoneNumber: string;
   symptom?: string;
+  appointment?: string;
 
   //TODO extend
 }
@@ -42,15 +43,15 @@ export function getIsRelatedForId(userId: string): boolean {
 
 function getEnumForDiseaseName(disease: string): Diseases {
   switch (disease) {
-    case 'backpain':
+    case 'Back Pain':
       return Diseases.BACKPAIN;
-    case 'ear-problems':
+    case 'Ear Problem':
       return Diseases.EAR_PROBLEMS;
-    case 'eye-problems':
+    case 'Eye Problem':
       return Diseases.EYE_PROBLEMS;
-    case 'sore-throat':
+    case 'Sore Throat':
       return Diseases.SORE_THROAT;
-    case 'headache':
+    case 'Headache':
       return Diseases.HEADACHE;
     default:
       return null;

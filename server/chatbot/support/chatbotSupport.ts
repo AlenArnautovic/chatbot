@@ -19,11 +19,11 @@ export interface chatbotTransportObject {
 }
 
 export enum Diseases {
-  BACKPAIN = 'backpain',
-  EAR_PROBLEMS = 'ear-problems',
-  EYE_PROBLEMS = 'eye-problems',
-  SORE_THROAT = 'sore-throat',
-  HEADACHE = 'headache',
+  BACKPAIN = 'Back Pain',
+  EAR_PROBLEMS = 'Ear Problem',
+  EYE_PROBLEMS = 'Eye Problem',
+  SORE_THROAT = 'Sore Throat',
+  HEADACHE = 'Headache',
 }
 
 export enum DialogEvents {
@@ -36,6 +36,11 @@ export enum DialogEvents {
   EVENT_ASK_WHO_IS_ILL = 'event_ask_who_is_ill',
   EVENT_SELECTED_ILLNESS_NOT_THERE = 'event_selected_illness_not_there',
   EVENT_BOOK_APPOINTMENT_RELATED_ASK = 'event_book_appointment_related_ask',
+  EVENT_PATIENT_HAS_APPOINTMENT = 'patient_has_appointment',
+  EVENT_ASK_FOR_APPOINTMENT = 'event_appointment_ask_date',
+
+  EVENT_APPOINTMENT_IS_AVAILABLE = 'appointment_is_available',
+  EVENT_APPOINTMENT_NOT_AVAILABLE = 'appointment_not_available',
 }
 
 export enum ChoiceLevel {

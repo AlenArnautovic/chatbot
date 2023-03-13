@@ -75,12 +75,12 @@ app.get('/database/getPatient', async (req, res) => {
 
 app.post('/database/createDatabase', async (req, res) => {
   const text = req.body.message;
-  createDatabase(req, res);
+  createDatabase();
 });
 
 app.post('/database/insertTestData', async (req, res) => {
   const text = req.body.message;
-  insertTestData(req, res);
+  insertTestData();
 });
 
 app.post('/database/checkPatientsData', async (req, res) => {
@@ -88,7 +88,7 @@ app.post('/database/checkPatientsData', async (req, res) => {
   const prename = req.body.prename;
   const lastname = req.body.lastname;
   const vNumber = req.body.vNumber;
-  checkPatientsData(birthdate, prename, lastname, vNumber);
+  checkPatientsData(vNumber);
 });
 
 app.post(
@@ -106,12 +106,14 @@ app.post('/database/checkIfPatientHasAppointmentAtTime', async (req, res) => {
   checkIfPatientHasAppointmentAtTime(vNumber, appointment);
 });
 
-
-app.post('/database/checkIfAppointmentForDiseaseIsAvailable', async (req, res) => {
-  const disease = req.body.disease;  
-  const appointment = req.body.appointment;
-  checkIfAppointmentForDiseaseIsAvailable(disease,appointment);
-});
+app.post(
+  '/database/checkIfAppointmentForDiseaseIsAvailable',
+  async (req, res) => {
+    const disease = req.body.disease;
+    const appointment = req.body.appointment;
+    checkIfAppointmentForDiseaseIsAvailable(disease, appointment);
+  }
+);
 
 app.post('/database/checkIfDoctorForDiseaseIsAvailable', async (req, res) => {
   const disease = req.body.disease;

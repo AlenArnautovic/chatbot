@@ -1,6 +1,8 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import {
   addPatient,
+  checkIfAppointmentForDiseaseIsAvailable,
+  checkIfDoctorForDiseaseIsAvailableForASpecificAppointment,
   checkIfPatientHasAppointmentForDisease,
   checkPatientsData,
 } from '../../database/controllers/patient';
@@ -8,7 +10,13 @@ import {
   getPatientInfoObjectForId,
   PatientInfo,
 } from './chatbotPatientInfoStore';
-import { timeObject } from './chatbotSupport';
+import {
+  chatbotTransportObject,
+  choiceContainer,
+  choiceServerObject,
+  DialogEvents,
+  timeObject,
+} from './chatbotSupport';
 
 export class AppointmentHelper {
   public static retrieveAppointmentFromResponse(
@@ -18,7 +26,7 @@ export class AppointmentHelper {
       any
     ],
     userId: string
-  ): timeObject {
+  ) {
     const timeObject: timeObject = {
       date: '',
       time: '',
@@ -59,22 +67,18 @@ export class AppointmentHelper {
         }
       }
     }
-    return timeObject;
+    const patient = getPatientInfoObjectForId(userId);
+    patient.appointment = timeObject.date + ' ' + timeObject.time;
   }
 
   private static retrieveInfoFromJson(value: string, isDate: boolean): string {
     const splitted = value.split('T');
     if (isDate) {
-      const onlyDate = splitted[0];
-      const splittedDate = onlyDate.split('-');
-      const returnDate =
-        splittedDate[2] + '.' + splittedDate[1] + '.' + splittedDate[0];
-      return returnDate;
+      return splitted[0];
     } else {
       const onlyTime = splitted[1];
-      const splittedTime = onlyTime.split(':');
-      const returnTime = splittedTime[0] + ':' + splittedTime[1];
-      return returnTime;
+      const splittedTime = onlyTime.split('+');
+      return splittedTime[0];
     }
   }
 
@@ -99,12 +103,7 @@ export class AppointmentHelper {
     userId: string
   ): Promise<boolean> {
     const patient: PatientInfo = getPatientInfoObjectForId(userId);
-    const result: any = await checkPatientsData(
-      patient.birthdate,
-      patient.firstName,
-      patient.lastName,
-      patient.vNumber.toString()
-    );
+    const result: any = await checkPatientsData(patient.vNumber.toString());
 
     if (
       result != null &&
@@ -148,7 +147,7 @@ export class AppointmentHelper {
       vnumber.toString(),
       firstName,
       lastName,
-      phone.toString(),
+      phone,
       birthdate,
       '1'
     );
@@ -184,13 +183,100 @@ export class AppointmentHelper {
     }
   }
 
-  // public static async createDataResponse(userId:string):Promise<string>{
-  //   const toProof = await AppointmentHelper.checkIfUserIsInDataBase(userId);
-  //   if(toProof){
-  //     const toProofDisease = await AppointmentHelper.isPatientForDiseaseAlreadyRegistered(userId);
-  //     if()
-  //   }else{
+  public static async getTimeFromAppointment(userId: string): Promise<string> {
+    const patient: PatientInfo = getPatientInfoObjectForId(userId);
+    const result = await checkIfPatientHasAppointmentForDisease(
+      patient.vNumber.toString(),
+      patient.disease
+    );
+    return this.convertDataBaseIntoViewFormat(result[0].time_from.toString());
+  }
 
-  //   }
-  // }
+  public static convertDataBaseIntoViewFormat(dateTime: string): string {
+    try {
+      const time = dateTime;
+      const splitted = time.split('T');
+      const date = splitted[0];
+      const hours = splitted[1];
+      const splittedhours = hours.split('.');
+      return date + ' from ' + splittedhours;
+    } catch (error) {
+      return 'Sometime';
+    }
+  }
+
+  public static async createDataResponse(
+    userId: string
+  ): Promise<DialogEvents> {
+    const toProof = await AppointmentHelper.checkIfUserIsInDataBase(userId);
+
+    if (toProof) {
+      const toProofDisease =
+        await AppointmentHelper.isPatientForDiseaseAlreadyRegistered(userId);
+      if (toProofDisease) {
+        return DialogEvents.EVENT_PATIENT_HAS_APPOINTMENT;
+      } else {
+        return DialogEvents.EVENT_ASK_FOR_APPOINTMENT;
+      }
+    } else {
+      this.saveUserInDatabase(userId);
+      return DialogEvents.EVENT_ASK_FOR_APPOINTMENT;
+    }
+  }
+
+  public static async checkIfAppointmentAvailable(
+    userId: string
+  ): Promise<DialogEvents> {
+    const patient = getPatientInfoObjectForId(userId);
+    const result: any = await checkIfAppointmentForDiseaseIsAvailable(
+      patient.disease,
+      patient.appointment
+    );
+    if (
+      result != null &&
+      result.length > 0 &&
+      result[0].TerminIsAvaiable == 'True'
+    ) {
+      return DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE;
+    } else {
+      console.log('false');
+      return DialogEvents.EVENT_APPOINTMENT_NOT_AVAILABLE;
+    }
+  }
+
+  public static async createMultipleChoiceForAppointments(
+    userId: string
+  ): Promise<choiceContainer> {
+    const patient = getPatientInfoObjectForId(userId);
+    console.log(patient);
+    const result: any =
+      await checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(
+        patient.disease,
+        patient.appointment
+      );
+    const choice: choiceServerObject = {
+      label: 'none of the above',
+      event: DialogEvents.EVENT_APPOINTMENT_NOT_AVAILABLE,
+      description:
+        'If you have no time on the given appointments select this. There are possibly other appointments available later on that could be fitting. To trigger these, it is however necessary to reload the website!',
+      isFallback: true,
+    };
+    const choiceObjects: choiceServerObject[] = [choice];
+
+    result.forEach((element) => {
+      const choice: choiceServerObject = {
+        label: this.convertDataBaseIntoViewFormat(element.Time_From),
+        event: DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE,
+        description:
+          'The Appointment takes up a time slot of about 15min with the Doctor. Click consent to select.',
+        isFallback: false,
+      };
+      choiceObjects.push(choice);
+    });
+    const container: choiceContainer = {
+      choices: choiceObjects,
+    };
+
+    return container;
+  }
 }

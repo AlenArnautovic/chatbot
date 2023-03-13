@@ -2,12 +2,14 @@ import dialogflow from '@google-cloud/dialogflow';
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import e from 'express';
 import { v4 as uuid } from 'uuid';
+import { getInformationOfAppointment } from '../database/controllers/patient';
 import { chatbotDiseaseManager } from './chatbotDiseaseManager';
 import { AppointmentHelper } from './support/chatbotAppointmentHelper';
 import {
   activePatiens,
   getDiseaseForId,
   getIsRelatedForId,
+  getPatientInfoObjectForId,
   PatientInfo,
 } from './support/chatbotPatientInfoStore';
 import {
@@ -90,6 +92,57 @@ export class Chatbot {
       sessionPath
     );
     console.log(request);
+    try {
+      const response = await Chatbot.sessionClient.detectIntent(request);
+      return response;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  private static eventQueryForAppointment = async (
+    eventName: string,
+    userId: string,
+    patientName?: string,
+    appointment?: string
+  ) => {
+    const sessionPath = Chatbot.sessionClient.projectAgentSessionPath(
+      Chatbot.projectId,
+      this.getFullUserId(userId)
+    );
+    let request: google.cloud.dialogflow.v2.IDetectIntentRequest;
+    switch (eventName) {
+      case DialogEvents.EVENT_PATIENT_HAS_APPOINTMENT:
+      case DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+              parameters: {
+                fields: {
+                  name: { stringValue: patientName },
+                  time: { stringValue: appointment },
+                },
+              },
+            },
+          },
+        };
+        break;
+      default:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+            },
+          },
+        };
+        break;
+    }
     try {
       const response = await Chatbot.sessionClient.detectIntent(request);
       return response;
@@ -248,8 +301,8 @@ export class Chatbot {
               break;
             case 'phone-number':
               if (
-                fields[key].numberValue != null &&
-                fields[key].numberValue > 0
+                fields[key].stringValue != null &&
+                fields[key].stringValue.length > 0
               ) {
                 this.patchPatientInfo(
                   userId,
@@ -260,7 +313,7 @@ export class Chatbot {
                   null,
                   null,
                   null,
-                  fields[key].numberValue
+                  fields[key].stringValue
                 );
               }
               break;
@@ -284,7 +337,7 @@ export class Chatbot {
     disease?: string,
     symptom?: string,
     isRelatedPerson?: boolean,
-    phoneNumber?: number
+    phoneNumber?: string
   ) {
     const activePatientsIterator = activePatiens;
     let patientExists = false;
@@ -314,7 +367,7 @@ export class Chatbot {
         disease: disease != null ? disease : '',
         symptom: symptom != null ? symptom : '',
         isRelatedPerson: isRelatedPerson != null ? isRelatedPerson : false,
-        phoneNumber: phoneNumber != null ? phoneNumber : null,
+        phoneNumber: phoneNumber != null ? phoneNumber : '',
       };
       activePatiens.push(newPatient);
     }
@@ -389,18 +442,30 @@ export class Chatbot {
           break;
         case 'appointment_date_time':
           if (response[0].queryResult.allRequiredParamsPresent) {
-            const timeObject =
-              AppointmentHelper.retrieveAppointmentFromResponse(
-                response,
-                this.getFullUserId(userId)
-              );
-            const message = AppointmentHelper.createAppointmentMessage(
-              timeObject,
+            AppointmentHelper.retrieveAppointmentFromResponse(
+              response,
               this.getFullUserId(userId)
             );
-            response[0].queryResult.fulfillmentText = message;
+            if (
+              (await AppointmentHelper.checkIfAppointmentAvailable(
+                this.getFullUserId(userId)
+              )) == DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE
+            ) {
+              response[0].queryResult.fulfillmentText =
+                await this.triggerAppointmentAgree(this.getFullUserId(userId));
+              if (response[0].queryResult.fulfillmentText == null) {
+                chatbotTransportObject.isError = true;
+              }
+            } else {
+              chatbotTransportObject.fulfillmentText =
+                'Im sorry about that but the Doctor is not Available at that time. How about the following time slots?';
+              chatbotTransportObject.isMultipleChoice = true;
+              chatbotTransportObject.choiceContainer =
+                await AppointmentHelper.createMultipleChoiceForAppointments(
+                  this.getFullUserId(userId)
+                );
+            }
           }
-
           break;
         case 'Event_book_appointment_Ask':
         case 'Event_Call_Ambulace_Exit':
@@ -410,7 +475,13 @@ export class Chatbot {
           break;
         case 'patient_get_phone_number':
         case 'related_person_get_phone_number':
-          // response[0].queryResult.fulfillmentText = message;
+          response[0].queryResult.fulfillmentText =
+            await this.getMessageForAppointmentRequest(
+              this.getFullUserId(userId)
+            );
+          if (response[0].queryResult.fulfillmentText == null) {
+            chatbotTransportObject.isError = true;
+          }
           break;
         default:
           break;
@@ -433,6 +504,56 @@ export class Chatbot {
     }
     console.log(chatbotTransportObject);
     return chatbotTransportObject;
+  }
+
+  private static async triggerAppointmentAgree(
+    userId: string
+  ): Promise<string> {
+    try {
+      const patient = getPatientInfoObjectForId(userId);
+      const patientFullName = patient.firstName + ' ' + patient.lastName;
+      const response = await this.eventQueryForAppointment(
+        DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE,
+        userId,
+        patientFullName,
+        patient.appointment
+      );
+
+      return response[0].queryResult.fulfillmentText;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private static async getMessageForAppointmentRequest(
+    userId: string
+  ): Promise<string> {
+    const event = await AppointmentHelper.createDataResponse(userId);
+    let response: [
+      google.cloud.dialogflow.v2.IDetectIntentResponse,
+      google.cloud.dialogflow.v2.IDetectIntentRequest,
+      any
+    ];
+
+    try {
+      if (event == DialogEvents.EVENT_PATIENT_HAS_APPOINTMENT) {
+        const patient = getPatientInfoObjectForId(userId);
+        const patientFullName = patient.firstName + ' ' + patient.lastName;
+        const time = await AppointmentHelper.getTimeFromAppointment(userId);
+        response = await this.eventQueryForAppointment(
+          event,
+          userId,
+          patientFullName,
+          time
+        );
+        return response[0].queryResult.fulfillmentText;
+      } else {
+        response = await this.eventQueryForAppointment(event, userId);
+        return response[0].queryResult.fulfillmentText;
+      }
+    } catch (error) {
+      return null;
+    }
   }
 
   private static createTransportObjectForDiseaseLevel(

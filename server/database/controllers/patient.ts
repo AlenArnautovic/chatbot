@@ -6,26 +6,18 @@ const Connection = Connect();
 
 //Gibt yes zurück , wenn Patient in DB gefunden wurde,
 //Ansonsten NULL
-export const checkPatientsData = async (
-  birthdate: string,
-  prename: string,
-  lastname: string,
-  vNumber: string
-) => {
+export const checkPatientsData = async (vNumber: string) => {
   console.log(NAMESPACE, 'Check Patient Data');
   const query =
     'SELECT "Yes" AS Correct_PATIENT_Data FROM 	chatbot.PATIENT WHERE vnumber = ?';
 
-  (await Connection).query(
-    query,
-    [vNumber, prename, lastname],
-    (error, result) => {
-      if (error) {
-        return null;
-      }
-      return AppointmentHelper.convertDatabaseIntoJSON(result);
+  (await Connection).query(query, [vNumber], (error, result) => {
+    if (error) {
+      return null;
     }
-  );
+    return AppointmentHelper.convertDatabaseIntoJSON(result);
+  });
+
   (await Connection).end;
 };
 
@@ -102,14 +94,12 @@ export const checkIfAppointmentForDiseaseIsAvailable = async (
   );
   const query =
     'SELECT "True"  AS TerminIsAvaiable FROM chatbot.appointment a RIGHT JOIN chatbot.openinghours oh ON a.openinghours_id = oh.openinghours_id LEFT JOIN chatbot.doctor_location dl ON a.docloc_id = dl.doctor_location_id LEFT JOIN chatbot.doctor d ON d.doc_id = dl.doc_id WHERE (a.docloc_id NOT IN (SELECT d.doc_id FROM chatbot.DOCTOR d INNER JOIN chatbot.doctor_specialization ds ON d.doc_id = ds.doc_id LEFT JOIN chatbot.SPECIALIZATION s ON ds.spec_id = s.spec_id WHERE s.spec_name = ?) OR a.docloc_id iS NULL) AND time_from = ? ORDER BY oh.openinghours_id ; ';
-    (await Connection).query(query, [disease, appointment], (error, result) => {
+  (await Connection).query(query, [disease, appointment], (error, result) => {
     if (error) {
       console.log(NAMESPACE, error.message, error);
       return null;
     }
-    console.log(result);
-    //return res.status(200).json({result});
-    return result;
+    return AppointmentHelper.convertDatabaseIntoJSON(result);
   });
   (await Connection).end;
 };
@@ -131,9 +121,7 @@ export const checkIfDoctorForDiseaseIsAvailableForASpecificAppointment = async (
       console.log(NAMESPACE, error.message, error);
       return null;
     }
-    console.log(result);
-    //return res.status(200).json({result});
-    return result;
+    return AppointmentHelper.convertDatabaseIntoJSON(result);
   });
   (await Connection).end;
 };
