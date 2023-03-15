@@ -117,10 +117,13 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     this.messageEvent.emit('closeWindow');
     this.communicationService.saveMessages(this.messageObjects);
   }
-
+  setUpDatabase() {
+    this.communicationService.createDatabase();
+  }
+  fillTestData() {
+    this.communicationService.insertTestData();
+  }
   testDataBase() {
-    //this.communicationService.createDatabase();
-    //this.communicationService.insertTestData();
     // this.communicationService.checkPatientsData(
     //   '1970-05-02',
     //   'Daniel',

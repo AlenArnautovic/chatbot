@@ -62,5 +62,10 @@
     </p-panel>
 </div>
 <p-confirmPopup  [style]="{'boxShadow':'0px 20px 30px 10px black', 'width':'30vw', 'maxWidth':'350px', 'zoom': confirmPopup}" rejectButtonStyleClass="p-button-outlined" [autoZIndex]="true"></p-confirmPopup>
-<button pButton label="Test Database" (click)="testDataBase()"></button>
+
+<div style="position:absolute; bottom: 0px; left:0px;" class="flex">
+    <button pButton class="mr-1  p-button-outlined"  label="Create Database" (click)="setUpDatabase()"></button>
+    <button pButton  class="mr-1  p-button-outlined" label="Insert Testdata" (click)="fillTestData()"></button>
+    <button pButton  class="mr-1 p-button-outlined" label="Test Database" (click)="testDataBase()"></button>
+</div>
  
