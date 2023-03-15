@@ -1,60 +1,34 @@
 # Chatbot Dokumentation:
 
-## Anleitung zum Projekt starten:
+## Initialize the Project (Chatbot):
 
-### Requirements: 
-- Node.js installieren (neuste Version)
-- VSCode installieren
-  - Erweiterungen für VSCode:
-    - Angular Language Service
-    - ESLint
-    - Nx Console
-    - Prettier ESLint (optional)
-- Git installieren
-- SourceTree installieren (optional)
-### Requirements Datenbank
--In Server/database
-  npm i snowflake-sdk
-  
+In order to set up the Server and Client of the Project the following steps need to be considered:
 
-### Projekt Initialisieren:
+1.	Install latest Git version on device
+2.	Install Node.js version 18.12.1 on device (other version may work as well, but not tested)
+3.	Install latest version of Virtual Studio Code on device
+4.	Install latest version of SourceTree on device (optional)
+5.	Clone the Project (e.g., via SourceTree or manually)
+  a.	In SourceTree:
+    i.	Click Remote
+    ii.	Copy Clone URL of git Project into URL input field
+    iii.	Choose Target folder and Name (e.g., Chatbot)
+    iv.	Press Clone
+6.	Open the Cloned folder in VSCode (via File-> Open Folder)
+7.	Open VSCode Terminal (the folder of the project should be selected ideal-ly)
+8.	Enter *npm i* and press enter (wait for it to run through)
+9.	When finished enter *cd server* press enter again
+10.	Enter *npm i* and press enter (wait for it to run through)
+11.	Enter *cd..* press enter again
 
-1. Repo clonen
-2. in VSCode öffnen
-3. Terminal öffnen
-4. "npm i" eingeben und enter drücken (falls es zu error kommt "npm i --legacy-peer-deps" versuchen)
+The project should now be set up.
 
-### Zum Starten: 
+## Start the Chatbot:
 
-- "yarn serve" eingeben
-  - startet sowohl den Server auf port 4245 als auch das Angular-Frontend auf port 4200
-- "localhost:4200" im Browser eingeben zum öffnen des Angular-Frontends
+- To start both the server and client all the command *yarn serve* has to be typed into the console. 
+- To now open the chatbot client the URL *localhost:4200* has to be entered into a browser of choice. 
+  We recommend using Google Chrome to guarantee that everything works as intended.
+- To shut down both server and client *ctrl+c* has to be pressed twice in the console.
 
 
-# Angular generated Dokumentation:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
