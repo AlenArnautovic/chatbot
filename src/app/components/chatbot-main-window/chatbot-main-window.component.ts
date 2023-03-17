@@ -523,8 +523,10 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
         }
         this.createMessage(answer, false);
         this.showIsTyping = true;
-        const eventExtendedWithSymptom =
-          choiceObj.event + '#' + choiceObj.label;
+        let eventExtendedWithSymptom = choiceObj.event;
+        if (!choiceObj.isFallback) {
+          eventExtendedWithSymptom = choiceObj.event + '#' + choiceObj.label;
+        }
         const response =
           await this.communicationService.triggerEventInDialogFlow(
             eventExtendedWithSymptom
