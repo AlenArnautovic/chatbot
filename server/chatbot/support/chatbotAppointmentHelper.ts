@@ -287,7 +287,31 @@ export class AppointmentHelper {
       patient.vNumber.toString(),
       patient.appointment,
       patient.disease,
-      patient.symptom != null ? patient.symptom : ''
+      this.createSymptonDescription(patient)
     );
+  }
+
+  public static createSymptonDescription(patient: PatientInfo): string {
+    if (patient != null) {
+      const symptom =
+        patient.symptom != null
+          ? `An Additional sympton is: ${patient.symptom}, `
+          : '';
+      const criticality =
+        patient.criticalCondition != null
+          ? 'Patient is either a Baby or Elderly, '
+          : '';
+      const duration =
+        patient.lengthOfDisease != null &&
+        patient.lengthOfDisease.amount != null &&
+        patient.lengthOfDisease.unit != null
+          ? `The combination of symptoms appeared ${patient.lengthOfDisease.amount} ${patient.lengthOfDisease.unit} ago.`
+          : '';
+
+      const symptomDescription = symptom + criticality + duration;
+      return symptomDescription;
+    } else {
+      return '';
+    }
   }
 }

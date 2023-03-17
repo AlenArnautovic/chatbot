@@ -9,11 +9,14 @@ import { AppointmentHelper } from './support/chatbotAppointmentHelper';
 import {
   activePatiens,
   deletePatientData,
+  duration,
   getDiseaseForId,
+  getEnumForDiseaseName,
   getFullNameById,
   getIsRelatedForId,
   getPatientInfoObjectForId,
   PatientInfo,
+  setCriticalCondition,
 } from './support/chatbotPatientInfoStore';
 import {
   chatbotTransportObject,
@@ -23,6 +26,7 @@ import {
   Diseases,
 } from './support/chatbotSupport';
 import { devKeys } from './support/devKeyConfig';
+import { DurationHelper } from './support/durationHelper';
 
 export class Chatbot {
   static eventSplitter = '#';
@@ -77,9 +81,15 @@ export class Chatbot {
       try {
         const splittedEvent = eventName.split(this.eventSplitter);
         eventName = splittedEvent[0];
+        const patient = getPatientInfoObjectForId(this.getFullUserId(userId));
         if (eventName == DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE) {
-          const patient = getPatientInfoObjectForId(this.getFullUserId(userId));
           patient.appointment = splittedEvent[1];
+        } else if (
+          eventName == DialogEvents.AMBULANCE_EXIT ||
+          eventName == DialogEvents.BOOK_APPOINTMENT_ASK ||
+          eventName == DialogEvents.CALL_DOCTOR_ASAP
+        ) {
+          patient.symptom = splittedEvent[1];
         } else {
           this.patchPatientInfo(
             this.getFullUserId(userId),
@@ -344,6 +354,28 @@ export class Chatbot {
                 );
               }
               break;
+            case 'disease-duration':
+              if (fields[key].structValue != null) {
+                const value = DurationHelper.retrieveDurationString(
+                  fields[key].structValue
+                );
+                if (value != null) {
+                  console.log(value);
+                  this.patchPatientInfo(
+                    userId,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    value
+                  );
+                }
+              }
+              break;
             default:
               //
               break;
@@ -364,7 +396,8 @@ export class Chatbot {
     disease?: string,
     symptom?: string,
     isRelatedPerson?: boolean,
-    phoneNumber?: string
+    phoneNumber?: string,
+    lengthOfDisease?: duration
   ) {
     const activePatientsIterator = activePatiens;
     let patientExists = false;
@@ -381,6 +414,9 @@ export class Chatbot {
           ? (activePatient.isRelatedPerson = isRelatedPerson)
           : null;
         phoneNumber != null ? (activePatient.phoneNumber = phoneNumber) : null;
+        lengthOfDisease != null
+          ? (activePatient.lengthOfDisease = lengthOfDisease)
+          : null;
         break;
       }
     }
@@ -395,8 +431,42 @@ export class Chatbot {
         symptom: symptom != null ? symptom : '',
         isRelatedPerson: isRelatedPerson != null ? isRelatedPerson : false,
         phoneNumber: phoneNumber != null ? phoneNumber : '',
+        lengthOfDisease: lengthOfDisease != null ? lengthOfDisease : null,
       };
       activePatiens.push(newPatient);
+    }
+  }
+
+  public static fullfillTasksForLevelRed(
+    userId: string,
+    isRelated: boolean,
+    isCritical: boolean,
+    response: [
+      google.cloud.dialogflow.v2.IDetectIntentResponse,
+      google.cloud.dialogflow.v2.IDetectIntentRequest,
+      any
+    ],
+    chatbotTransportObject: chatbotTransportObject
+  ) {
+    if (response[0].queryResult.allRequiredParamsPresent) {
+      this.setIsRelatedPerson(userId, isRelated);
+      setCriticalCondition(userId, isCritical);
+      this.createTransportObjectForDiseaseLevel(
+        userId,
+        chatbotTransportObject,
+        ChoiceLevel.RED
+      );
+      if (
+        response[0].queryResult.fulfillmentText != null &&
+        response[0].queryResult.fulfillmentText.length > 0
+      ) {
+        const extendedResponse =
+          response[0].queryResult.fulfillmentText +
+          ' ' +
+          getDiseaseForId(userId) +
+          '?';
+        response[0].queryResult.fulfillmentText = extendedResponse;
+      }
     }
   }
 
@@ -417,47 +487,61 @@ export class Chatbot {
     };
     try {
       const intentName = response[0].queryResult.intent.displayName;
+      const currentUserFull = this.getFullUserId(userId);
       switch (intentName) {
-        case 'Illness_Start':
-        case 'ask_who_is_ill_person':
-          this.setIsRelatedPerson(this.getFullUserId(userId), false);
-          if (response[0].queryResult.allRequiredParamsPresent) {
-            this.createTransportObjectForDiseaseLevel(
-              userId,
-              chatbotTransportObject,
-              ChoiceLevel.RED
-            );
-          }
+        case 'extension_retrieve_critical_age_no':
+          this.fullfillTasksForLevelRed(
+            currentUserFull,
+            false,
+            false,
+            response,
+            chatbotTransportObject
+          );
           break;
-        case 'related_person_is_ill':
-        case 'user_is_well_approve':
-        case 'ask_who_is_ill_related':
-          this.setIsRelatedPerson(this.getFullUserId(userId), true);
-          if (response[0].queryResult.allRequiredParamsPresent) {
-            this.createTransportObjectForDiseaseLevel(
-              userId,
-              chatbotTransportObject,
-              ChoiceLevel.RED
-            );
-          }
+        case 'extension_retrieve_critical_age_yes':
+          this.fullfillTasksForLevelRed(
+            currentUserFull,
+            false,
+            true,
+            response,
+            chatbotTransportObject
+          );
+          break;
+        case 'extension_retrieve_critical_age_related_no':
+          this.fullfillTasksForLevelRed(
+            currentUserFull,
+            true,
+            false,
+            response,
+            chatbotTransportObject
+          );
+          break;
+        case 'extension_retrieve_critical_age_related_yes':
+          this.fullfillTasksForLevelRed(
+            currentUserFull,
+            true,
+            true,
+            response,
+            chatbotTransportObject
+          );
           break;
         case 'event_choice_orange':
           this.createTransportObjectForDiseaseLevel(
-            userId,
+            currentUserFull,
             chatbotTransportObject,
             ChoiceLevel.ORANGE
           );
           break;
         case 'event_choice_yellow':
           this.createTransportObjectForDiseaseLevel(
-            userId,
+            currentUserFull,
             chatbotTransportObject,
             ChoiceLevel.YELLOW
           );
           break;
         case 'event_choice_green':
           this.createTransportObjectForDiseaseLevel(
-            userId,
+            currentUserFull,
             chatbotTransportObject,
             ChoiceLevel.GREEN
           );
@@ -471,15 +555,15 @@ export class Chatbot {
           if (response[0].queryResult.allRequiredParamsPresent) {
             AppointmentHelper.retrieveAppointmentFromResponse(
               response,
-              this.getFullUserId(userId)
+              currentUserFull
             );
             if (
               (await AppointmentHelper.checkIfAppointmentAvailable(
-                this.getFullUserId(userId)
+                currentUserFull
               )) == DialogEvents.EVENT_APPOINTMENT_IS_AVAILABLE
             ) {
               response[0].queryResult.fulfillmentText =
-                await this.triggerAppointmentAgree(this.getFullUserId(userId));
+                await this.triggerAppointmentAgree(currentUserFull);
               if (response[0].queryResult.fulfillmentText == null) {
                 chatbotTransportObject.isError = true;
               }
@@ -489,7 +573,7 @@ export class Chatbot {
               chatbotTransportObject.isMultipleChoice = true;
               chatbotTransportObject.choiceContainer =
                 await AppointmentHelper.createMultipleChoiceForAppointments(
-                  this.getFullUserId(userId)
+                  currentUserFull
                 );
             }
           }
@@ -503,18 +587,16 @@ export class Chatbot {
         case 'patient_get_phone_number':
         case 'related_person_get_phone_number':
           response[0].queryResult.fulfillmentText =
-            await this.getMessageForAppointmentRequest(
-              this.getFullUserId(userId)
-            );
+            await this.getMessageForAppointmentRequest(currentUserFull);
           if (response[0].queryResult.fulfillmentText == null) {
             chatbotTransportObject.isError = true;
           }
           break;
         case 'appointment_available_agree':
-          AppointmentHelper.bookAppointment(this.getFullUserId(userId));
+          AppointmentHelper.bookAppointment(currentUserFull);
           break;
         case 'appointment_available_disagree':
-          deletePatientData(this.getFullUserId(userId));
+          deletePatientData(currentUserFull);
           break;
         default:
           break;
@@ -594,11 +676,19 @@ export class Chatbot {
     chatbotTransportObject: chatbotTransportObject,
     choiceLevel: ChoiceLevel
   ) {
-    const disease = getDiseaseForId(this.getFullUserId(userId));
-    if (disease != null) {
+    const patient = getPatientInfoObjectForId(userId);
+    if (
+      patient != null &&
+      patient.disease != null &&
+      patient.disease.length > 0
+    ) {
       chatbotTransportObject.isMultipleChoice = true;
       chatbotTransportObject.choiceContainer =
-        chatbotDiseaseManager.getInfoForDisease(disease, choiceLevel);
+        chatbotDiseaseManager.getInfoForDisease(
+          getEnumForDiseaseName(patient.disease),
+          choiceLevel,
+          patient.criticalCondition
+        );
     } else {
       console.log(activePatiens);
       this.createErrorForNotfoundDisease(chatbotTransportObject);

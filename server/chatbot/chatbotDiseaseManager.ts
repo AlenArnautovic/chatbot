@@ -27,19 +27,84 @@ export class chatbotDiseaseManager {
 
   public static getInfoForDisease(
     disease: Diseases,
-    choiceLevel: ChoiceLevel
+    choiceLevel: ChoiceLevel,
+    isCritical: boolean
   ): choiceContainer {
     switch (disease) {
       case Diseases.BACKPAIN:
-        return back_pain.getBackpainForChoiceLevel(choiceLevel);
+        return this.adaptSevertiyForCriticallity(
+          back_pain.getBackpainForChoiceLevel(choiceLevel),
+          isCritical,
+          choiceLevel
+        );
       case Diseases.EAR_PROBLEMS:
-        return ear_problems.getSymptomForChoiceLevel(choiceLevel);
+        return this.adaptSevertiyForCriticallity(
+          ear_problems.getSymptomForChoiceLevel(choiceLevel),
+          isCritical,
+          choiceLevel
+        );
       case Diseases.EYE_PROBLEMS:
-        return eye_problems.getSymptomForChoiceLevel(choiceLevel);
+        return this.adaptSevertiyForCriticallity(
+          eye_problems.getSymptomForChoiceLevel(choiceLevel),
+          isCritical,
+          choiceLevel
+        );
       case Diseases.SORE_THROAT:
-        return sore_throat.getSymptomForChoiceLevel(choiceLevel);
+        return this.adaptSevertiyForCriticallity(
+          sore_throat.getSymptomForChoiceLevel(choiceLevel),
+          isCritical,
+          choiceLevel
+        );
       case Diseases.HEADACHE:
-        return headache.getSymptomForChoiceLevel(choiceLevel);
+        return this.adaptSevertiyForCriticallity(
+          headache.getSymptomForChoiceLevel(choiceLevel),
+          isCritical,
+          choiceLevel
+        );
+      default:
+        break;
+    }
+  }
+
+  private static adaptSevertiyForCriticallity(
+    container: choiceContainer,
+    isCritical: boolean,
+    choiceLevel: ChoiceLevel
+  ): choiceContainer {
+    const event = this.getEventForChoiceLevel(choiceLevel, isCritical);
+    return this.changeSeverityForChoiceContainer(container, event);
+  }
+
+  private static changeSeverityForChoiceContainer(
+    container: choiceContainer,
+    event: DialogEvents
+  ): choiceContainer {
+    container.choices.forEach((choice) => {
+      if (!choice.isFallback) {
+        choice.event = event;
+      }
+    });
+    return container;
+  }
+
+  private static getEventForChoiceLevel(
+    choiceLevel: ChoiceLevel,
+    isCritical: boolean
+  ): DialogEvents {
+    switch (choiceLevel) {
+      case ChoiceLevel.RED:
+        return DialogEvents.AMBULANCE_EXIT;
+      case ChoiceLevel.ORANGE:
+        return isCritical
+          ? DialogEvents.AMBULANCE_EXIT
+          : DialogEvents.CALL_DOCTOR_ASAP;
+      case ChoiceLevel.YELLOW:
+        return isCritical
+          ? DialogEvents.CALL_DOCTOR_ASAP
+          : DialogEvents.BOOK_APPOINTMENT_ASK;
+      case ChoiceLevel.BLUE:
+      case ChoiceLevel.GREEN:
+        return DialogEvents.BOOK_APPOINTMENT_ASK;
       default:
         break;
     }

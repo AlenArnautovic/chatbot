@@ -13,14 +13,30 @@ export interface PatientInfo {
   phoneNumber: string;
   symptom?: string;
   appointment?: string;
-
+  criticalCondition?: boolean;
+  lengthOfDisease?: duration;
   //TODO extend
+}
+
+export interface duration {
+  amount: number;
+  unit: string;
 }
 export function getPatientInfoObjectForId(userId: string): PatientInfo {
   for (const patient of activePatiens) {
     if (patient.userId == userId) {
       return patient;
     }
+  }
+}
+
+export function setCriticalCondition(
+  userId: string,
+  conditionIsCritical: boolean
+) {
+  const patient = getPatientInfoObjectForId(userId);
+  if (patient != null) {
+    patient.criticalCondition = conditionIsCritical;
   }
 }
 
@@ -59,7 +75,7 @@ export function getIsRelatedForId(userId: string): boolean {
   return false;
 }
 
-function getEnumForDiseaseName(disease: string): Diseases {
+export function getEnumForDiseaseName(disease: string): Diseases {
   switch (disease) {
     case 'Back Pain':
       return Diseases.BACKPAIN;

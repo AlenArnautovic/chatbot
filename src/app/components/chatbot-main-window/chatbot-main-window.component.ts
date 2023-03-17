@@ -340,16 +340,16 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
             this.INPUT_setupForNextInput();
           }
         } else {
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Hey',
-            detail: 'type something :))',
-          });
+          this.createErrorMessage(
+            'Oops something went wrong. Please reload the website!'
+          );
         }
       } else {
-        this.createErrorMessage(
-          'Oops something went wrong. Please reload the website!'
-        );
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Hey',
+          detail: 'type something :))',
+        });
       }
     } catch (error) {
       this.createErrorMessage(
@@ -523,9 +523,11 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
         }
         this.createMessage(answer, false);
         this.showIsTyping = true;
+        const eventExtendedWithSymptom =
+          choiceObj.event + '#' + choiceObj.label;
         const response =
           await this.communicationService.triggerEventInDialogFlow(
-            choiceObj.event
+            eventExtendedWithSymptom
           );
         if (response != null) {
           this.wait(1000);
