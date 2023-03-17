@@ -297,10 +297,12 @@ export class AppointmentHelper {
         patient.symptom != null
           ? `An Additional sympton is: ${patient.symptom}, `
           : '';
-      const criticality =
-        patient.criticalCondition != null
-          ? 'Patient is either a Baby or Elderly, '
+      let criticality = '';
+      if (patient.criticalCondition != null) {
+        criticality = patient.criticalCondition
+          ? 'Patient is in critical initial condition, '
           : '';
+      }
       const duration =
         patient.lengthOfDisease != null &&
         patient.lengthOfDisease.amount != null &&
