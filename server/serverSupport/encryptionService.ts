@@ -1,6 +1,8 @@
 //Inside imports of your TS file include
 import * as CryptoJS from 'crypto-js';
-
+/**
+ * By Nicolai Haferkamp
+ */
 //Source https://stackoverflow.com/questions/41671267/encrypt-the-string-in-typescript-and-decrypt-in-c-sharp-using-advanced-encryptio
 export class encyptionService {
   private static key = CryptoJS.enc.Utf8.parse('1238943452945234');

@@ -1,3 +1,6 @@
+/**
+ * By Nicolai Haferkamp
+ */
 export class ClientIdService {
   private static registeredClients: client[] = [];
 

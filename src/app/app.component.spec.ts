@@ -1,33 +1,66 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppComponent } from './app.component';
+import { ChatbotInplaceComponent } from './components/chatbot-inplace/chatbot-inplace.component';
+import { MessageService } from 'primeng/api';
+import { CommunicationService } from './services/communication/communication.service';
 
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let app: AppComponent;
+
+  const mockCommunicationSerivce: any = {
+    registerClient() {
+      return null;
+    },
+    createDatabase() {
+      return null;
+    },
+    insertTestData() {
+      return null;
+    },
+    testDatabase() {
+      return null;
+    },
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [AppComponent],
-      providers: [HttpClient, HttpHandler],
+      declarations: [AppComponent, ChatbotInplaceComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        HttpClient,
+        HttpHandler,
+        MessageService,
+        { provide: CommunicationService, useValue: mockCommunicationSerivce },
+      ],
     }).compileComponents();
-  });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  // it(`should have as title 'chatbot'`, () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   const app = fixture.componentInstance;
-  //   expect(app.title).toEqual('chatbot');
-  // });
+  it('should create the app', () => {
+    expect(app).toBeTruthy();
+  });
 
-  // it('should render title', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.nativeElement as HTMLElement;
-  //   expect(compiled.querySelector('.content span')?.textContent).toContain('chatbot app is running!');
-  // });
+  it('METHOD: fillTestData(), TARGET: should call communication service , OUTCOME: none specific', () => {
+    const spy = spyOn(mockCommunicationSerivce, 'insertTestData');
+    app.fillTestData();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('METHOD: setUpDatabase(), TARGET: should call communication service, OUTCOME: none specific', () => {
+    const spy = spyOn(mockCommunicationSerivce, 'createDatabase');
+    app.setUpDatabase();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('METHOD: testDataBase(), TARGET: should call message service, OUTCOME: none specific', () => {
+    const spy = spyOn(MessageService.prototype, 'add');
+    app.testDataBase();
+    expect(spy).toHaveBeenCalled();
+  });
 });

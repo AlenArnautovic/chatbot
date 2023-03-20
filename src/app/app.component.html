@@ -1,6 +1,13 @@
 
 <html>
   <div class="flex mb-7"></div>
-  <router-outlet></router-outlet>
+  <app-chatbot-inplace></app-chatbot-inplace>
+  <div style="position:absolute; bottom: 0px; left:0px;" class="flex">
+    <button pButton class="mr-1  p-button-outlined"  label="Create Database" (click)="setUpDatabase()"></button>
+    <button pButton  class="mr-1  p-button-outlined" label="Insert Testdata" (click)="fillTestData()"></button>
+    <button pButton  class="mr-1 p-button-outlined" label="Test Database" (click)="testDataBase()"></button>
+</div>
+
+<p-toast position="top-left"></p-toast>
 </html>
 

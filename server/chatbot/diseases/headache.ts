@@ -32,7 +32,9 @@ import {
   vomiting,
   warm,
 } from '../symptoms/symptomStore';
-
+/**
+ * By Nicolai Haferkamp
+ */
 //Emergency Triage (2013) pages 116-117
 export class headache {
   static headache_red: choiceContainer = { choices: null };
@@ -76,13 +78,13 @@ export class headache {
   }
   private static initalizeOrange(): choiceServerObject[] {
     const orangeList = [
-      altered_concious_level,
+      //altered_concious_level,
       new_neurological_deficit_less_than_24_hours_old,
       signs_of_meningism,
-      purpura,
-      non_blanching_rash,
+      //purpura,
+      //non_blanching_rash,
       abrupt_onset,
-      acute_complete_loss_of_vision,
+      //acute_complete_loss_of_vision,
       very_hot,
       possible_sepsis,
       servere_pain,
@@ -96,7 +98,7 @@ export class headache {
     const yellowList = [
       new_neurological_deficit_more_than_24_hours_old,
       recent_reduced_visual_acuity,
-      temporal_scalp_tenderness,
+      //temporal_scalp_tenderness,
       history_of_unconsciousness,
       persistent_vomiting,
       hot,

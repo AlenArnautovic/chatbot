@@ -34,7 +34,6 @@ import { messageTypes } from './messageTypes';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { choiceServerObject } from 'src/app/services/communication/communicationHelper';
-import { timestamp } from 'rxjs';
 
 @Component({
   selector: 'app-chatbot-main-window',
@@ -116,51 +115,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   closeWindow() {
     this.messageEvent.emit('closeWindow');
     this.communicationService.saveMessages(this.messageObjects);
-  }
-  setUpDatabase() {
-    this.communicationService.createDatabase();
-  }
-  fillTestData() {
-    this.communicationService.insertTestData();
-  }
-  testDataBase() {
-    // this.communicationService.checkPatientsData(
-    //   '1970-05-02',
-    //   'Daniel',
-    //   'Miller',
-    //   '555666777'
-    // );
-    // this.communicationService.checkIfPatientHasAppointmentForDisease(
-    //   '123456789',
-    //   'Ear Problem'
-    // );
-    //this.communicationService.checkIfPatientHasAppointmentAtTime('123456789','2023-02-01 07:00:00' );
-    //this.communicationService.checkIfDoctorForDiseaseIsAvailable('Ear Problem');
-    this.communicationService.checkIfDoctorForDiseaseIsAvailableForASpecificAppointment(
-      'Ear Problem',
-      '2023-03-01 10:00:00'
-    );
-    //this.communicationService.getInformationOfAppointment('555666777' ,'2023-02-01 07:15:00');
-    //this.communicationService.bookAppointment(
-    //  '123456789',
-    //  '2023-02-01 10:15:00',
-    //  'Headache',
-    //  'Pressure, Cant hear anything, Stucked'
-    //);
-    //this.communicationService.changeAppointment('123456789','Back Pain', '2023-02-01 07:00:00','2023-02-01 09:15:00' );
-    //this.communicationService.deleteAppointment('123456789','2023-02-01 09:15:00');
-    // this.communicationService.addPatient(
-    //   '0000000',
-    //   'Alen',
-    //   'Arnautovic',
-    //   '15771517805',
-    //   '1997-05-26',
-    //   '3'
-    // );
-    // this.communicationService.checkIfAppointmentForDiseaseIsAvailable(
-    //   'Ear Problem',
-    //   '2023-02-01 08:00:00'
-    // );
   }
 
   /**

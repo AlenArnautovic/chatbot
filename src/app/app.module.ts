@@ -11,11 +11,9 @@ import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
 import { SlideMenuModule } from 'primeng/slidemenu';
-import { LoginComponent } from './login/login.component';
-import { RouterModule } from '@angular/router';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -25,12 +23,12 @@ import { AutoFocusModule } from 'primeng/autofocus';
 import { ChatbotInplaceComponent } from './components/chatbot-inplace/chatbot-inplace.component';
 import { InplaceModule } from 'primeng/inplace';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatbotMainWindowComponent,
-    LoginComponent,
     ChatbotInplaceComponent,
   ],
   imports: [
@@ -38,6 +36,7 @@ import { TooltipModule } from 'primeng/tooltip';
     BadgeModule,
     TooltipModule,
     AvatarModule,
+    ToastModule,
     AutoFocusModule,
     HttpClientModule,
     InplaceModule,
@@ -54,12 +53,8 @@ import { TooltipModule } from 'primeng/tooltip';
     FormsModule,
     MenuModule,
     SlideMenuModule,
-    RouterModule.forRoot([
-      { path: '', component: ChatbotInplaceComponent },
-      { path: 'login', component: LoginComponent },
-    ]),
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

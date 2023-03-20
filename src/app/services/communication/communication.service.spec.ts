@@ -66,4 +66,28 @@ describe('CommunicationService', () => {
     expect(request.request.method).toEqual('GET');
     httpMock.verify();
   });
+
+  it('METHOD: createDatabase(), TARGET: should send post request, OUTCOME: method == POST', () => {
+    const mockUrl = 'http://localhost:4245/database/createDatabase';
+    service.createDatabase();
+    const request = httpMock.expectOne(mockUrl);
+    expect(request.request.method).toEqual('POST');
+    httpMock.verify();
+  });
+
+  it('METHOD: insertTestData(), TARGET: should send post request, OUTCOME: method == POST', () => {
+    const mockUrl = 'http://localhost:4245/database/insertTestData';
+    service.insertTestData();
+    const request = httpMock.expectOne(mockUrl);
+    expect(request.request.method).toEqual('POST');
+    httpMock.verify();
+  });
+
+  it('METHOD: (), TARGET: should send post request, OUTCOME: method == POST', () => {
+    const mockUrl = 'http://localhost:4245/database/testDatabase';
+    service.testDatabase();
+    const request = httpMock.expectOne(mockUrl);
+    expect(request.request.method).toEqual('POST');
+    httpMock.verify();
+  });
 });
