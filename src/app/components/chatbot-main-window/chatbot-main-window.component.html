@@ -1,3 +1,4 @@
+<!--by Nicolai Haferkamp-->
 <div [style]="mainWindowContainer" style="width: 100%;" class="flex justify-content-center zoomin fadeout">
     <p-panel>
         <ng-template pTemplate="header">
@@ -56,7 +57,8 @@
         <ng-template pTemplate="footer" >
             <div (keydown.enter)="onSendMessage()" class="flex justify-content-center">
             <input #inputField [disabled]="inputDisabled" [(ngModel)]="inputFieldValue" class="flex mr-2" style="width:100%" type="text" [placeholder]="inputPlaceholder" pAutoFocus [autofocus]="InputAutoFocus" pInputText/>
-            <button [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane" pTooltip="Send Message" tooltipPosition="top" [showDelay]="sendButtonDelay" ></button>
+            <button *ngIf="!sendButtonHidden" [disabled]="inputDisabled" pButton (click)="onSendMessage()" type="button" icon="fa fa-light fa-paper-plane" pTooltip="Send Message" tooltipPosition="top" [showDelay]="sendButtonDelay" ></button>
+            <button *ngIf="sendButtonHidden" pButton (click)="onReloadChatbot()" type="button" icon="pi pi-replay" pTooltip="Reload Conversation" tooltipPosition="top" [showDelay]="sendButtonDelay" ></button>
         </div>
         </ng-template>
     </p-panel>

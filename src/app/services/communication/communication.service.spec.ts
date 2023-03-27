@@ -7,8 +7,13 @@ import {
 import { CommunicationService } from './communication.service';
 import { EncryptionService } from '../encryption/encryption.service';
 
-//https://stackoverflow.com/questions/64748224/how-to-test-http-post-request-with-parameters-in-angular-9
-//https://angular.io/guide/http#testing-http-requests
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on:
+ * https://angular.io/guide/http#testing-http-requests
+ * https://stackoverflow.com/questions/64748224/how-to-test-http-post-request-with-parameters-in-angular-9
+ */
 describe('CommunicationService', () => {
   let httpMock: HttpTestingController;
   let service: CommunicationService;

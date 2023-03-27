@@ -1,3 +1,8 @@
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: https://www.youtube.com/watch?v=F2ibS4gcglY
+ */
 export const devKeys = {
   type: 'service_account',
   googleProjectId: 'doctorsappointment-lhpq',

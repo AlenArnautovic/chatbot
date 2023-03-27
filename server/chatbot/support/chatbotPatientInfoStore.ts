@@ -2,6 +2,9 @@ import { Diseases } from './chatbotSupport';
 
 export const activePatiens: PatientInfo[] = [];
 
+/**
+ * by Nicolai Haferkamp
+ */
 export interface PatientInfo {
   userId: string;
   firstName: string;

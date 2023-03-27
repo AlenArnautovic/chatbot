@@ -1,6 +1,9 @@
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
 import { duration as duration } from './chatbotPatientInfoStore';
 
+/**
+ * by Nicolai Haferkamp
+ */
 export class DurationHelper {
   public static retrieveDurationString(
     value: google.protobuf.IStruct

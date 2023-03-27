@@ -8,6 +8,11 @@ import { Database } from './database/controllers/databaseMain';
 import { ClientIdService } from './serverSupport/clientIdService';
 import { encyptionService } from './serverSupport/encryptionService';
 
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: https://www.youtube.com/watch?v=Ad3fj9V7s6A
+ */
 const app = express.Router();
 export { app as routes };
 

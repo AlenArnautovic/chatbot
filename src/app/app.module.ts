@@ -25,6 +25,9 @@ import { InplaceModule } from 'primeng/inplace';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 
+/**
+ * by Nicolai Haferkamp
+ */
 @NgModule({
   declarations: [
     AppComponent,

@@ -11,7 +11,11 @@ import { eye_problems } from './diseases/eye-problem';
 import { headache } from './diseases/headache';
 import { sore_throat } from './diseases/sore-throat';
 
-//DISCLAIMER: all content inside the variables is either indirectly or directly cited by the article "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
+ */
 export class chatbotDiseaseManager {
   static available_diseases: choiceContainer = { choices: null };
 

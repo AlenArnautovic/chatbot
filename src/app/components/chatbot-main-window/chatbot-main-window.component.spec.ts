@@ -21,6 +21,9 @@ import {
 } from './colorHelper';
 import { messageTypes } from './messageTypes';
 
+/**
+ * by Nicolai Haferkamp
+ */
 describe('ChatbotMainWindowComponent', () => {
   let component: ChatbotMainWindowComponent;
   let fixture: ComponentFixture<ChatbotMainWindowComponent>;

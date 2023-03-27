@@ -1,6 +1,10 @@
 import { choiceServerObject, DialogEvents } from '../support/chatbotSupport';
-//DISCLAIMER: all content inside the variables is either indirectly or directly cited by the article "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
 
+/**
+ * by Nicolai Haferkamp
+ *
+ * DISCLAIMER: all content inside the variables is either indirectly or directly cited by the Book "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle
+ */
 export const airway_compromise: choiceServerObject = {
   label: 'Airway compromise',
   event: DialogEvents.AMBULANCE_EXIT,

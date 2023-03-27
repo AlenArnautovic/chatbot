@@ -1,9 +1,6 @@
 import dialogflow from '@google-cloud/dialogflow';
 import { google } from '@google-cloud/dialogflow/build/protos/protos';
-import e from 'express';
 import { v4 as uuid } from 'uuid';
-import { Database } from '../database/controllers/databaseMain';
-import { getInformationOfAppointment } from '../database/controllers/patient';
 import { chatbotDiseaseManager } from './chatbotDiseaseManager';
 import { AppointmentHelper } from './support/chatbotAppointmentHelper';
 import {
@@ -20,14 +17,17 @@ import {
 } from './support/chatbotPatientInfoStore';
 import {
   chatbotTransportObject,
-  choiceContainer,
   ChoiceLevel,
   DialogEvents,
-  Diseases,
 } from './support/chatbotSupport';
 import { devKeys } from './support/devKeyConfig';
 import { DurationHelper } from './support/durationHelper';
 
+/**
+ * by Nicolai Haferkamp
+ *
+ * some of the DialogFlow query Methods are based on the guide of the video: https://www.youtube.com/watch?v=F2ibS4gcglY
+ */
 export class Chatbot {
   static eventSplitter = '#';
   static projectId = devKeys.googleProjectId;
@@ -240,6 +240,20 @@ export class Chatbot {
                 },
               },
             },
+          },
+        };
+        break;
+      case DialogEvents.EVENT_RESET_CONTEXTS:
+        request = {
+          session: sessionPath,
+          queryInput: {
+            event: {
+              name: eventName,
+              languageCode: Chatbot.languageCode,
+            },
+          },
+          queryParams: {
+            resetContexts: true,
           },
         };
         break;
@@ -616,6 +630,29 @@ export class Chatbot {
     } catch (error2) {
       chatbotTransportObject.isError = true;
       console.log(error2);
+    }
+
+    try {
+      if (
+        response[0].queryResult.diagnosticInfo != null &&
+        response[0].queryResult.diagnosticInfo.fields != null
+      ) {
+        const fields = response[0].queryResult.diagnosticInfo.fields;
+        const keys = Object.keys(fields);
+        for (const key of keys) {
+          switch (key) {
+            case 'end_conversation':
+              if (fields[key].boolValue == true) {
+                chatbotTransportObject.isEndMessage = true;
+              }
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    } catch (error) {
+      //TODO
     }
     console.log(chatbotTransportObject);
     return chatbotTransportObject;

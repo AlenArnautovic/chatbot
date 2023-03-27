@@ -1,3 +1,6 @@
+/**
+ * by Nicolai Haferkamp
+ */
 export interface choiceServerObject {
   label: string;
   event: string;
@@ -16,6 +19,7 @@ export interface chatbotTransportObject {
   isMultipleChoice: boolean;
   choiceContainer?: choiceContainer;
   isReminderForPatient?: boolean;
+  isEndMessage?: boolean;
 }
 
 export enum Diseases {
@@ -42,6 +46,7 @@ export enum DialogEvents {
   EVENT_APPOINTMENT_IS_AVAILABLE = 'appointment_is_available',
   EVENT_APPOINTMENT_NOT_AVAILABLE = 'appointment_not_available',
   EVENT_APPOINTMENT_IS_AVAILABLE_DECLINE = 'event_appointment_is_available_decline',
+  EVENT_RESET_CONTEXTS = 'event_reset_contexts',
 }
 
 export enum ChoiceLevel {

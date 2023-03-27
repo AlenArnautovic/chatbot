@@ -26,7 +26,11 @@ import {
   very_hot,
 } from '../symptoms/symptomStore';
 
-//Emergency Triage (2013) pages 80-81
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle -> pages 80-81
+ */
 export class back_pain {
   static backpain_red: choiceContainer = { choices: null };
   static backpain_orange: choiceContainer = { choices: null };

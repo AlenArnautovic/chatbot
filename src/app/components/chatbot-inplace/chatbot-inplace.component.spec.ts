@@ -5,6 +5,9 @@ import { Inplace } from 'primeng/inplace';
 
 import { ChatbotInplaceComponent } from './chatbot-inplace.component';
 
+/**
+ * by Nicolai Haferkamp
+ */
 describe('ChatbotInplaceComponent', () => {
   let component: ChatbotInplaceComponent;
   let fixture: ComponentFixture<ChatbotInplaceComponent>;

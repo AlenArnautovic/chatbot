@@ -5,13 +5,15 @@ import {
   PatientInfo,
 } from './chatbotPatientInfoStore';
 import {
-  chatbotTransportObject,
   choiceContainer,
   choiceServerObject,
   DialogEvents,
   timeObject,
 } from './chatbotSupport';
 
+/**
+ * by Nicolai Haferkamp
+ */
 export class AppointmentHelper {
   public static retrieveAppointmentFromResponse(
     response: [
@@ -282,13 +284,17 @@ export class AppointmentHelper {
   }
 
   public static async bookAppointment(userId: string) {
-    const patient = getPatientInfoObjectForId(userId);
-    await Database.bookAppointment(
-      patient.vNumber.toString(),
-      patient.appointment,
-      patient.disease,
-      this.createSymptonDescription(patient)
-    );
+    try {
+      const patient = getPatientInfoObjectForId(userId);
+      await Database.bookAppointment(
+        patient.vNumber.toString(),
+        patient.appointment,
+        patient.disease,
+        this.createSymptonDescription(patient)
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public static createSymptonDescription(patient: PatientInfo): string {

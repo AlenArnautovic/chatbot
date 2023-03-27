@@ -1,5 +1,8 @@
 import { messageTypes } from './messageTypes';
 
+/**
+ * by Nicolai Haferkamp
+ */
 export interface MessageObject {
   content: string;
   messageLayout: MessageLayout;

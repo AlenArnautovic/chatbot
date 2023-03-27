@@ -22,7 +22,11 @@ import {
   very_hot,
 } from '../symptoms/symptomStore';
 
-//Emergency Triage (2013) pages 104-105
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle -> pages 104-105
+ */
 export class eye_problems {
   static eye_problems_red: choiceContainer = { choices: null };
   static eye_problems_orange: choiceContainer = { choices: null };

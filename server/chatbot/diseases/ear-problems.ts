@@ -27,7 +27,11 @@ import {
   warm,
 } from '../symptoms/symptomStore';
 
-//Emergency Triage (2013) pages 102-103
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle -> pages 102-103
+ */
 export class ear_problems {
   static ear_problems_red: choiceContainer = { choices: null };
   static ear_problems_orange: choiceContainer = { choices: null };

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { CommunicationService } from './services/communication/communication.service';
 
+/**
+ * by Nicolai Haferkamp
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

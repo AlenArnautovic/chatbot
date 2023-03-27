@@ -3,6 +3,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { ThemeService } from './theme.service';
 
+/**
+ * by Nicolai Haferkamp
+ */
 describe('ThemeService', () => {
   let service: ThemeService;
   let doc: Document;

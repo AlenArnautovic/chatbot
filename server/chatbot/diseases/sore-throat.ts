@@ -25,7 +25,11 @@ import {
   warm,
 } from '../symptoms/symptomStore';
 
-//Emergency Triage (2013) pages 150-151
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle -> pages 150-151
+ */
 export class sore_throat {
   static sore_throat_red: choiceContainer = { choices: null };
   static sore_throat_orange: choiceContainer = { choices: null };

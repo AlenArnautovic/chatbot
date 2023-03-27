@@ -35,6 +35,9 @@ import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { choiceServerObject } from 'src/app/services/communication/communicationHelper';
 
+/**
+ * by Nicolai Haferkamp
+ */
 @Component({
   selector: 'app-chatbot-main-window',
   templateUrl: './chatbot-main-window.component.html',
@@ -52,6 +55,9 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   mainWindowContainer = '';
   messageTimeStamp = '';
   messageTimeStampColor = '';
+
+  sendButtonIcon = 'fa fa-light fa-paper-plane';
+  sendButtonHidden = false;
 
   confirmPopup = '';
   showIsTyping = false;
@@ -106,6 +112,27 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
     } catch (error) {
       this.createErrorMessage('');
     }
+  }
+
+  /**
+   * Resets the Conversation
+   */
+  async onReloadChatbot() {
+    await this.communicationService.triggerEventInDialogFlow(
+      'event_reset_contexts'
+    );
+    this.messageObjects = [];
+    this.INPUT_setInputFieldstatus();
+    this.sendButtonHidden = false;
+    this.messageService.clear();
+  }
+
+  /**
+   * Closes the chatbot conversation
+   */
+  endConversation() {
+    this.INPUT_blockInputForNextConvo();
+    this.sendButtonHidden = true;
   }
 
   ngOnInit() {
@@ -284,6 +311,11 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
               } else {
                 this.createErrorMessage('');
               }
+            } else if (
+              response.isEndMessage != null &&
+              response.isEndMessage == true
+            ) {
+              this.endConversation();
             } else {
               this.INPUT_setupForNextInput();
             }
@@ -347,6 +379,12 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   INPUT_blockInput() {
     this.toggleInputFooter(true);
     this.showIsTyping = true;
+  }
+
+  INPUT_blockInputForNextConvo() {
+    this.toggleInputFooter(true);
+    this.inputFieldValue = '';
+    this.inputPlaceholder = 'Conversation ended, Please reload..';
   }
 
   /**
@@ -509,7 +547,15 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
           );
         }
         this.showIsTyping = false;
-        this.INPUT_setInputFieldstatus();
+        if (
+          response != null &&
+          response.isEndMessage != null &&
+          response.isEndMessage == true
+        ) {
+          this.endConversation();
+        } else {
+          this.INPUT_setInputFieldstatus();
+        }
       },
       reject: () => {
         //

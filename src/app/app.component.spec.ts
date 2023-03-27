@@ -6,6 +6,9 @@ import { ChatbotInplaceComponent } from './components/chatbot-inplace/chatbot-in
 import { MessageService } from 'primeng/api';
 import { CommunicationService } from './services/communication/communication.service';
 
+/**
+ * by Nicolai Haferkamp
+ */
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let app: AppComponent;

@@ -1,6 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 
+/**
+ * by Nicolai Haferkamp
+ */
 @Injectable({
   providedIn: 'root',
 })

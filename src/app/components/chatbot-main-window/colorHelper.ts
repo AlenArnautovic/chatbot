@@ -1,3 +1,6 @@
+/**
+ * by Nicolai Haferkamp
+ */
 export function returnColorForQuestions(
   themeName: string,
   inHex: boolean

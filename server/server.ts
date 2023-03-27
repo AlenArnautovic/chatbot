@@ -1,7 +1,11 @@
 import express from 'express';
 import { routes } from './routes';
-import helmet from 'helmet';
 
+/**
+ * by Nicolai Haferkamp
+ *
+ * Based on: https://www.youtube.com/watch?v=Ad3fj9V7s6A
+ */
 const app = express();
 
 //app.use(helmet());

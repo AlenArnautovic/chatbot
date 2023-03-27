@@ -1,3 +1,6 @@
+/**
+ * by Nicolai Haferkamp
+ */
 export interface choiceServerObject {
   label: string;
   event: string;
@@ -16,4 +19,5 @@ export interface chatbotTransportObject {
   isMultipleChoice: boolean;
   choiceContainer?: choiceContainer;
   isReminderForPatient?: boolean;
+  isEndMessage?: boolean;
 }

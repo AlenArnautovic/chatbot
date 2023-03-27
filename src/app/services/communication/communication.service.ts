@@ -5,6 +5,9 @@ import { MessageObject } from 'src/app/components/chatbot-main-window/chatbotMai
 import { EncryptionService } from '../encryption/encryption.service';
 import { chatbotTransportObject } from './communicationHelper';
 
+/**
+ * by Nicolai Haferkamp
+ */
 @Injectable({
   providedIn: 'root',
 })

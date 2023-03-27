@@ -1,11 +1,9 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Inplace } from 'primeng/inplace';
 
+/**
+ * by Nicolai Haferkamp
+ */
 @Component({
   selector: 'app-chatbot-inplace',
   templateUrl: './chatbot-inplace.component.html',

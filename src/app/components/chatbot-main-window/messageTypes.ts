@@ -1,3 +1,6 @@
+/**
+ * by Nicolai Haferkamp
+ */
 export enum messageTypes {
   question = 100,
   answer = 200,

@@ -17,25 +17,24 @@ import {
   moderate_pain,
   new_neurological_deficit_less_than_24_hours_old,
   new_neurological_deficit_more_than_24_hours_old,
-  non_blanching_rash,
   persistent_vomiting,
   possible_sepsis,
-  purpura,
   recent_mild_pain,
   recent_problem,
   recent_reduced_visual_acuity,
   servere_pain,
   shock,
   signs_of_meningism,
-  temporal_scalp_tenderness,
   very_hot,
   vomiting,
   warm,
 } from '../symptoms/symptomStore';
+
 /**
  * By Nicolai Haferkamp
+ *
+ * Based on: "Emergency Triage 3rd Edition (2014)" by Kevin Mackway-Jones, Janet Marsden & Jill Windle -> Pages 116-117
  */
-//Emergency Triage (2013) pages 116-117
 export class headache {
   static headache_red: choiceContainer = { choices: null };
   static headache_orange: choiceContainer = { choices: null };
