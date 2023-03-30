@@ -77,7 +77,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   constructor(
     private themeSerivce: ThemeService,
     private communicationService: CommunicationService,
-    private router: Router,
     @Inject(DOCUMENT) private document: Document,
     private confirmationService: ConfirmationService,
     private ref: ChangeDetectorRef,
@@ -133,6 +132,9 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   endConversation() {
     this.INPUT_blockInputForNextConvo();
     this.sendButtonHidden = true;
+    if (this.messageObjects != null && this.messageObjects.length > 1) {
+      this.messageObjects[this.messageObjects.length - 1].isLastMessage = true;
+    }
   }
 
   ngOnInit() {
@@ -223,6 +225,13 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       this.inputPlaceholder = 'Say Hi...';
       this.toggleInputFooter(false);
     } else if (
+      this.messageObjects[this.messageObjects.length - 1].isLastMessage !=
+        null &&
+      this.messageObjects[this.messageObjects.length - 1].isLastMessage == true
+    ) {
+      this.inputPlaceholder = 'Conversation ended, Please reload..';
+      this.endConversation();
+    } else if (
       this.messageObjects[this.messageObjects.length - 1].isMultipleChoice
     ) {
       this.inputPlaceholder = 'Choose an Option...';
@@ -294,7 +303,6 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
               response.fulfillmentText.length > 0
             ) {
               this.createMessage(response.fulfillmentText, true);
-              console.log(response.fulfillmentText);
             }
 
             if (response.isMultipleChoice) {

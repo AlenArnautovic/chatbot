@@ -372,4 +372,38 @@ describe('ChatbotMainWindowComponent', () => {
     component.confirmChoice(event, choiceObj);
     expect(mockConfirm).toHaveBeenCalled();
   });
+
+  it('METHOD: endConversation(), TARGET: should end conversation, OUTCOME: blocked input', () => {
+    component.INPUT_blockInputForNextConvo();
+    expect(component.showIsTyping).toBe(false);
+    expect(component.inputPlaceholder).toBe(
+      'Conversation ended, Please reload..'
+    );
+  });
+
+  it('METHOD: onReloadChatbot(), TARGET: should reload an empty conversation, OUTCOME: send button unhidden and messageobjects length = 0', () => {
+    component.onReloadChatbot();
+    expect(component.messageObjects.length).toBe(0);
+    expect(component.showIsTyping).toBe(false);
+    expect(component.sendButtonHidden).toBe(false);
+  });
+
+  it('METHOD: onReloadChatbot(), TARGET: should reload an empty conversation, OUTCOME: isLastMessage == true', () => {
+    component.createMessage('Hi', true);
+    component.createMessage('Hi', false);
+    component.endConversation();
+    expect(
+      component.messageObjects[component.messageObjects.length - 1]
+        .isLastMessage
+    ).toBe(true);
+  });
+
+  it('METHOD: onReloadChatbot(), TARGET: should reload an empty conversation, OUTCOME: isLastMessage == null', () => {
+    component.createMessage('Hi', true);
+    component.endConversation();
+    expect(
+      component.messageObjects[component.messageObjects.length - 1]
+        .isLastMessage
+    ).toBeUndefined();
+  });
 });

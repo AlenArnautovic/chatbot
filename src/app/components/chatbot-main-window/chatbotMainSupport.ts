@@ -8,6 +8,7 @@ export interface MessageObject {
   messageLayout: MessageLayout;
   choiceObjects: ChoiceObject[];
   isMultipleChoice: boolean;
+  isLastMessage?: boolean;
 }
 
 export interface MessageLayout {
