@@ -122,7 +122,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
       'event_reset_contexts'
     );
     this.messageObjects = [];
-    this.INPUT_setInputFieldstatus();
+    this.INPUT_setupForNextInput();
     this.sendButtonHidden = false;
     this.messageService.clear();
   }
@@ -382,6 +382,7 @@ export class ChatbotMainWindowComponent implements OnInit, AfterViewInit {
   }
 
   INPUT_blockInputForNextConvo() {
+    this.showIsTyping = false;
     this.toggleInputFooter(true);
     this.inputFieldValue = '';
     this.inputPlaceholder = 'Conversation ended, Please reload..';
