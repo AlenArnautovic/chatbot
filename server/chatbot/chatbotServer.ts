@@ -26,7 +26,7 @@ import { DurationHelper } from './support/durationHelper';
 /**
  * by Nicolai Haferkamp
  *
- * some of the DialogFlow query Methods are based on the guide of the video: https://www.youtube.com/watch?v=F2ibS4gcglY
+ * some of the DialogFlow query Methods (textQuery and eventQuery) are based on the guide of the video: https://www.youtube.com/watch?v=F2ibS4gcglY
  */
 export class Chatbot {
   static eventSplitter = '#';

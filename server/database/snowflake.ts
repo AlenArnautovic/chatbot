@@ -1,3 +1,6 @@
+/**
+ * by Alen Arnautovic
+ */
 // import * as snowflake from 'snowflake-sdk'
 
 // const snowConnect = snowflake.createConnection({

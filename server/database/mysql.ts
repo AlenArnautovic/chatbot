@@ -1,3 +1,6 @@
+/**
+ * by Alen Arnautovic
+ */
 import mysql from 'mysql';
 
 const MYSQL_HOST = process.env.MYSQL_HOST || 'localhost';

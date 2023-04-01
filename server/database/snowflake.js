@@ -1,3 +1,6 @@
+/**
+ * by Alen Arnautovic
+ */
 // "use strict";
 // exports.__esModule = true;
 // var snowflake = require("snowflake-sdk");

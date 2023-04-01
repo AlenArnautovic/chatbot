@@ -31,7 +31,6 @@ import {
   returnColorForQuestions,
 } from './colorHelper';
 import { messageTypes } from './messageTypes';
-import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { choiceServerObject } from 'src/app/services/communication/communicationHelper';
 

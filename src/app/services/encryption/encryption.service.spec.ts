@@ -1,9 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { EncryptionService } from './encryption.service';
-/**
- * by Nicolai Haferkamp
- */
+
 /**
  * by Nicolai Haferkamp
  */

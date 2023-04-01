@@ -77,8 +77,8 @@ export class back_pain {
       segnificant_mechanism_of_injury,
       very_hot,
       possible_sepsis,
-      aortic_pain,
-      abdominal_pain,
+      //aortic_pain,
+      //abdominal_pain,
       servere_pain,
       chatbotDiseaseManager.createChoiceFallback(
         DialogEvents.EVENT_CHOICE_YELLOW
@@ -92,7 +92,7 @@ export class back_pain {
       direct_traume_to_the_back,
       unable_to_walk,
       hot,
-      colicky_pain,
+      //colicky_pain,
       moderate_pain,
       chatbotDiseaseManager.createChoiceFallback(
         DialogEvents.EVENT_CHOICE_GREEN

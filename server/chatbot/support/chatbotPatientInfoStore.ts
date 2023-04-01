@@ -18,7 +18,6 @@ export interface PatientInfo {
   appointment?: string;
   criticalCondition?: boolean;
   lengthOfDisease?: duration;
-  //TODO extend
 }
 
 export interface duration {

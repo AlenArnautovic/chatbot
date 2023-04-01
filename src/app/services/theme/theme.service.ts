@@ -3,6 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 
 /**
  * by Nicolai Haferkamp
+ *
+ * Based on: https://www.youtube.com/watch?v=5VOuUdDXRsE
  */
 @Injectable({
   providedIn: 'root',

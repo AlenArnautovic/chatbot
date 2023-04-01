@@ -1,3 +1,6 @@
+/**
+ * by Alen Arnautovic
+ */
 import { AppointmentHelper } from '../../chatbot/support/chatbotAppointmentHelper';
 import { Connect } from '../mysql';
 

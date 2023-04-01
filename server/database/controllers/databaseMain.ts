@@ -1,18 +1,21 @@
+/**
+ * by Alen Arnautovic
+ */
 import * as mysql from 'mysql2';
 
 export class Database {
   public static getConnection(): mysql.Connection {
-    try{
-    return mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: 'root',
-      database: 'chatbot',
-    });
-  }catch(error){
-    console.log(error);
-    console.log('[Server] Please set up a database!')
-  }
+    try {
+      return mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'chatbot',
+      });
+    } catch (error) {
+      console.log(error);
+      console.log('[Server] Please set up a database!');
+    }
   }
 
   public static async checkPatientsData(vNumber: string): Promise<any> {
