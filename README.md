@@ -32,7 +32,7 @@ To set up our Dialogflow Agent the following steps need to be considered:
 3.	Create a new Agent
 4.	Press on the cogwheel
 5.	Select Import and Export tab
-6.	Press Import from Zip and select our ZIP from github
+6.	Press Import from Zip and select our ZIP from the *Artefakte* folder (Dialogflow_Agent_Doctors_Appointment_Version_X.zip)
 7.	The agent should restored
 
 To Enable API access, the following steps need to be considered:
@@ -77,13 +77,15 @@ Other Settings that should be opted in (inside the cogwheel settings) are: Gener
     -	Open the newly created connection if test of the connection was successful 
 3.	Create a connection for accessing the database via code:
     -	In MySQL Workbench (when connected to database):
-      -	Create a new Schema with the name chatbot
-      -	Execute the query: ALTER USER 'root'@'localhost' IDENTI-FIED WITH mysql_native_password BY 'root'; 
-      -	Execute the query: flush privileges; 
-4.	In VSCode:
-    -	Make sure that the mySQL2 driver in version 3.2.0 is installed and can be found in the package.json file within the server folder. Oth-erwise run npm i from the        terminal. Consider running this state-ment in the server folder
-    -	Check in the databaseMain.ts file if the declared values for the connection are fitting to your connection
-
+     -	Create a new Schema with the name *chatbot*
+     -	Execute the query: ALTER USER 'root'@'localhost' IDENTI-FIED WITH mysql_native_password BY 'root'; 
+     -	Execute the query: flush privileges; 
+4.	(After The start of the Chatbot-> See next step)
+    - Open the URL localhost:4200
+    - There should be 3 buttons in the lower right corner
+    - Click first on the *Create Database* Button (wait 30seconds)
+    - Then click on *Insert Test Data* Button (wait 30seconds)
+5.  The Database should now be set up
 
 ## Start the Chatbot:
 
